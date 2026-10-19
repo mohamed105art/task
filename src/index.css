@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@layer base {
+  /* Institutional Light Theme (Default) */
+  :root {
+    --font-sans: 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --bg-app: #f8fafc;
+    --bg-sidebar: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-surface: #f1f5f9;
+    --bg-muted: #f1f5f9;
+    --bg-input: #ffffff;
+
+    --text-main: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+    --text-inverse: #ffffff;
+
+    --border-subtle: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --border-color: #e2e8f0;
+
+    --primary: #0f4c81;
+    --primary-hover: #0c3e6a;
+    --primary-soft: rgba(15, 76, 129, 0.08);
+
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --purple: #8b5cf6;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Obsidian Dark Theme */
+  [data-theme="dark"], html.dark-mode, body.dark-mode, .dark {
+    --bg-app: #0b0f19;
+    --bg-sidebar: #111827;
+    --bg-card: #1f2937;
+    --bg-card-hover: #283548;
+    --bg-surface: #1e293b;
+    --bg-muted: #1a2234;
+    --bg-input: #111827;
+
+    --text-main: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-inverse: #090d16;
+
+    --border-subtle: #334155;
+    --border-strong: #475569;
+    --border-color: #334155;
+
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --primary-soft: rgba(59, 130, 246, 0.15);
+
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --purple: #8b5cf6;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  html {
+    direction: rtl;
+    text-align: right;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* Density & Font Scale Presets */
+  html.font-scale-sm { font-size: 14px; }
+  html.font-scale-md { font-size: 16px; }
+  html.font-scale-lg { font-size: 18px; }
+
+  /* ========================================================
+     INVISIBLE, ULTRA-SLEEK, EYE-FRIENDLY SCROLLBAR ARCHITECTURE
+     Zero ugly white bars, zero clipped rounded corners!
+     ======================================================== */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent !important;
+    margin-block: 8px;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.22);
+    border-radius: 9999px;
+    transition: background 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.22) transparent;
+  }
+
+  /* Official Administrative A4 Print Styles */
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 10mm 10mm 12mm 10mm;
+    }
+    body {
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+    header, aside, .no-print, button:not(.allow-print) {
+      display: none !important;
+    }
+  }
+}

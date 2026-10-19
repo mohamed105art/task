@@ -1,0 +1,6 @@
+{
+  "name": "E-Tasks Justice Settat V18 Enterprise",
+  "description": "نظام تدبير المهام والتدخلات الميدانية - المديرية الإقليمية لوزارة العدل بسطات",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

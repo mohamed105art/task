@@ -6634,6 +6634,435 @@ svg.outline-svg-icon,
   height: 12px !important;
 }
 
+
+/* ========================================================
+   MASTER ENGINEERING DIRECTIVE v27.0 — DEFCON 1 FUNCTIONAL LOCKDOWN &
+   NATIVE MOBILE UI / TYPOGRAPHY OVERHAUL (PURE CSS — ZERO JS TOUCHED)
+   ======================================================== */
+
+/* PART II — BUTTON ALIGNMENT, BREVITY & OUTLINES (GLOBAL & MOBILE) */
+/* Mandatory Fix 1 & 2: Strict Flexbox Vertical Centering (min-height: 44px, padding: 10px 16px, gap: 8px, line-height: 1) & Single-Line No-Wrap */
+.btn:not(.action-icon-btn):not(.btn-icon):not(.header-icon-btn):not(.theme-toggle-btn):not(.sidebar-toggle-btn),
+button.btn:not(.action-icon-btn):not(.btn-icon):not(.header-icon-btn):not(.theme-toggle-btn):not(.sidebar-toggle-btn),
+#settings-unified-save-btn,
+#settings-header-theme-toggle,
+.workflow-subview-btn,
+.settings-nav-btn,
+.sub-filter-pill,
+.smart-chips-toggle-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  line-height: 1 !important;
+  padding: 10px 16px !important;
+  min-height: 44px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex-wrap: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+button,
+.btn,
+.sidebar-action-btn,
+.nav-item,
+.settings-nav-btn,
+.workflow-subview-btn,
+.sub-filter-pill,
+.cat-pill-btn,
+.library-chip-btn,
+.smart-chip-bubble,
+.status-pill-btn,
+.strength-btn,
+.dest-count-opt,
+.chart-opt-btn,
+.page-btn,
+.actions-trigger-btn {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex-wrap: nowrap !important;
+}
+
+/* Force inner icon+text wrapper inside buttons to stay single-line and vertically centered */
+button .outline-icon-text-wrap,
+.btn .outline-icon-text-wrap,
+.settings-nav-btn .outline-icon-text-wrap,
+.workflow-subview-btn .outline-icon-text-wrap,
+.sub-filter-pill .outline-icon-text-wrap,
+.cat-pill-btn .outline-icon-text-wrap,
+.library-chip-btn .outline-icon-text-wrap,
+.smart-chips-toggle-btn .outline-icon-text-wrap {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  line-height: 1 !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+
+/* Mandatory Fix 3 (Action Buttons): Strip background colors from task action buttons (Delete, Edit, View, Complete) — strictly transparent with 1px solid currentColor outline border */
+.action-icon-btn,
+button.action-icon-btn,
+.btn.action-icon-btn,
+.btn-success.action-icon-btn,
+.btn-danger.action-icon-btn,
+.btn-danger-outline.action-icon-btn,
+.btn-outline.action-icon-btn,
+.btn-primary.action-icon-btn,
+.btn-secondary.action-icon-btn,
+#dash-today-tasks-container button.action-icon-btn,
+#dash-future-tasks-container button.action-icon-btn,
+#dash-pending-tasks-container button.action-icon-btn,
+#view-today .accordion-body button.action-icon-btn,
+#backlog-table-body button.action-icon-btn,
+#tasks-table-body button.action-icon-btn,
+#trash-table-body button.action-icon-btn,
+#lib-missions-grid .mission-lib-card .action-icon-btn,
+#cfg-saved-titles-list .action-icon-btn,
+#cfg-destinations-table-body .action-icon-btn,
+#cfg-categories-list-container .action-icon-btn,
+#cfg-library-list-container .action-icon-btn,
+#cfg-templates-list-container .action-icon-btn,
+#usr-basic-tasks-list .action-icon-btn,
+#inspector-tasks-container .action-icon-btn,
+#mexec-modal-body .action-icon-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: 1px solid currentColor !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+}
+
+.btn-success.action-icon-btn {
+  color: var(--success) !important;
+  border-color: currentColor !important;
+}
+
+.btn-danger.action-icon-btn,
+.btn-danger-outline.action-icon-btn {
+  color: var(--danger) !important;
+  border-color: currentColor !important;
+}
+
+.btn-outline.action-icon-btn,
+.btn-secondary.action-icon-btn {
+  color: var(--text-secondary) !important;
+  border-color: currentColor !important;
+}
+
+.btn-primary.action-icon-btn {
+  color: var(--primary) !important;
+  border-color: currentColor !important;
+}
+
+.action-icon-btn:hover,
+.action-icon-btn:focus,
+.action-icon-btn:active,
+.btn-success.action-icon-btn:hover,
+.btn-danger.action-icon-btn:hover,
+.btn-danger-outline.action-icon-btn:hover,
+.btn-outline.action-icon-btn:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: 1px solid currentColor !important;
+  opacity: 0.8 !important;
+}
+
+/* PART III — MODAL PERFECTION & BORDER-RADIUS CLIPPING (16px Curve + overflow: hidden + Internal Scroll + Sticky Footer) */
+.modal,
+.modal-card,
+#modal-task-form > .modal,
+#modal-fast-capture > .modal,
+#modal-day-inspector > .modal,
+#modal-task-preview > .modal,
+#modal-destination-form > .modal,
+#modal-category-form > .modal,
+#modal-template-form > .modal,
+#modal-mission-library-form > .modal,
+#modal-mission-executions > .modal,
+#modal-contextual-help > .modal,
+#modal-custom-dialog > .modal,
+#modal-unsaved-guard > .modal,
+#modal-settings-pin-verify > .modal {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  max-height: 90vh !important;
+  max-height: 90dvh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.modal > .modal-header,
+#modal-task-form > .modal > .modal-header,
+#modal-fast-capture > .modal > .modal-header {
+  flex: 0 0 auto !important;
+  border-top-left-radius: 16px !important;
+  border-top-right-radius: 16px !important;
+  background: var(--bg-card) !important;
+  padding: 14px 18px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  z-index: 5 !important;
+}
+
+.modal > .modal-body,
+#modal-task-form > .modal > .modal-body,
+#modal-fast-capture > .modal > .modal-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 16px 18px !important;
+  margin: 0 !important;
+}
+
+.modal > .modal-footer,
+.modal form > .modal-footer,
+#modal-task-form > .modal > .modal-footer,
+#modal-fast-capture > .modal > .modal-footer {
+  flex: 0 0 auto !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  border-bottom-left-radius: 16px !important;
+  border-bottom-right-radius: 16px !important;
+  background: var(--bg-card) !important;
+  padding: 12px 18px !important;
+  margin: 0 !important;
+  border-top: 1px solid var(--border-subtle) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  z-index: 10 !important;
+}
+
+/* PART I — NATIVE APP TYPOGRAPHY & VISUAL HIERARCHY ON MOBILE (<= 768px) */
+@media (max-width: 768px) {
+  /* Mandatory Fix 1: Systematic Base Sizes (14px base body text, 1.5 line-height, zero wild vw units) */
+  html,
+  body {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    max-width: 100% !important;
+  }
+
+  #app-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #app-main,
+  #content-wrapper,
+  #app-sidebar ~ #app-main,
+  #sidebar ~ #app-main {
+    margin-inline-start: 64px !important;
+    width: calc(100% - 64px) !important;
+    max-width: calc(100% - 64px) !important;
+  }
+
+  body,
+  p,
+  li,
+  td,
+  th,
+  label,
+  .form-label,
+  .smart-combo-item,
+  .recent-task-item,
+  .recent-activity-item,
+  .compact-legend-item,
+  .saved-item-row,
+  .toast {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Mandatory Fix 2A: Main Titles (16px to 18px, font-weight: 600, primary text color) */
+  h1,
+  h2,
+  .page-main-heading,
+  .breadcrumb-current,
+  .page-header-title,
+  .modal-title {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    color: var(--text-main) !important;
+  }
+
+  h3,
+  h4,
+  .card-title,
+  .cell-truncate-title,
+  #tasks-table-body .cell-truncate-title,
+  #backlog-table-body .cell-truncate-title,
+  .mission-lib-card h3,
+  .saved-item-row strong,
+  #view-today .accordion-header > div:first-child strong,
+  #dash-today-tasks-container > div > div:first-child > div:last-child,
+  #dash-future-tasks-container > div > div:first-child > div:last-child,
+  #dash-pending-tasks-container > div > div:first-child > div:first-child,
+  #today-scheduled-list > div > div:first-child > div:nth-child(2),
+  #today-pending-list > div > div:first-child > div:nth-child(2),
+  #today-future-list > div > div:first-child > div:nth-child(2),
+  #today-done-list > div > div:first-child > div:nth-child(2),
+  .compact-analytics-header span[style*="font-size:0.92rem"] {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    color: var(--text-main) !important;
+  }
+
+  /* Mandatory Fix 2B: Secondary Text / Subtitles (12px to 13px, font-weight: 400, muted #9aa0a6 color) */
+  .page-concise-subtitle,
+  .page-concise-subtitle span,
+  .cell-truncate-desc,
+  #tasks-table-body .cell-truncate-desc,
+  #backlog-table-body .cell-truncate-desc,
+  .mission-lib-card p,
+  .mission-subtasks-preview,
+  .mission-subtasks-preview ul,
+  .mission-subtasks-preview li,
+  .kpi-meta-pill,
+  #dash-stat-total-sub,
+  #dash-stat-today-sub,
+  #dash-stat-future-sub,
+  #dash-stat-pending-sub,
+  #dash-stat-done-sub,
+  #dash-lib-stat-types-sub,
+  #dash-lib-stat-occ-sub,
+  #lib-kpi-total-runs-label,
+  .smart-combo-item-meta,
+  .smart-combo-header,
+  .cell-date,
+  .pagination-bar,
+  .brand-subtitle,
+  .recent-header,
+  .audit-badge,
+  .mission-type-badge,
+  .mission-exec-badge,
+  .badge-soft,
+  .card-header p,
+  [style*="color:var(--text-muted)"]:not(button):not(.btn),
+  [style*="color:var(--text-secondary)"]:not(button):not(.btn),
+  [style*="font-size:0.65rem"]:not(button):not(.btn),
+  [style*="font-size:0.68rem"]:not(button):not(.btn),
+  [style*="font-size:0.7rem"]:not(button):not(.btn),
+  [style*="font-size:0.72rem"]:not(button):not(.btn),
+  [style*="font-size:0.73rem"]:not(button):not(.btn),
+  [style*="font-size:0.74rem"]:not(button):not(.btn),
+  [style*="font-size:0.75rem"]:not(button):not(.btn),
+  [style*="font-size:0.76rem"]:not(button):not(.btn),
+  [style*="font-size:0.77rem"]:not(button):not(.btn),
+  [style*="font-size:0.78rem"]:not(button):not(.btn),
+  [style*="font-size:0.8rem"]:not(button):not(.btn):not(select):not(input) {
+    font-size: 12.5px !important;
+    font-weight: 400 !important;
+    line-height: 1.45 !important;
+    color: #9aa0a6 !important;
+  }
+
+  html[data-theme="light"] body:not(.dark-mode) .page-concise-subtitle,
+  html[data-theme="light"] body:not(.dark-mode) .page-concise-subtitle span,
+  html[data-theme="light"] body:not(.dark-mode) .cell-truncate-desc,
+  html[data-theme="light"] body:not(.dark-mode) .card-header p {
+    color: #5f6368 !important;
+  }
+
+  /* Mandatory Fix 2C: Mobile Buttons (14px, font-weight: 500, vertically centered, single-line) */
+  .btn:not(.action-icon-btn):not(.btn-icon):not(.header-icon-btn):not(.theme-toggle-btn):not(.sidebar-toggle-btn),
+  button.btn:not(.action-icon-btn):not(.btn-icon):not(.header-icon-btn):not(.theme-toggle-btn):not(.sidebar-toggle-btn),
+  #settings-unified-save-btn,
+  #settings-header-theme-toggle,
+  .workflow-subview-btn,
+  .settings-nav-btn,
+  .sub-filter-pill,
+  .smart-chips-toggle-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    padding: 10px 16px !important;
+    min-height: 44px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  /* Mandatory Fix 3: Breathing Room — Consistent 16px Native Padding & 1.5 Line-Height on Cards & List Items */
+  .card,
+  .data-table tbody tr,
+  .mission-lib-card,
+  .saved-item-row,
+  #dash-today-tasks-container > div,
+  #dash-future-tasks-container > div,
+  #dash-pending-tasks-container > div,
+  #today-scheduled-list > div,
+  #today-pending-list > div,
+  #today-future-list > div,
+  #today-done-list > div {
+    padding: 16px !important;
+    line-height: 1.5 !important;
+    border-radius: 14px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Keep the 5 Top Dashboard Stat Cards sleek & compact with 14px-16px padding */
+  #view-dashboard .grid-5 > .card.kpi-stat-card,
+  .grid-5 > .card.kpi-stat-card {
+    padding: 14px 16px !important;
+    min-height: 94px !important;
+    max-height: 112px !important;
+  }
+
+  /* Modal Width & Clipping on Mobile (No vw units, strict 16px border-radius + overflow: hidden) */
+  .modal,
+  .modal-card,
+  #modal-task-form > .modal,
+  #modal-fast-capture > .modal,
+  #modal-day-inspector > .modal,
+  #modal-task-preview > .modal,
+  #modal-destination-form > .modal,
+  #modal-category-form > .modal,
+  #modal-template-form > .modal,
+  #modal-mission-library-form > .modal,
+  #modal-mission-executions > .modal,
+  #modal-contextual-help > .modal,
+  #modal-custom-dialog > .modal,
+  #modal-unsaved-guard > .modal,
+  #modal-settings-pin-verify > .modal {
+    width: 94% !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    max-height: 90dvh !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}
+
   </style>
 </head>
 <body class="dark-mode">
@@ -7669,7 +8098,7 @@ svg.outline-svg-icon,
               <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
               <span id="settings-unified-save-label">حفظ التغييرات</span>
             </button>
-            <button type="button" class="btn btn-sm btn-outline" id="settings-header-theme-toggle" onclick="toggleTheme()" style="height:40px !important; min-height:40px !important; display:inline-flex; align-items:center; gap:0.4rem; font-weight:700;" title="تبديل المظهر بين الوضع الليلي والنهاري">
+            <button type="button" class="btn btn-sm btn-outline" id="settings-header-theme-toggle" onclick="toggleTheme()" title="تبديل المظهر بين الوضع الليلي والنهاري">
               <span id="settings-header-theme-icon" style="display:inline-flex;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.07" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span>
               <span id="settings-header-theme-text">🌓 تبديل المظهر (نهاري / ليلي)</span>
             </button>
@@ -8229,7 +8658,7 @@ svg.outline-svg-icon,
         </div>
         <button type="button" class="modal-close" onclick="closeModal('modal-fast-capture')">&times;</button>
       </div>
-      <div class="modal-body" style="overflow:visible !important;">
+      <div class="modal-body">
         <form id="fast-capture-form" onsubmit="event.preventDefault(); executeFastCapture();">
           <!-- Field 1: Primary Category (Optional, Click-Only Open, Breakout Dropdown with Viewport Restraint) -->
           <div class="form-group" style="margin-bottom:0.95rem; overflow:visible !important;">

@@ -6339,18 +6339,25 @@ h4,
   line-height: 1.45 !important;
 }
 
-/* KPI Primary Numbers */
-[id^="dash-stat-total"],
-[id^="dash-stat-today"],
-[id^="dash-stat-future"],
-[id^="dash-stat-pending"],
-[id^="dash-stat-done"],
-[id^="dash-lib-stat-"],
-[id^="lib-kpi-"] {
+/* KPI Primary Numbers (Exact IDs ONLY — never match -sub descriptive elements) */
+#dash-stat-total,
+#dash-stat-today,
+#dash-stat-future,
+#dash-stat-pending,
+#dash-stat-done,
+#dash-lib-stat-configured,
+#dash-lib-stat-used,
+#dash-lib-stat-unused,
+#dash-lib-stat-occurrences,
+#lib-kpi-total,
+#lib-kpi-types,
+#lib-kpi-executed,
+#lib-kpi-never {
   font-family: 'Tajawal', 'Cairo', sans-serif !important;
   font-size: 1.5rem !important;
   font-weight: 800 !important;
-  line-height: 1.2 !important;
+  line-height: 1.1 !important;
+  margin: 0 !important;
 }
 
 /* REQUIREMENT 1: The "Locked" Sidebar Structure (Top & Bottom Pinned, Only Middle Scrolls) */
@@ -6494,6 +6501,137 @@ svg.outline-svg-icon,
 .btn svg * {
   fill: none !important;
   stroke: currentColor !important;
+}
+
+  
+/* ========================================================
+   MASTER ENGINEERING DIRECTIVE v24.0 — EMERGENCY HOTFIX:
+   DASHBOARD STATS CARDS TYPOGRAPHY OVERFLOW & HEIGHT CORRECTION
+   ======================================================== */
+
+/* MANDATORY FIX 2: Card Height Constraints & Tight Compact Rectangular Layout */
+#view-dashboard .grid-5 > .card.kpi-stat-card,
+.grid-5 > .card.kpi-stat-card,
+.card.kpi-stat-card {
+  padding: 0.7rem 0.9rem !important;
+  min-height: 92px !important;
+  height: auto !important;
+  max-height: 108px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  gap: 0.2rem !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.kpi-stat-card .kpi-card-top {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+}
+
+.kpi-stat-card .kpi-card-top > span:first-child {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  color: var(--text-secondary) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.kpi-stat-card .kpi-icon-box {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  max-width: 28px !important;
+  max-height: 28px !important;
+  border-radius: 7px !important;
+  flex-shrink: 0 !important;
+}
+
+.kpi-stat-card .kpi-icon-box svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+/* MANDATORY FIX 3: Main Statistic Number Prominent & Contained */
+.kpi-stat-card #dash-stat-total,
+.kpi-stat-card #dash-stat-today,
+.kpi-stat-card #dash-stat-future,
+.kpi-stat-card #dash-stat-pending,
+.kpi-stat-card #dash-stat-done {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* MANDATORY FIX 1: Sub-text Sizing (12px max, normal-weight, single-line contained) */
+.kpi-stat-card > div:last-child {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 0.3rem !important;
+  margin-top: 0.1rem !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.kpi-stat-card .kpi-meta-pill,
+#dash-stat-total-sub,
+#dash-stat-today-sub,
+#dash-stat-future-sub,
+#dash-stat-pending-sub,
+#dash-stat-done-sub,
+#dash-lib-stat-types-sub,
+#dash-lib-stat-occ-sub,
+#lib-kpi-total-runs-label {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: 1.25 !important;
+  padding: 0.1rem 0.45rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: calc(100% - 48px) !important;
+  display: inline-block !important;
+}
+
+[data-theme="dark"] #dash-stat-total-sub,
+.dark-mode #dash-stat-total-sub,
+[data-theme="dark"] #dash-stat-today-sub,
+.dark-mode #dash-stat-today-sub,
+[data-theme="dark"] #dash-stat-future-sub,
+.dark-mode #dash-stat-future-sub,
+[data-theme="dark"] #dash-stat-pending-sub,
+.dark-mode #dash-stat-pending-sub,
+[data-theme="dark"] #dash-stat-done-sub,
+.dark-mode #dash-stat-done-sub {
+  color: var(--text-secondary) !important;
+}
+
+.kpi-stat-card > div:last-child > span:last-child,
+.kpi-stat-card > div:last-child > span:last-child .outline-icon-text-wrap {
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  flex-wrap: nowrap !important;
+  gap: 0.15rem !important;
+}
+
+.kpi-stat-card > div:last-child svg.outline-svg-icon {
+  width: 12px !important;
+  height: 12px !important;
 }
 
   </style>

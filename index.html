@@ -5549,6 +5549,393 @@ main#main-content .help-btn {
   }
 }
 
+  
+/* ========================================================
+   MASTER ENGINEERING DIRECTIVE v13.0 — SURGICAL MOBILE & UI FIXES
+   (REQUIREMENTS 5, 6, 7, 8, 9 + INLINE CATEGORY/SUBCATEGORY CRUD)
+   ======================================================== */
+
+/* Requirement 5 (Global & Mobile): Clean separation between '+' and '▼' inside input fields
+   and generous left padding in RTL so text/placeholders never touch or slide under the buttons */
+.smart-combo-wrap {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.smart-combo-toggle {
+  position: absolute !important;
+  left: 6px !important;
+  inset-inline-end: 6px !important;
+  inset-inline-start: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 3 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* 6px gap between '▼' (left: 6px, width: 28px -> ends at 34px) and '+' (starts at left: 40px) */
+.inline-input-add-btn,
+.smart-combo-clear {
+  position: absolute !important;
+  left: 40px !important;
+  inset-inline-end: 40px !important;
+  inset-inline-start: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 3 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.smart-combo-wrap .form-control,
+.smart-combo-wrap.has-inline-add .form-control,
+.smart-combo-wrap input.form-control {
+  padding-left: 78px !important;
+  padding-inline-end: 78px !important;
+  padding-right: 0.75rem !important;
+  padding-inline-start: 0.75rem !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Mobile-Specific Surgical Rules (<= 768px) */
+@media (max-width: 768px) {
+  /* REQUIREMENT 5: Button spacing, padding-left: 78px, and clean placeholder styling on mobile */
+  .smart-combo-wrap .form-control,
+  .smart-combo-wrap.has-inline-add .form-control,
+  #modal-task-form .smart-combo-wrap .form-control,
+  #modal-fast-capture .smart-combo-wrap .form-control {
+    padding-left: 78px !important;
+    padding-inline-end: 78px !important;
+    padding-right: 0.7rem !important;
+    padding-inline-start: 0.7rem !important;
+    font-size: 0.88rem !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .form-control::placeholder,
+  input.form-control::placeholder,
+  textarea.form-control::placeholder,
+  .smart-combo-wrap .form-control::placeholder {
+    font-size: 0.82rem !important;
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+  }
+
+  /* REQUIREMENT 6: Dropdown menus inside Modals on Mobile (max-height: 190px; overflow-y: auto; z-index: 9999)
+     and Modal Body padding-bottom: 90px so dropdowns & bottom fields are never clipped behind footer */
+  .smart-combo-menu,
+  #modal-task-form .smart-combo-menu,
+  #modal-fast-capture .smart-combo-menu,
+  .fc-breakout-dropdown {
+    max-height: 190px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    z-index: 9999 !important;
+  }
+
+  .modal > .modal-body,
+  .modal-body,
+  #modal-task-form > .modal > .modal-body,
+  #modal-fast-capture > .modal > .modal-body,
+  #modal-category-form > .modal > .modal-body,
+  #modal-destination-form > .modal > .modal-body,
+  #modal-mission-library-form > .modal > .modal-body {
+    padding-bottom: 90px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* REQUIREMENT 7: Card-like Stacked Rows for Task Registry (#tasks-table-body),
+     Backlog (#backlog-table-body), Audit Log (#audit-log-table-body), Trash, and Destinations on Mobile */
+  .table-container {
+    overflow-x: visible !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .data-table,
+  .data-table tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .data-table thead {
+    display: none !important;
+  }
+
+  .data-table tbody tr {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.4rem 0.5rem !important;
+    padding: 0.8rem 0.85rem !important;
+    margin-bottom: 0.7rem !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--shadow-sm) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .data-table tbody tr td {
+    display: block !important;
+    border: none !important;
+    padding: 0.15rem 0 !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
+  .data-table tbody tr td[colspan] {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    text-align: center !important;
+    padding: 1.5rem 0.5rem !important;
+  }
+
+  /* 7A. Tasks Registry Table (#tasks-table-body):
+     td(1)=Date, td(2)=Category, td(3)=Title & Details, td(4)=Destination, td(5)=Status, td(6)=Priority, td(7)=Actions */
+  #tasks-table-body tr > td:nth-child(1) {
+    order: 1 !important;
+    width: auto !important;
+    text-align: right !important;
+    font-weight: 700 !important;
+  }
+
+  #tasks-table-body tr > td:nth-child(2) {
+    order: 2 !important;
+    width: auto !important;
+    text-align: left !important;
+    margin-right: auto !important;
+  }
+
+  #tasks-table-body tr > td:nth-child(3) {
+    order: 3 !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0.45rem 0 !important;
+    margin: 0.15rem 0 !important;
+    border-top: 1px dashed var(--border-subtle) !important;
+    border-bottom: 1px dashed var(--border-subtle) !important;
+    text-align: right !important;
+  }
+
+  #tasks-table-body tr > td:nth-child(4) {
+    order: 4 !important;
+    width: auto !important;
+    max-width: 60% !important;
+    font-size: 0.78rem !important;
+  }
+
+  #tasks-table-body tr > td:nth-child(5),
+  #tasks-table-body tr > td:nth-child(6) {
+    order: 5 !important;
+    width: auto !important;
+    font-size: 0.76rem !important;
+  }
+
+  #tasks-table-body tr > td:nth-child(7) {
+    order: 6 !important;
+    width: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* 7B. Backlog Table (#backlog-table-body):
+     td(1)=Date/Schedule, td(2)=Title & Details, td(3)=Category & Scope, td(4)=Destination, td(5)=Priority, td(6)=Status, td(7)=Actions */
+  #backlog-table-body tr > td:nth-child(1) {
+    order: 1 !important;
+    width: auto !important;
+    text-align: right !important;
+  }
+
+  #backlog-table-body tr > td:nth-child(3) {
+    order: 2 !important;
+    width: auto !important;
+    text-align: left !important;
+    margin-right: auto !important;
+  }
+
+  #backlog-table-body tr > td:nth-child(2) {
+    order: 3 !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0.45rem 0 !important;
+    margin: 0.15rem 0 !important;
+    border-top: 1px dashed var(--border-subtle) !important;
+    border-bottom: 1px dashed var(--border-subtle) !important;
+    text-align: right !important;
+  }
+
+  #backlog-table-body tr > td:nth-child(4) {
+    order: 4 !important;
+    width: auto !important;
+    font-size: 0.78rem !important;
+  }
+
+  #backlog-table-body tr > td:nth-child(5),
+  #backlog-table-body tr > td:nth-child(6) {
+    order: 5 !important;
+    width: auto !important;
+    font-size: 0.76rem !important;
+  }
+
+  #backlog-table-body tr > td:nth-child(7) {
+    order: 6 !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    padding-top: 0.35rem !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+  }
+
+  /* 7C. Audit Log, Trash, and Destinations Tables on Mobile */
+  #audit-log-table-body tr > td:nth-child(1),
+  #trash-table-body tr > td:nth-child(1) {
+    order: 1 !important;
+    width: auto !important;
+  }
+
+  #audit-log-table-body tr > td:nth-child(2),
+  #trash-table-body tr > td:nth-child(3) {
+    order: 2 !important;
+    width: auto !important;
+    margin-right: auto !important;
+  }
+
+  #audit-log-table-body tr > td:nth-child(3),
+  #audit-log-table-body tr > td:nth-child(4),
+  #trash-table-body tr > td:nth-child(2),
+  #cfg-destinations-table-body tr > td:nth-child(1) {
+    order: 3 !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    padding: 0.3rem 0 !important;
+  }
+
+  /* Ensure ZERO truncation on Task Titles and Descriptions across all tables and cards on mobile */
+  .cell-truncate-title,
+  .cell-truncate-desc,
+  #tasks-table-body .cell-truncate-title,
+  #tasks-table-body .cell-truncate-desc,
+  #backlog-table-body .cell-truncate-title,
+  #backlog-table-body .cell-truncate-desc,
+  #view-dashboard [style*="text-overflow:ellipsis"],
+  #view-today [style*="text-overflow:ellipsis"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Stack Dashboard & Today task item cards cleanly on mobile so text has 100% width */
+  #dash-today-tasks-container > div,
+  #dash-future-tasks-container > div,
+  #dash-pending-tasks-container > div,
+  #today-scheduled-list > div,
+  #today-pending-list > div,
+  #today-future-list > div,
+  #today-done-list > div {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.5rem !important;
+  }
+
+  /* REQUIREMENT 8: Today Board Accordion Headers — Hide "انقر للفتح/الإغلاق" & separate badge cleanly */
+  .accordion-toggle-hint,
+  #view-today .accordion-header > div:last-child > span:not(.accordion-chevron) {
+    display: none !important;
+  }
+
+  #view-today .accordion-header {
+    padding: 0.75rem 0.85rem !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  #view-today .accordion-header > div:first-child {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+  }
+
+  #view-today .accordion-header > div:first-child strong {
+    font-size: 0.86rem !important;
+    line-height: 1.35 !important;
+  }
+
+  #view-today .accordion-header .badge-soft {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 0.16rem 0.55rem !important;
+    border-radius: 999px !important;
+    font-size: 0.74rem !important;
+    font-weight: 800 !important;
+  }
+
+  /* REQUIREMENT 9: Date inputs & Report page fields take 100% width with clean alignment on mobile */
+  input[type="date"],
+  input[type="date"].form-control,
+  #tf-date,
+  #report-date-input,
+  #dash-chart-date-from,
+  #dash-chart-date-to,
+  #view-report .form-control,
+  #view-report input,
+  #view-report select,
+  #view-report textarea,
+  .modal .form-control {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  #modal-task-form .progressive-section:first-of-type > div:first-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 0.35rem !important;
+  }
+}
+
   </style>
 </head>
 <body class="dark-mode">
@@ -5864,8 +6251,8 @@ main#main-content .help-btn {
                 <div class="chart-menu-section">
                   <div class="chart-menu-label">2. نوع المبيان:</div>
                   <div class="chart-menu-pills">
-                    <button type="button" class="chart-opt-btn active" data-ctype="pie" onclick="setDashChartOption('type', 'pie')">مبيان دائري (Pie)</button>
-                    <button type="button" class="chart-opt-btn" data-ctype="bar" onclick="setDashChartOption('type', 'bar')">مبيان أعمدة (Bar)</button>
+                    <button type="button" class="chart-opt-btn active" data-ctype="pie" onclick="setDashChartOption('type', 'pie')">مبيان دائري</button>
+                    <button type="button" class="chart-opt-btn" data-ctype="bar" onclick="setDashChartOption('type', 'bar')">مبيان أعمدة</button>
                   </div>
                 </div>
 
@@ -5893,7 +6280,7 @@ main#main-content .help-btn {
               <span class="kpi-icon-box" style="width:28px !important; height:28px !important;">
                 <svg class="outline-svg-icon" style="width:16px;height:16px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
               </span>
-              <span style="font-size:0.92rem; font-weight:800; color:var(--text-main);">آخر النشاطات (Recent Activity)</span>
+              <span style="font-size:0.92rem; font-weight:800; color:var(--text-main);">آخر النشاطات</span>
             </div>
             <button type="button" class="btn btn-sm btn-outline chart-settings-trigger-btn" onclick="switchView('tasks')" title="عرض السجل الكامل">
               <svg class="outline-svg-icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
@@ -6033,7 +6420,7 @@ main#main-content .help-btn {
               <div style="font-size:0.72rem; color:var(--text-muted);">معرفة في الاختصاصات وجاهزة للتنفيذ</div>
             </div>
             <div style="background:var(--bg-muted); padding:0.8rem 1rem; border-radius:var(--radius-sm); cursor:pointer; border-right:3px solid var(--purple);" onclick="switchView('tasks');">
-              <div style="font-size:0.76rem; color:var(--text-muted);">إجمالي التنفيذات المسجلة (Occurrences)</div>
+              <div style="font-size:0.76rem; color:var(--text-muted);">إجمالي التنفيذات المسجلة</div>
               <div style="font-size:1.4rem; font-weight:800; color:var(--purple);" id="dash-lib-stat-occurrences">75</div>
               <div style="font-size:0.72rem; color:var(--text-muted);" id="dash-lib-stat-occ-sub">في السجل العام للعمليات</div>
             </div>
@@ -6144,7 +6531,7 @@ main#main-content .help-btn {
             <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
               <div class="workflow-subview-bar" role="tablist" aria-label="التنقل السريع بين التدبير اليومي وبرمجة المهام">
                 <button type="button" class="workflow-subview-btn active" onclick="switchView('today')">☀️ التدبير اليومي</button>
-                <button type="button" class="workflow-subview-btn" onclick="switchView('backlog')">📌 برمجة المهام (Backlog)</button>
+                <button type="button" class="workflow-subview-btn" onclick="switchView('backlog')">📌 برمجة المهام</button>
               </div>
               <button class="btn btn-sm btn-primary" onclick="openNewTaskModal()">➕ إضافة مهمة لليوم</button>
             </div>
@@ -6160,7 +6547,7 @@ main#main-content .help-btn {
               <span class="badge-soft badge-primary" id="acc-today-scheduled-badge">0 مهام</span>
             </div>
             <div style="display:flex; align-items:center; gap:0.75rem;">
-              <span style="font-size:0.75rem; color:var(--text-muted);">مفتوح افتراضياً</span>
+              <span class="accordion-toggle-hint" style="font-size:0.75rem; color:var(--text-muted);">مفتوح افتراضياً</span>
               <span class="accordion-chevron">▼</span>
             </div>
           </div>
@@ -6178,7 +6565,7 @@ main#main-content .help-btn {
               <span class="badge-soft badge-warning" id="acc-today-pending-badge">0 مهام</span>
             </div>
             <div style="display:flex; align-items:center; gap:0.75rem;">
-              <span style="font-size:0.75rem; color:var(--text-muted);">انقر للفتح/الإغلاق</span>
+              <span class="accordion-toggle-hint" style="font-size:0.75rem; color:var(--text-muted);">انقر للفتح/الإغلاق</span>
               <span class="accordion-chevron">▼</span>
             </div>
           </div>
@@ -6196,7 +6583,7 @@ main#main-content .help-btn {
               <span class="badge-soft badge-purple" id="acc-today-future-badge">0 مهام</span>
             </div>
             <div style="display:flex; align-items:center; gap:0.75rem;">
-              <span style="font-size:0.75rem; color:var(--text-muted);">انقر للفتح/الإغلاق</span>
+              <span class="accordion-toggle-hint" style="font-size:0.75rem; color:var(--text-muted);">انقر للفتح/الإغلاق</span>
               <span class="accordion-chevron">▼</span>
             </div>
           </div>
@@ -6214,7 +6601,7 @@ main#main-content .help-btn {
               <span class="badge-soft badge-success" id="acc-today-done-badge">0 مهام</span>
             </div>
             <div style="display:flex; align-items:center; gap:0.75rem;">
-              <span style="font-size:0.75rem; color:var(--text-muted);">انقر للفتح/الإغلاق</span>
+              <span class="accordion-toggle-hint" style="font-size:0.75rem; color:var(--text-muted);">انقر للفتح/الإغلاق</span>
               <span class="accordion-chevron">▼</span>
             </div>
           </div>
@@ -6237,7 +6624,7 @@ main#main-content .help-btn {
             <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
               <div class="workflow-subview-bar" role="tablist" aria-label="التنقل السريع بين التدبير اليومي وبرمجة المهام">
                 <button type="button" class="workflow-subview-btn" onclick="switchView('today')">☀️ التدبير اليومي</button>
-                <button type="button" class="workflow-subview-btn active" onclick="switchView('backlog')">📌 برمجة المهام (Backlog)</button>
+                <button type="button" class="workflow-subview-btn active" onclick="switchView('backlog')">📌 برمجة المهام</button>
               </div>
               <button class="btn btn-sm btn-primary" onclick="openNewBacklogTaskModal()">➕ إضافة مهمة مبرمجة</button>
             </div>
@@ -6248,7 +6635,7 @@ main#main-content .help-btn {
           <div class="sub-filter-pills">
             <button class="sub-filter-pill active" id="backlog-pill-all" onclick="setBacklogSubFilter('all')">الكل (المستقبلية والمفتوحة)</button>
             <button class="sub-filter-pill" id="backlog-pill-future" onclick="setBacklogSubFilter('future')">🗓️ مجدولة مستقبلاً</button>
-            <button class="sub-filter-pill" id="backlog-pill-open" onclick="setBacklogSubFilter('open')">📌 مفتوحة بدون تاريخ (Backlog)</button>
+            <button class="sub-filter-pill" id="backlog-pill-open" onclick="setBacklogSubFilter('open')">📌 مفتوحة بدون تاريخ</button>
           </div>
           <div style="flex:1; max-width:320px; min-width:200px;">
             <input type="text" id="backlog-search-input" class="form-control" placeholder="🔍 بحث في المهام المبرمجة والمفتوحة..." oninput="renderBacklogTable()">
@@ -6403,7 +6790,7 @@ main#main-content .help-btn {
           <div class="card" style="margin-bottom:1rem; padding:1rem;">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
               <div>
-                <div style="font-weight:800; font-size:0.95rem; color:var(--text-main);">🕒 سجل العمليات والأحداث الزمنية الموثق (Audit Log)</div>
+                <div style="font-weight:800; font-size:0.95rem; color:var(--text-main);">🕒 سجل العمليات والأحداث الزمنية الموثق</div>
                 <div style="font-size:0.76rem; color:var(--text-muted);">يوثق تلقائياً كافة عمليات الإنشاء، التعديل، الإنجاز، الحذف، الاسترجاع، وتحديثات المكتبة والملف المهني حسب تسلسلها الزمني.</div>
               </div>
               <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; flex:1; max-width:520px;">
@@ -6488,8 +6875,8 @@ main#main-content .help-btn {
               </div>
             </div>
             <div class="form-group" style="margin-bottom:0.75rem;">
-              <label class="form-label" for="report-stamp-input">عبارة تأشيرة السيد المدير الإقليمي / المسؤول (إعداد خاص بهذا التقرير):</label>
-              <input type="text" id="report-stamp-input" class="form-control" value="تأشيرة السيد المدير الإقليمي" placeholder="تأشيرة السيد المدير الإقليمي..." oninput="onReportSpecificStampChanged(this.value)">
+              <label class="form-label" for="report-stamp-input">صفة المسؤول الموقّع / المؤشّر (تظهر في التقرير):</label>
+              <input type="text" id="report-stamp-input" class="form-control" value="تأشيرة السيد المدير الإقليمي" placeholder="مثلاً: السيد المدير الإقليمي، أو رئيس المصلحة..." oninput="onReportSpecificStampChanged(this.value)">
             </div>
 
             <div class="form-group" style="margin-bottom:0.75rem;">
@@ -6570,45 +6957,62 @@ main#main-content .help-btn {
           <button type="button" class="settings-nav-btn" id="stab-about-btn" onclick="switchSettingsTab('about')">ℹ️ حول النظام</button>
         </div>
 
-        <!-- REQUIREMENT 3: DEDICATED "USER SETTINGS" SECTION (إعدادات المستخدم) — Completely Separate from Interface Settings -->
+        <!-- REQUIREMENT 2 & 3: DEDICATED "USER SETTINGS" SECTION (إعدادات المستخدم) — Pure Arabic & Single Source of Truth -->
         <div id="settings-tab-user" class="settings-sub-tab">
           <div class="card" style="border-inline-start: 4px solid var(--primary);">
             <div class="card-header" style="border-bottom:1px solid var(--border-subtle); padding-bottom:0.75rem; margin-bottom:1rem;">
               <div>
-                <h3 class="card-title" style="margin:0;">👤 إعدادات المستخدم (User Settings)</h3>
-                <p style="font-size:0.78rem; color:var(--text-muted); margin:0.25rem 0 0 0;">
-                  تخصيص البيانات الشخصية والمهنية للمستخدم، وإدارة قائمة المهام الأساسية المعتادة المحفوظة في قاعدة البيانات.
+                <h3 class="card-title" style="margin:0;">👤 إعدادات المستخدم</h3>
+                <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.25rem;">
+                  تخصيص البيانات الشخصية والمهنية للموظف، والمصلحة الإدارية، وصفة المسؤول الموقّع في التقارير، وإدارة المهام الأساسية المعتادة.
                 </p>
               </div>
-              <button type="button" class="btn btn-primary btn-sm" onclick="saveDedicatedUserSettings()">💾 حفظ إعدادات المستخدم</button>
+              <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                <span id="usr-save-confirm-badge" class="badge-soft badge-success" style="display:none; font-weight:800; font-size:0.76rem;">✓ تم حفظ التغييرات بنجاح</span>
+                <button type="button" class="btn btn-primary btn-sm" onclick="saveDedicatedUserSettings()">💾 حفظ التغييرات</button>
+              </div>
             </div>
 
-            <div class="grid-3" style="margin-bottom:1.1rem;">
-              <!-- 1. User Name (الاسم) -->
+            <div class="grid-3" style="margin-bottom:0.85rem;">
+              <!-- 1. الاسم الكامل -->
               <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="usr-cfg-name">1. الاسم (User Name):</label>
-                <input type="text" id="usr-cfg-name" class="form-control" placeholder="الاسم الكامل للمستخدم..." value="محمد ايت حمادي">
+                <label class="form-label" for="usr-cfg-name">الاسم الكامل:</label>
+                <input type="text" id="usr-cfg-name" class="form-control" placeholder="الاسم الكامل للموظف..." value="محمد ايت حمادي">
               </div>
 
-              <!-- 2. User Capacity/Role (الصفة) -->
+              <!-- 2. الصفة -->
               <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="usr-cfg-role">2. الصفة (User Capacity / Role):</label>
+                <label class="form-label" for="usr-cfg-role">الصفة:</label>
                 <input type="text" id="usr-cfg-role" class="form-control" placeholder="الصفة الوظيفية أو المهمة..." value="إطار إداري وتقني">
               </div>
 
-              <!-- 3. Professional Title/Framework (الإطار) -->
+              <!-- 3. الإطار الإداري -->
               <div class="form-group" style="margin-bottom:0;">
-                <label class="form-label" for="usr-cfg-framework">3. الإطار (Professional Title / Framework):</label>
+                <label class="form-label" for="usr-cfg-framework">الإطار الإداري:</label>
                 <input type="text" id="usr-cfg-framework" class="form-control" placeholder="مثال: منتدب قضائي / تقني متخصص / متصرف..." value="منتدب قضائي / إطار تقني">
               </div>
             </div>
 
-            <!-- 4. Default/Basic Tasks (المهام الأساسية المعتادة) -->
+            <div class="grid-2" style="margin-bottom:1.1rem;">
+              <!-- 4. المصلحة / الإدارة -->
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="usr-cfg-department">المصلحة / الإدارة:</label>
+                <input type="text" id="usr-cfg-department" class="form-control" placeholder="مثال: المديرية الإقليمية للعدل بسطات - مصلحة تدبير الممتلكات والعتاد..." value="المديرية الإقليمية للعدل بسطات">
+              </div>
+
+              <!-- 5. صفة المسؤول الموقّع / المؤشّر (تظهر في التقرير) -->
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label" for="usr-cfg-stamp">صفة المسؤول الموقّع / المؤشّر (تظهر في التقرير):</label>
+                <input type="text" id="usr-cfg-stamp" class="form-control" placeholder="مثلاً: السيد المدير الإقليمي، أو رئيس المصلحة..." value="تأشيرة السيد المدير الإقليمي">
+              </div>
+            </div>
+
+            <!-- 6. المهام الأساسية المعتادة -->
             <div style="background:var(--bg-muted); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.65rem;">
                 <div>
-                  <label class="form-label" for="usr-new-basic-task-input" style="margin-bottom:0.15rem; font-size:0.88rem;">4. المهام الأساسية المعتادة (Default / Basic Routine Tasks):</label>
-                  <div style="font-size:0.75rem; color:var(--text-muted);">أضف مهامك الاعتيادية والروتينية عبر زر "+" ليتم حفظها في قاعدة البيانات (LocalStorage) واستخدامها في التطبيق.</div>
+                  <label class="form-label" for="usr-new-basic-task-input" style="margin-bottom:0.15rem; font-size:0.88rem;">المهام الأساسية المعتادة:</label>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">أضف مهامك الاعتيادية والروتينية عبر زر "+" ليتم حفظها بشكل دائم في الذاكرة المحلية واستخدامها في التطبيق.</div>
                 </div>
                 <span class="badge-soft badge-primary" id="usr-basic-tasks-count-badge" style="font-weight:800;">0 مهام أساسية</span>
               </div>
@@ -6697,16 +7101,36 @@ main#main-content .help-btn {
         <!-- SETTINGS TAB 3: INTERVENTION CATEGORIES & INTERACTIVE SUB-BRANCHES (مجالات وتصنيفات التدخل) -->
         <div id="settings-tab-categories" class="settings-sub-tab" style="display:none;">
           <div class="card">
-            <div class="card-header">
+            <div class="card-header" style="border-bottom:1px solid var(--border-subtle); padding-bottom:0.75rem; margin-bottom:1rem;">
               <div>
-                <div class="card-title">🏷️ مجالات وتصنيفات التدخل (مع إدارة التفريعات التفاعلية داخل كل صنف)</div>
+                <div class="card-title">🏷️ مجالات وتصنيفات التدخل وتفريعاتها</div>
                 <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem;">
-                  اضغط على أي صنف لفتح قسم التفريعات والعمليات الفرعية الخاصة به. أي تفريع تضيفه أو تعدله هنا يظهر فوراً في القائمة المنسدلة للمهام الفرعية عند تسجيل مهمة جديدة!
+                  جميع عمليات الإضافة والتعديل والحذف للتصنيفات الرئيسية وتفريعاتها الفرعية تُحفظ فوراً وتلقائياً في الذاكرة الدائمة وتظهر مباشرة في قوائم تسجيل المهام والإدخال السريع والفلاتر.
                 </p>
               </div>
-              <button class="btn btn-sm btn-primary" onclick="openCategoryModal()">➕ إضافة تصنيف رئيسي جديد</button>
+              <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                <span id="categories-save-confirm-badge" class="badge-soft badge-success" style="display:inline-flex; align-items:center; gap:0.3rem; font-weight:800; font-size:0.76rem; padding:0.28rem 0.65rem;">✓ محفوظ تلقائياً</span>
+                <button type="button" class="btn btn-sm btn-outline" onclick="openCategoryModal()">➕ نافذة تصنيف جديد</button>
+                <button type="button" class="btn btn-sm btn-primary" id="btn-save-all-categories" onclick="saveAllCategoriesChanges()">💾 حفظ التغييرات</button>
+              </div>
             </div>
+
+            <!-- Direct Inline Bar to Add a New Primary Category Immediately -->
+            <div style="background:var(--bg-muted); padding:0.85rem 1rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle); margin-bottom:1rem;">
+              <label class="form-label" for="cfg-inline-new-cat-name" style="margin-bottom:0.4rem;">➕ إضافة تصنيف رئيسي جديد مباشرة:</label>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+                <input type="text" id="cfg-inline-new-cat-name" class="form-control" style="flex:2; min-width:200px;" placeholder="اكتب اسم التصنيف الرئيسي الجديد..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addPrimaryCategoryFromSettingsBar();}">
+                <input type="text" id="cfg-inline-new-cat-sub" class="form-control" style="flex:2; min-width:180px;" placeholder="تفريعات أولية مفصولة بفاصلة (اختياري)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addPrimaryCategoryFromSettingsBar();}">
+                <button type="button" class="btn btn-primary" onclick="addPrimaryCategoryFromSettingsBar()">➕ إضافة وحفظ التصنيف</button>
+              </div>
+            </div>
+
             <div id="cfg-categories-list-container" style="display:flex; flex-direction:column; gap:0.75rem;"></div>
+
+            <div style="margin-top:1.15rem; padding-top:0.85rem; border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <span style="font-size:0.78rem; color:var(--text-muted);">جميع التعديلات مرتبطة مباشرة بالقوائم المنسدلة في نافذة تسجيل المهمة والإدخال السريع والفلاتر.</span>
+              <button type="button" class="btn btn-primary" onclick="saveAllCategoriesChanges()">💾 حفظ التغييرات</button>
+            </div>
           </div>
         </div>
 
@@ -6714,7 +7138,7 @@ main#main-content .help-btn {
         <div id="settings-tab-identity" class="settings-sub-tab" style="display:none;">
           <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--border-subtle);">
-              <h3 class="card-title" style="margin:0;">👤 إعدادات الواجهة والمظهر (Interface & Appearance Settings)</h3>
+              <h3 class="card-title" style="margin:0;">🎨 إعدادات الواجهة والمظهر</h3>
               <!-- Direct Theme Switcher inside Settings -->
               <div style="display:flex; align-items:center; gap:0.45rem; background:var(--bg-muted); padding:0.3rem 0.5rem; border-radius:999px; border:1px solid var(--border-color);">
                 <span style="font-size:0.76rem; font-weight:700; color:var(--text-secondary); padding-inline-start:0.4rem;">مظهر الواجهة:</span>
@@ -6738,30 +7162,24 @@ main#main-content .help-btn {
               </div>
             </div>
 
+            <!-- Hidden compatibility fields automatically synced from إعدادات المستخدم (Single Source of Truth) -->
+            <div style="display:none !important;" aria-hidden="true">
+              <input type="text" id="cfg-user-name" value="محمد ايت حمادي">
+              <input type="text" id="cfg-user-role" value="إطار إداري وتقني">
+              <input type="text" id="cfg-user-dept" value="المديرية الإقليمية للعدل بسطات">
+              <input type="text" id="cfg-user-service" value="مصلحة تدبير الممتلكات والعتاد والمعلوميات">
+              <input type="text" id="cfg-user-grade" value="">
+              <input type="text" id="cfg-user-phone" value="">
+              <input type="email" id="cfg-user-email" value="">
+              <textarea id="cfg-user-responsibilities"></textarea>
+              <textarea id="cfg-user-core-missions"></textarea>
+              <textarea id="cfg-user-recurring-missions"></textarea>
+            </div>
+
             <div class="grid-3">
               <div class="form-group">
                 <label class="form-label">اسم النظام في الواجهة والترويسة:</label>
                 <input type="text" id="cfg-system-name" class="form-control" value="نظام تدبير المهام اليومية">
-              </div>
-              <div class="form-group">
-                <label class="form-label">اسم الموظف / القائم بالمهمة:</label>
-                <input type="text" id="cfg-user-name" class="form-control" value="محمد ايت حمادي" placeholder="الاسم والنسب...">
-              </div>
-              <div class="form-group">
-                <label class="form-label">الصفة المهنية / المنصب:</label>
-                <input type="text" id="cfg-user-role" class="form-control" value="إطار إداري وتقني" placeholder="مثال: إطار إداري وتقني...">
-              </div>
-              <div class="form-group">
-                <label class="form-label">المديرية / المؤسسة:</label>
-                <input type="text" id="cfg-user-dept" class="form-control" value="المديرية الإقليمية للعدل بسطات" placeholder="المديرية الإقليمية للعدل بسطات...">
-              </div>
-              <div class="form-group">
-                <label class="form-label">المصلحة / القسم:</label>
-                <input type="text" id="cfg-user-service" class="form-control" value="مصلحة تدبير الممتلكات والعتاد والمعلوميات">
-              </div>
-              <div class="form-group">
-                <label class="form-label">عبارة تأشيرة السيد المدير الإقليمي:</label>
-                <input type="text" id="cfg-stamp-text" class="form-control" value="تأشيرة السيد المدير الإقليمي">
               </div>
               <div class="form-group">
                 <label class="form-label">الوزارة / الهيئة الوصية:</label>
@@ -6775,34 +7193,13 @@ main#main-content .help-btn {
                 <label class="form-label">المجال الرئيسي للنشاط:</label>
                 <input type="text" id="cfg-user-domain" class="form-control" value="التدبير الإداري والتقني واللوجستي">
               </div>
-              <div class="form-group">
-                <label class="form-label">الدرجة أو الإطار الإداري (اختياري):</label>
-                <input type="text" id="cfg-user-grade" class="form-control" value="">
-              </div>
-              <div class="form-group">
-                <label class="form-label">الهاتف المهني (اختياري):</label>
-                <input type="text" id="cfg-user-phone" class="form-control" value="">
-              </div>
-              <div class="form-group">
-                <label class="form-label">البريد الإلكتروني المهني (اختياري):</label>
-                <input type="email" id="cfg-user-email" class="form-control" value="">
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label" for="cfg-stamp-text">صفة المسؤول الموقّع / المؤشّر (تظهر في التقرير):</label>
+                <input type="text" id="cfg-stamp-text" class="form-control" value="تأشيرة السيد المدير الإقليمي" placeholder="مثلاً: السيد المدير الإقليمي، أو رئيس المصلحة...">
               </div>
             </div>
 
-            <div class="grid-3" style="margin-top:0.25rem;">
-              <div class="form-group">
-                <label class="form-label">الاختصاصات والمسؤوليات العامة:</label>
-                <textarea id="cfg-user-responsibilities" class="form-control" rows="2"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label">ملخص المهام الأساسية:</label>
-                <textarea id="cfg-user-core-missions" class="form-control" rows="2"></textarea>
-              </div>
-              <div class="form-group">
-                <label class="form-label">ملخص المهام الاعتيادية والدورية:</label>
-                <textarea id="cfg-user-recurring-missions" class="form-control" rows="2"></textarea>
-              </div>
-            </div>
+
 
             <!-- Standard Images Management (./logo.png, ./en_tete.png, ./en_pied.png) -->
             <h4 style="font-size:0.95rem; font-weight:800; margin:1.25rem 0 0.65rem; border-top:1px solid var(--border-subtle); padding-top:1rem; color:var(--text-main);">
@@ -6857,7 +7254,7 @@ main#main-content .help-btn {
 
             <!-- Dynamic Sidebar Labels -->
             <h4 style="font-size:0.92rem; font-weight:700; margin:1.25rem 0 0.5rem; border-top:1px solid var(--border-subtle); padding-top:1rem;">
-              🏷️ تخصيص عناوين القوائم الجانبية (Sidebar Labels):
+              🏷️ تخصيص عناوين القوائم الجانبية:
             </h4>
             <div class="grid-4">
               <div class="form-group"><label class="form-label">لوحة القيادة:</label><input type="text" id="cfg-nav-dashboard" class="form-control" value="لوحة القيادة والمؤشرات"></div>
@@ -6888,7 +7285,7 @@ main#main-content .help-btn {
             <div class="storage-quota-card" id="storage-quota-card">
               <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                 <div style="font-weight:700; font-size:0.88rem; display:flex; align-items:center; gap:0.4rem;">
-                  <span>📊</span> <span>فحص الذاكرة وسعة التخزين المحلي بالمتصفح (LocalStorage Monitor)</span>
+                  <span>📊</span> <span>فحص الذاكرة وسعة التخزين المحلي بالمتصفح</span>
                 </div>
                 <span class="badge-soft badge-primary" id="storage-quota-pct" style="font-weight:800;">0% مستخدم</span>
               </div>
@@ -6908,7 +7305,7 @@ main#main-content .help-btn {
             <div style="background:var(--bg-muted); padding:1.2rem; border-radius:var(--radius-md); border:1px solid var(--border-color); border-inline-start:4px solid var(--purple); margin-bottom:1rem;">
               <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem;">
                 <div style="flex:1; min-width:240px;">
-                  <div style="font-weight:800; font-size:0.95rem; color:var(--text-main); margin-bottom:0.3rem;">🏛️ نظام الأرشفة السنوية المجمدة (Standalone Yearly Archive HTML)</div>
+                  <div style="font-weight:800; font-size:0.95rem; color:var(--text-main); margin-bottom:0.3rem;">🏛️ نظام الأرشفة السنوية المجمدة</div>
                   <p style="font-size:0.78rem; color:var(--text-secondary); line-height:1.6; margin:0;">
                     تصدير كامل سجل المهام والعمليات (من أول مهمة مسجلة حتى اليوم) في <strong>ملف أرشيف HTML مستقل ومجمد للقراءة والطباعة</strong> يعمل مدى الحياة بدون إنترنت. وبعد تحميل الأرشيف، يمكنك تصفير المهام النشطة لبدء سنة جديدة مع <strong>الحفاظ التام</strong> على كافة الإعدادات، التصنيفات، الوجهات، والملف المهني.
                   </p>
@@ -6970,8 +7367,8 @@ main#main-content .help-btn {
                   </p>
                 </div>
                 <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                  <button type="button" class="btn btn-danger-outline btn-sm" id="btn-safe-delete-tasks-only" onclick="confirmSafeDeleteData('tasks_only')">🗑️ حذف المهام فقط (Tasks Only)</button>
-                  <button type="button" class="btn btn-danger btn-sm" id="btn-safe-delete-all-data" onclick="confirmSafeDeleteData('all_data')">⚠️ حذف جميع البيانات (All Data)</button>
+                  <button type="button" class="btn btn-danger-outline btn-sm" id="btn-safe-delete-tasks-only" onclick="confirmSafeDeleteData('tasks_only')">🗑️ حذف المهام فقط</button>
+                  <button type="button" class="btn btn-danger btn-sm" id="btn-safe-delete-all-data" onclick="confirmSafeDeleteData('all_data')">⚠️ حذف جميع البيانات</button>
                 </div>
               </div>
             </div>
@@ -7011,9 +7408,9 @@ main#main-content .help-btn {
         <!-- SETTINGS TAB 8: ABOUT APP -->
         <div id="settings-tab-about" class="settings-sub-tab" style="display:none;">
           <div class="card">
-            <h3 class="card-title" style="margin-bottom:0.5rem;">ℹ️ حول نظام تدبير المهام اليومية والتدخلات (E-Tasks Justice Settat V18/V21)</h3>
+            <h3 class="card-title" style="margin-bottom:0.5rem;">ℹ️ حول نظام تدبير المهام اليومية والتدخلات</h3>
             <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.7;">
-              منظومة رقمية مؤسساتية شاملة تعمل بملف واحد مستقل (100% Offline Single-File SPA) لتدبير المهام اليومية والتدخلات التقنية واللوجستية وتنقلات أوامر المهمة، وإصدار التقارير الرسمية بصيغة A4.
+              منظومة رقمية مؤسساتية شاملة تعمل بملف واحد مستقل (تطبيق مستقل يعمل بالكامل دون اتصال بالإنترنت) لتدبير المهام اليومية والتدخلات التقنية واللوجستية وتنقلات أوامر المهمة، وإصدار التقارير الرسمية بصيغة A4.
             </p>
           </div>
         </div>
@@ -7113,7 +7510,7 @@ main#main-content .help-btn {
           <div class="progressive-section" style="border-inline-start:3.5px solid var(--primary);">
             <!-- Primary Category with Inline '+' Button -->
             <div class="form-group" style="margin-bottom:0.65rem;">
-              <label class="form-label" for="tf-category">الصنف الرئيسي (Primary Category):</label>
+              <label class="form-label" for="tf-category">الصنف الرئيسي:</label>
               <div class="smart-combo-wrap has-inline-add">
                 <input type="text" id="tf-category" class="form-control" placeholder="اختر الصنف الرئيسي أو اضغط + لإدخال صنف جديد..." autocomplete="off" onfocus="openSmartCombo('cat', true)" onclick="openSmartCombo('cat', true)" oninput="onPrimaryCategoryInputV2(this.value)">
                 <button type="button" class="inline-input-add-btn" onclick="inlineClearAndFocusField('tf-category', 'cat')" title="مسح الحقل لكتابة صنف رئيسي جديد">+</button>
@@ -7124,7 +7521,7 @@ main#main-content .help-btn {
 
             <!-- Subcategory: Hidden Entirely Until a Primary Category is Selected (Progressive Disclosure) -->
             <div class="form-group" id="tf-subcat-wrap" style="display:none; margin-bottom:0.65rem;">
-              <label class="form-label" for="tf-subcategory">التصنيف الفرعي (Subcategory):</label>
+              <label class="form-label" for="tf-subcategory">التصنيف الفرعي:</label>
               <div class="smart-combo-wrap has-inline-add">
                 <input type="text" id="tf-subcategory" class="form-control" placeholder="اختر التصنيف الفرعي لتوليد العنوان تلقائياً أو اكتب تفريعاً..." autocomplete="off" onfocus="openSmartCombo('subcat', true)" onclick="openSmartCombo('subcat', true)" oninput="onSubcategoryInputV2(this.value)">
                 <button type="button" class="inline-input-add-btn" onclick="inlineClearAndFocusField('tf-subcategory', 'subcat')" title="مسح الحقل لكتابة تصنيف فرعي جديد">+</button>
@@ -7184,6 +7581,11 @@ main#main-content .help-btn {
               <datalist id="categories-datalist"></datalist>
               <datalist id="subcategories-datalist"></datalist>
               <datalist id="subtask-ops-datalist"></datalist>
+              <input type="hidden" id="fc-input-text" value="">
+              <input type="hidden" id="fc-main-title-input" value="">
+              <div id="fc-title-combo-menu"></div>
+              <div id="fc-main-titles-chips"></div>
+              <span id="tf-strength-label"></span>
             </div>
           </div>
 
@@ -7418,27 +7820,37 @@ main#main-content .help-btn {
     </div>
   </div>
 
-  <!-- MODAL: CATEGORY FORM (ADD & EDIT) -->
+  <!-- MODAL: CATEGORY FORM (ADD & EDIT WITH SUBCATEGORIES) -->
   <div id="modal-category-form" class="modal-backdrop">
-    <div class="modal" style="max-width:500px;">
+    <div class="modal" style="max-width:540px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="cat-modal-title">🏷️ تعديل التصنيف</h3>
+        <h3 class="modal-title" id="cat-modal-title">🏷️ تعديل التصنيف وتفريعاته</h3>
         <button class="modal-close" onclick="closeModal('modal-category-form')">&times;</button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="cf-id">
-        <div class="form-group">
-          <label class="form-label">اسم التصنيف الرئيسي:</label>
-          <input type="text" id="cf-name" class="form-control" required>
+        <div class="grid-2" style="gap:0.65rem;">
+          <div class="form-group" style="margin-bottom:0.75rem;">
+            <label class="form-label" for="cf-name">اسم التصنيف الرئيسي:</label>
+            <input type="text" id="cf-name" class="form-control" placeholder="اسم التصنيف الرئيسي..." required>
+          </div>
+          <div class="form-group" style="margin-bottom:0.75rem;">
+            <label class="form-label" for="cf-icon">رمز الأيقونة:</label>
+            <input type="text" id="cf-icon" class="form-control" placeholder="📦 أو 🔑 أو 🖥️...">
+          </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">رمز الأيقونة (Emoji):</label>
-          <input type="text" id="cf-icon" class="form-control" placeholder="📦 أو 🔑 أو 🖥️...">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" for="cf-modal-new-sub">التفريعات (التصنيفات الفرعية) المرتبطة بهذا التصنيف:</label>
+          <div style="display:flex; gap:0.4rem; margin-bottom:0.55rem;">
+            <input type="text" id="cf-modal-new-sub" class="form-control" placeholder="اكتب تفريعاً فرعياً جديداً..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubInCategoryModal();}">
+            <button type="button" class="btn btn-sm btn-primary" onclick="addSubInCategoryModal()" style="white-space:nowrap;">➕ إضافة تفريع</button>
+          </div>
+          <div id="cf-modal-subs-list" style="display:flex; flex-direction:column; gap:0.35rem; max-height:190px; overflow-y:auto; padding:0.35rem; background:var(--bg-muted); border-radius:var(--radius-sm); border:1px solid var(--border-subtle);"></div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('modal-category-form')">إلغاء</button>
-        <button class="btn btn-primary" onclick="saveCategoryModalSubmit()">💾 حفظ التصنيف</button>
+        <button type="button" class="btn btn-outline" onclick="closeModal('modal-category-form')">إلغاء</button>
+        <button type="button" class="btn btn-primary" onclick="saveCategoryModalSubmit()">💾 حفظ التغييرات</button>
       </div>
     </div>
   </div>
@@ -7804,6 +8216,21 @@ function ensureDataIntegrity() {
       t.court = 'مقر المديرية الإقليمية بسطات';
     }
   });
+
+  if (APP.settings && APP.settings.v13Initialized) {
+    // Respect user-saved categories, subcategories, courts, savedTitles, and tasks in LocalStorage without resurrecting deleted/edited items
+    try {
+      const savedCats = localStorage.getItem('ops_v13_categories');
+      if (savedCats) APP.categories = JSON.parse(savedCats);
+      const savedCourts = localStorage.getItem('ops_v13_courts');
+      if (savedCourts) APP.courts = JSON.parse(savedCourts);
+      const savedTitles = localStorage.getItem('ops_v13_saved_titles');
+      if (savedTitles) APP.savedTitles = JSON.parse(savedTitles);
+      const savedTpls = localStorage.getItem('ops_v13_templates');
+      if (savedTpls) APP.templates = JSON.parse(savedTpls);
+    } catch (e) {}
+    return;
+  }
 
   const existingTaskIds = new Set(APP.tasks.map(t => t.id));
   const existingTrashIds = new Set(APP.trash.map(t => t.id));
@@ -8190,7 +8617,7 @@ const CONTEXTUAL_HELP_DATA = {
       <p><strong>مرحباً بك في لوحة القيادة المركزية!</strong></p>
       <ul style="padding-right:1.2rem; margin-top:0.5rem;">
         <li><strong>الأشرطة الأفقية:</strong> تنظيم أفقي كامل (100% Width) لسهولة المتابعة الفورية.</li>
-        <li><strong>العرض المصغر (Compact Preview):</strong> يعرض كل قسم 2 إلى 3 مهام كحد أقصى لتفادي الازدحام، مع رابط <em>"المزيد..."</em> للانتقال إلى اللائحة الكاملة.</li>
+        <li><strong>العرض المصغر:</strong> يعرض كل قسم 2 إلى 3 مهام كحد أقصى لتفادي الازدحام، مع رابط <em>"المزيد..."</em> للانتقال إلى اللائحة الكاملة.</li>
         <li><strong>التمييز البصري الهادئ:</strong> تظهر المهام المبرمجة بشريط جانبي أصفر دقيق دون أي خلفيات مزعجة.</li>
       </ul>
     `
@@ -8217,7 +8644,7 @@ const CONTEXTUAL_HELP_DATA = {
     `
   },
   calendar: {
-    title: "التقويم الزمني وتفسير الألوان (Legend)",
+    title: "التقويم الزمني وتفسير الألوان",
     html: `
       <p><strong>دليل ألوان التقويم الزمني:</strong></p>
       <div style="display:flex; flex-direction:column; gap:0.5rem; margin:0.75rem 0;">
@@ -8275,7 +8702,7 @@ const CONTEXTUAL_HELP_DATA = {
     `
   },
   settings: {
-    title: "الإعدادات وتخصيص النظام (White-labeling)",
+    title: "الإعدادات وتخصيص النظام",
     html: `
       <p><strong>لوحة التخصيص الكاملة:</strong></p>
       <ul style="padding-right:1.2rem; margin-top:0.5rem;">
@@ -17061,6 +17488,7 @@ const CANONICAL_DEST_MAP = {
 
 function consolidateGenuineDuplicateProfiles() {
   if (!APP) return;
+  if (APP.settings && APP.settings.v13Initialized) return;
 
   // 1. Normalize settings & profile department name if it is a duplicate variant of المديرية الإقليمية للعدل بسطات
   if (APP.settings) {
@@ -17539,7 +17967,7 @@ function populatePrimaryAndSecondaryCategorySelects(selectedCatName = '', select
   const chosenCatObj = cats.find(c => c.name === priSelect.value);
   const subs = (chosenCatObj && Array.isArray(chosenCatObj.subs)) ? chosenCatObj.subs.filter(s => s && s !== 'عام') : [];
 
-  secSelect.innerHTML = '<option value="">-- اختر التصنيف الفرعي (Subcategory) --</option>';
+  secSelect.innerHTML = '<option value="">-- اختر التصنيف الفرعي --</option>';
   subs.forEach(s => {
     const opt = document.createElement('option');
     opt.value = s;
@@ -18724,7 +19152,7 @@ function exportYearlyArchiveHTML() {
         <div style="font-size:13px; color:#334155;">الموظف القائم بالمهام: <strong>${escapeHtml(p.fullName || s.userName || 'محمد ايت حمادي')}</strong> (${escapeHtml(p.jobTitle || s.userRole || 'إطار إداري وتقني')})</div>
       </div>
       <div style="text-align:left;">
-        <div class="archive-badge">🔒 وثيقة أرشيف مجمدة (Frozen HTML Archive)</div>
+        <div class="archive-badge">🔒 وثيقة أرشيف رسمية مجمدة</div>
         <div style="font-size:12px; color:#64748b; margin-top:6px;">الفترة: من ${escapeHtml(firstDate)} إلى ${escapeHtml(todayStr)}</div>
         <button class="no-print" onclick="window.print()" style="margin-top:8px; padding:6px 14px; background:#0f4c81; color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:700;">🖨️ طباعة الأرشيف</button>
       </div>
@@ -20368,6 +20796,1028 @@ restoreTask = function(id) {
   recordUserModification();
   showToast('تمت استعادة المهمة بنجاح إلى السجل النشط!');
 };
+
+  
+// ========================================================
+// MASTER ENGINEERING DIRECTIVE v13.0 — ROOT PERSISTENCE ENGINE,
+// PURE ARABIC UNIFIED USER SETTINGS, GENERALIZED SIGNATORY STAMP,
+// AND FULL JSON BACKUP & RESTORE
+// ========================================================
+
+const V13_CATS_KEY = 'ops_v13_categories';
+const V13_COURTS_KEY = 'ops_v13_courts';
+const V13_TITLES_KEY = 'ops_v13_saved_titles';
+const V13_TPLS_KEY = 'ops_v13_templates';
+const V13_USER_KEY = 'ops_v13_user_settings';
+
+let categoryModalTempSubs = [];
+
+// 1. Direct Mirror Synchronization with LocalStorage
+function syncV13MirrorsToLocalStorage() {
+  if (!APP) return;
+  if (!APP.settings) APP.settings = {};
+  APP.settings.v13Initialized = true;
+  try {
+    if (Array.isArray(APP.categories)) {
+      localStorage.setItem(V13_CATS_KEY, JSON.stringify(APP.categories));
+    }
+    if (Array.isArray(APP.courts)) {
+      localStorage.setItem(V13_COURTS_KEY, JSON.stringify(APP.courts));
+    }
+    if (Array.isArray(APP.savedTitles)) {
+      localStorage.setItem(V13_TITLES_KEY, JSON.stringify(APP.savedTitles));
+    }
+    if (Array.isArray(APP.templates)) {
+      localStorage.setItem(V13_TPLS_KEY, JSON.stringify(APP.templates));
+    }
+    if (APP.profile || APP.settings) {
+      localStorage.setItem(V13_USER_KEY, JSON.stringify({
+        profile: APP.profile || {},
+        settings: APP.settings || {}
+      }));
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(APP));
+  } catch (e) {
+    console.warn('LocalStorage mirror write warning:', e);
+  }
+}
+
+function loadV13MirrorsFromLocalStorage() {
+  if (!APP) return;
+  try {
+    const savedCats = localStorage.getItem(V13_CATS_KEY);
+    if (savedCats) {
+      const parsedCats = JSON.parse(savedCats);
+      if (Array.isArray(parsedCats)) APP.categories = parsedCats;
+    }
+    const savedCourts = localStorage.getItem(V13_COURTS_KEY);
+    if (savedCourts) {
+      const parsedCourts = JSON.parse(savedCourts);
+      if (Array.isArray(parsedCourts)) APP.courts = parsedCourts;
+    }
+    const savedTitles = localStorage.getItem(V13_TITLES_KEY);
+    if (savedTitles) {
+      const parsedTitles = JSON.parse(savedTitles);
+      if (Array.isArray(parsedTitles)) APP.savedTitles = parsedTitles;
+    }
+    const savedTpls = localStorage.getItem(V13_TPLS_KEY);
+    if (savedTpls) {
+      const parsedTpls = JSON.parse(savedTpls);
+      if (Array.isArray(parsedTpls)) APP.templates = parsedTpls;
+    }
+    const savedUser = localStorage.getItem(V13_USER_KEY);
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser);
+      if (parsedUser && typeof parsedUser === 'object') {
+        if (parsedUser.profile && typeof parsedUser.profile === 'object') {
+          APP.profile = Object.assign({}, APP.profile || {}, parsedUser.profile);
+        }
+        if (parsedUser.settings && typeof parsedUser.settings === 'object') {
+          APP.settings = Object.assign({}, APP.settings || {}, parsedUser.settings);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('LocalStorage mirror read warning:', e);
+  }
+}
+
+// Wrap saveData so EVERY saveData() call across the entire app automatically persists all V13 mirrors to LocalStorage!
+const _origSaveDataV13 = saveData;
+saveData = function() {
+  if (APP && APP.settings) {
+    APP.settings.v13Initialized = true;
+  }
+  syncV13MirrorsToLocalStorage();
+  return _origSaveDataV13();
+};
+
+// Visual Confirmation Helper for Categories Save
+function showCategoriesSavedBadge() {
+  const badge = document.getElementById('categories-save-confirm-badge');
+  if (!badge) return;
+  badge.style.display = 'inline-flex';
+  badge.innerText = '✓ تم حفظ التغييرات في الذاكرة الدائمة';
+  badge.style.background = 'var(--success-light)';
+  badge.style.color = 'var(--success)';
+}
+
+// Refresh ALL Dropdowns & Comboboxes across the app from LocalStorage
+function refreshAllCategoryAndDestinationDropdowns() {
+  loadV13MirrorsFromLocalStorage();
+  populateAllDropdowns();
+  populateSubtaskCatSelect();
+  populatePrimaryAndSecondaryCategorySelects(
+    document.getElementById('tf-category')?.value || '',
+    document.getElementById('tf-subcategory')?.value || ''
+  );
+  if (typeof renderMissionLibraryView === 'function' && currentActiveView === 'library') {
+    renderMissionLibraryView();
+  }
+}
+
+// ---------------------------------------------------------
+// REQUIREMENT 1: COMPLETE, IMMEDIATE CRUD PERSISTENCE FOR CATEGORIES & SUBCATEGORIES
+// ---------------------------------------------------------
+
+// 1A. Add Primary Category Directly from Settings Inline Bar
+function addPrimaryCategoryFromSettingsBar() {
+  if (!APP) return;
+  const nameInp = document.getElementById('cfg-inline-new-cat-name');
+  const subInp = document.getElementById('cfg-inline-new-cat-sub');
+  const name = (nameInp ? nameInp.value : '').trim();
+  if (!name) {
+    showToast('يرجى كتابة اسم التصنيف الرئيسي الجديد أولاً', 'warning');
+    if (nameInp) nameInp.focus();
+    return;
+  }
+
+  const rawSubs = (subInp ? subInp.value : '').trim();
+  const initialSubs = rawSubs
+    ? rawSubs.split(/[،,]/).map(s => s.trim()).filter(Boolean)
+    : [];
+
+  if (!Array.isArray(APP.categories)) APP.categories = [];
+  const existing = APP.categories.find(c => c.name.trim().toLowerCase() === name.toLowerCase());
+  if (existing) {
+    if (!Array.isArray(existing.subs)) existing.subs = [];
+    initialSubs.forEach(s => {
+      if (!existing.subs.includes(s)) existing.subs.push(s);
+    });
+    showToast(`تم تحديث التصنيف "${existing.name}" وحفظ تفريعاته في الذاكرة الدائمة`);
+  } else {
+    APP.categories.unshift({
+      id: 'cat_' + Date.now(),
+      name: name,
+      icon: '🏷️',
+      color: '#3b82f6',
+      subs: initialSubs
+    });
+    showToast(`تمت إضافة التصنيف الرئيسي "${name}" وحفظه بشكل دائم`);
+  }
+
+  if (nameInp) nameInp.value = '';
+  if (subInp) subInp.value = '';
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+}
+
+// 1B. Render Categories & Interactive Sub-branches with Direct Inline Editing & Deletion
+renderSettingsCategories = function() {
+  const container = document.getElementById('cfg-categories-list-container');
+  if (!container || !APP) return;
+  loadV13MirrorsFromLocalStorage();
+  container.innerHTML = '';
+
+  if (!Array.isArray(APP.categories) || APP.categories.length === 0) {
+    container.innerHTML = '<div style="text-align:center; padding:1.5rem; color:var(--text-muted);">لا توجد تصنيفات مسجلة حالياً. أضف تصنيفاً جديداً من الشريط أعلاه.</div>';
+    return;
+  }
+
+  APP.categories.forEach((cat, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.cssText = 'padding:1rem 1.15rem; margin-bottom:0.65rem; border-inline-start:4px solid var(--primary);';
+
+    const subs = Array.isArray(cat.subs) ? cat.subs : [];
+    let subRowsHtml = '';
+    subs.forEach((subName, sIdx) => {
+      subRowsHtml += `
+        <div class="saved-item-row" id="sub-row-${idx}-${sIdx}" style="padding:0.45rem 0.75rem; display:flex; justify-content:space-between; align-items:center; gap:0.4rem;">
+          <div id="sub-display-${idx}-${sIdx}" style="display:flex; align-items:center; gap:0.45rem; font-weight:600; font-size:0.84rem; color:var(--text-main); flex:1; min-width:0;">
+            <span style="color:var(--primary);">↳</span>
+            <span style="word-break:break-word;">${escapeHtml(subName)}</span>
+          </div>
+          <div id="sub-edit-box-${idx}-${sIdx}" style="display:none; align-items:center; gap:0.35rem; flex:1;">
+            <input type="text" id="sub-edit-input-${idx}-${sIdx}" class="form-control" style="height:32px !important; min-height:32px !important; padding:0.2rem 0.5rem !important; font-size:0.82rem !important;" value="${escapeHtml(subName)}" onkeydown="if(event.key==='Enter'){event.preventDefault(); saveInlineSubcategoryEdit(${idx}, ${sIdx});}">
+            <button type="button" class="btn btn-sm btn-primary" style="padding:0.18rem 0.55rem; font-size:0.74rem;" onclick="saveInlineSubcategoryEdit(${idx}, ${sIdx})">حفظ</button>
+            <button type="button" class="btn btn-sm btn-outline" style="padding:0.18rem 0.45rem; font-size:0.74rem;" onclick="cancelInlineSubcategoryEdit(${idx}, ${sIdx})">إلغاء</button>
+          </div>
+          <div id="sub-actions-${idx}-${sIdx}" style="display:flex; gap:0.3rem; flex-shrink:0;">
+            <button type="button" class="btn btn-sm btn-outline" style="padding:0.18rem 0.5rem; font-size:0.74rem;" onclick="editSubcategoryInCategory(${idx}, ${sIdx})" title="تعديل هذا التفريع">تعديل</button>
+            <button type="button" class="btn btn-sm btn-danger-outline" style="padding:0.18rem 0.5rem; font-size:0.74rem;" onclick="removeSubcategoryFromCategory(${idx}, ${sIdx})" title="حذف هذا التفريع">حذف</button>
+          </div>
+        </div>
+      `;
+    });
+
+    card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+        <div id="cat-header-display-${idx}" style="display:flex; align-items:center; gap:0.65rem; cursor:pointer; flex:1; min-width:180px;" onclick="toggleCategorySubs('cat-subs-${idx}')" title="اضغط لفتح أو طي التفريعات والعمليات الفرعية الخاصة بهذا الصنف">
+          <span style="font-size:1.25rem;">${cat.icon || '🏷️'}</span>
+          <div>
+            <strong style="font-size:0.96rem; color:var(--text-main);">${escapeHtml(cat.name)}</strong>
+            <span class="badge-soft badge-primary" style="margin-inline-start:8px; font-weight:700;">${subs.length} تفريعات ▾</span>
+          </div>
+        </div>
+        <div id="cat-header-edit-${idx}" style="display:none; align-items:center; gap:0.4rem; flex:1; min-width:220px;">
+          <input type="text" id="cat-inline-name-input-${idx}" class="form-control" style="flex:1; height:36px !important; min-height:36px !important;" value="${escapeHtml(cat.name)}" onkeydown="if(event.key==='Enter'){event.preventDefault(); saveInlineCategoryName(${idx});}">
+          <button type="button" class="btn btn-sm btn-primary" onclick="saveInlineCategoryName(${idx})">حفظ الاسم</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="cancelInlineCategoryName(${idx})">إلغاء</button>
+        </div>
+        <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm btn-outline" onclick="startInlineCategoryNameEdit(${idx})" title="تعديل اسم التصنيف مباشرة">تعديل الاسم</button>
+          <button type="button" class="btn btn-sm btn-outline" onclick="openCategoryModal(${idx})" title="تعديل التصنيف وتفريعاته في نافذة">نافذة التعديل</button>
+          <button type="button" class="btn btn-sm btn-danger-outline" onclick="deleteCategory(${idx})" title="حذف التصنيف">حذف</button>
+        </div>
+      </div>
+
+      <!-- Interactive Sub-branches Panel for this Category -->
+      <div id="cat-subs-${idx}" style="display:block; margin-top:0.85rem; background:var(--bg-muted); padding:0.85rem; border-radius:var(--radius-md); border-top:1px solid var(--border-subtle);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.65rem;">
+          <span style="font-weight:800; font-size:0.8rem; color:var(--primary);">التفريعات والعمليات الفرعية المرتبطة بصنف «${escapeHtml(cat.name)}»:</span>
+          <div style="display:flex; gap:0.4rem; flex:1; max-width:440px;">
+            <input type="text" id="new-sub-inline-input-${idx}" class="form-control" style="padding:0.28rem 0.6rem; font-size:0.82rem;" placeholder="اكتب تفريعاً أو عملية فرعية جديدة لهذا الصنف..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubcategoryInline(${idx});}">
+            <button type="button" class="btn btn-sm btn-primary" style="white-space:nowrap;" onclick="addSubcategoryInline(${idx})">➕ إضافة تفريع</button>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:0.45rem;">
+          ${subRowsHtml || '<div style="font-size:0.78rem; color:var(--text-muted); padding:0.5rem;">لا توجد تفريعات مسجلة حالياً — أضف تفريعاً جديداً من الحقل أعلاه.</div>'}
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  replaceEmojiWithOutlineInElement(container);
+};
+
+function startInlineCategoryNameEdit(catIdx) {
+  const disp = document.getElementById(`cat-header-display-${catIdx}`);
+  const edit = document.getElementById(`cat-header-edit-${catIdx}`);
+  const inp = document.getElementById(`cat-inline-name-input-${catIdx}`);
+  if (disp) disp.style.display = 'none';
+  if (edit) edit.style.display = 'flex';
+  if (inp) { inp.focus(); inp.select(); }
+}
+
+function cancelInlineCategoryName(catIdx) {
+  const disp = document.getElementById(`cat-header-display-${catIdx}`);
+  const edit = document.getElementById(`cat-header-edit-${catIdx}`);
+  if (disp) disp.style.display = 'flex';
+  if (edit) edit.style.display = 'none';
+}
+
+function saveInlineCategoryName(catIdx) {
+  if (!APP || !APP.categories || !APP.categories[catIdx]) return;
+  const inp = document.getElementById(`cat-inline-name-input-${catIdx}`);
+  const newName = (inp ? inp.value : '').trim();
+  if (!newName) {
+    showToast('يرجى إدخال اسم التصنيف الرئيسي', 'warning');
+    return;
+  }
+  const oldName = APP.categories[catIdx].name;
+  const catId = APP.categories[catIdx].id;
+  APP.categories[catIdx].name = newName;
+
+  if (oldName && oldName !== newName) {
+    (APP.tasks || []).forEach(t => { if (t && t.category === oldName) t.category = newName; });
+    (APP.missionLibrary || []).forEach(m => { if (m && m.category === oldName) m.category = newName; });
+    (APP.savedTitleMetadata || []).forEach(meta => {
+      if (meta && (meta.categoryId === catId || meta.categoryName === oldName)) meta.categoryName = newName;
+    });
+  }
+
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+  showToast(`تم تعديل اسم التصنيف إلى "${newName}" وحفظه بشكل دائم`);
+}
+
+// Inline & Modal Subcategory Edit
+editSubcategoryInCategory = function(catIdx, subIdx) {
+  const disp = document.getElementById(`sub-display-${catIdx}-${subIdx}`);
+  const editBox = document.getElementById(`sub-edit-box-${catIdx}-${subIdx}`);
+  const actBox = document.getElementById(`sub-actions-${catIdx}-${subIdx}`);
+  const inp = document.getElementById(`sub-edit-input-${catIdx}-${subIdx}`);
+  if (disp && editBox && inp) {
+    disp.style.display = 'none';
+    if (actBox) actBox.style.display = 'none';
+    editBox.style.display = 'flex';
+    inp.focus();
+    inp.select();
+    return;
+  }
+  // Fallback to custom prompt dialog if called programmatically without DOM row
+  if (!APP.categories[catIdx] || !APP.categories[catIdx].subs) return;
+  const oldSub = APP.categories[catIdx].subs[subIdx];
+  openCustomPromptDialog(
+    `تعديل التفريع الفرعي (${APP.categories[catIdx].name})`,
+    'قم بتعديل اسم التفريع أو العملية الفرعية ثم اضغط تأكيد وحفظ:',
+    oldSub,
+    function(newSub) {
+      applySubcategoryRename(catIdx, subIdx, newSub);
+    }
+  );
+};
+
+function cancelInlineSubcategoryEdit(catIdx, subIdx) {
+  const disp = document.getElementById(`sub-display-${catIdx}-${subIdx}`);
+  const editBox = document.getElementById(`sub-edit-box-${catIdx}-${subIdx}`);
+  const actBox = document.getElementById(`sub-actions-${catIdx}-${subIdx}`);
+  if (disp) disp.style.display = 'flex';
+  if (actBox) actBox.style.display = 'flex';
+  if (editBox) editBox.style.display = 'none';
+}
+
+function saveInlineSubcategoryEdit(catIdx, subIdx) {
+  const inp = document.getElementById(`sub-edit-input-${catIdx}-${subIdx}`);
+  const newSub = (inp ? inp.value : '').trim();
+  if (!newSub) {
+    showToast('يرجى كتابة اسم التفريع الفرعي', 'warning');
+    return;
+  }
+  applySubcategoryRename(catIdx, subIdx, newSub);
+}
+
+function applySubcategoryRename(catIdx, subIdx, newSub) {
+  if (!APP || !APP.categories[catIdx] || !Array.isArray(APP.categories[catIdx].subs)) return;
+  const cleanSub = (newSub || '').trim();
+  if (!cleanSub) return;
+  const oldSub = APP.categories[catIdx].subs[subIdx];
+  const catName = APP.categories[catIdx].name;
+  APP.categories[catIdx].subs[subIdx] = cleanSub;
+
+  // Also update tasks that used the old subcategory under this category
+  if (oldSub && oldSub !== cleanSub) {
+    (APP.tasks || []).forEach(t => {
+      if (t && t.category === catName && t.subcategory === oldSub) {
+        t.subcategory = cleanSub;
+      }
+    });
+  }
+
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+  showToast(`تم تعديل التفريع الفرعي إلى "${cleanSub}" وحفظه بشكل دائم`);
+}
+
+// Immediate Subcategory Addition
+addSubcategoryInline = function(catIdx) {
+  if (!APP || !APP.categories || !APP.categories[catIdx]) return;
+  const inp = document.getElementById(`new-sub-inline-input-${catIdx}`);
+  const val = (inp ? inp.value : '').trim();
+  if (!val) {
+    promptAddSubcategory(catIdx);
+    return;
+  }
+  if (!Array.isArray(APP.categories[catIdx].subs)) APP.categories[catIdx].subs = [];
+  if (!APP.categories[catIdx].subs.includes(val)) {
+    APP.categories[catIdx].subs.unshift(val);
+  }
+  if (inp) inp.value = '';
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+  showToast(`تمت إضافة التفريع "${val}" إلى صنف "${APP.categories[catIdx].name}" وحفظه بشكل دائم`);
+};
+
+// Immediate Subcategory Deletion (Persists directly to LocalStorage)
+removeSubcategoryFromCategory = function(catIdx, subIdx) {
+  if (!APP || !APP.categories[catIdx] || !Array.isArray(APP.categories[catIdx].subs)) return;
+  const subName = APP.categories[catIdx].subs[subIdx];
+  APP.categories[catIdx].subs.splice(subIdx, 1);
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+  showToast(`تم حذف التفريع الفرعي "${subName}" وحفظ التغييرات في الذاكرة الدائمة`);
+};
+
+// Immediate Category Deletion (Persists directly to LocalStorage)
+deleteCategory = function(idx) {
+  if (!APP || !Array.isArray(APP.categories) || !APP.categories[idx]) return;
+  const cName = APP.categories[idx].name;
+  APP.categories.splice(idx, 1);
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+  showToast(`تم حذف التصنيف "${cName}" وحفظ التغييرات بشكل دائم`);
+};
+
+// Category Modal with Subcategories Management
+openCategoryModal = function(editIndex = -1) {
+  loadV13MirrorsFromLocalStorage();
+  document.getElementById('cf-id').value = editIndex >= 0 ? editIndex : '';
+  const newSubInp = document.getElementById('cf-modal-new-sub');
+  if (newSubInp) newSubInp.value = '';
+
+  if (editIndex >= 0 && APP.categories[editIndex]) {
+    const c = APP.categories[editIndex];
+    document.getElementById('cat-modal-title').innerText = 'تعديل التصنيف وتفريعاته';
+    document.getElementById('cf-name').value = c.name || '';
+    document.getElementById('cf-icon').value = c.icon || '📁';
+    categoryModalTempSubs = Array.isArray(c.subs) ? [...c.subs] : [];
+  } else {
+    document.getElementById('cat-modal-title').innerText = 'إضافة تصنيف رئيسي جديد';
+    document.getElementById('cf-name').value = '';
+    document.getElementById('cf-icon').value = '📁';
+    categoryModalTempSubs = [];
+  }
+  renderCategoryModalSubsList();
+  openModal('modal-category-form');
+};
+
+function renderCategoryModalSubsList() {
+  const listEl = document.getElementById('cf-modal-subs-list');
+  if (!listEl) return;
+  listEl.innerHTML = '';
+  if (categoryModalTempSubs.length === 0) {
+    listEl.innerHTML = '<div style="font-size:0.76rem; color:var(--text-muted); text-align:center; padding:0.4rem;">لا توجد تفريعات مضافة بعد — يمكنك إضافة تفريعات من الحقل أعلاه.</div>';
+    return;
+  }
+  categoryModalTempSubs.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex; align-items:center; gap:0.4rem; background:var(--bg-card); padding:0.3rem 0.55rem; border-radius:6px; border:1px solid var(--border-subtle);';
+    row.innerHTML = `
+      <span style="color:var(--primary); font-weight:800; font-size:0.75rem;">${i + 1}.</span>
+      <input type="text" class="form-control" style="flex:1; height:30px !important; min-height:30px !important; padding:0.15rem 0.45rem !important; font-size:0.8rem !important;" value="${escapeHtml(s)}" oninput="categoryModalTempSubs[${i}] = this.value">
+      <button type="button" class="btn btn-sm btn-danger-outline" style="padding:0.12rem 0.4rem; font-size:0.72rem;" onclick="categoryModalTempSubs.splice(${i}, 1); renderCategoryModalSubsList();">حذف</button>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+function addSubInCategoryModal() {
+  const inp = document.getElementById('cf-modal-new-sub');
+  const val = (inp ? inp.value : '').trim();
+  if (!val) return;
+  if (!categoryModalTempSubs.includes(val)) {
+    categoryModalTempSubs.unshift(val);
+  }
+  if (inp) inp.value = '';
+  renderCategoryModalSubsList();
+  if (inp) inp.focus();
+}
+
+saveCategoryModalSubmit = function() {
+  const editIndex = document.getElementById('cf-id').value;
+  const name = (document.getElementById('cf-name')?.value || '').trim();
+  const icon = (document.getElementById('cf-icon')?.value || '').trim() || '📁';
+  if (!name) {
+    showToast('يرجى إدخال اسم التصنيف الرئيسي', 'warning');
+    return;
+  }
+
+  // Also commit any pending text in #cf-modal-new-sub
+  const pendingSub = (document.getElementById('cf-modal-new-sub')?.value || '').trim();
+  if (pendingSub && !categoryModalTempSubs.includes(pendingSub)) {
+    categoryModalTempSubs.unshift(pendingSub);
+  }
+  const cleanSubs = categoryModalTempSubs.map(s => (s || '').trim()).filter(Boolean);
+
+  if (editIndex !== '') {
+    const idx = parseInt(editIndex, 10);
+    if (APP.categories[idx]) {
+      const oldName = APP.categories[idx].name;
+      const catId = APP.categories[idx].id;
+      APP.categories[idx].name = name;
+      APP.categories[idx].icon = icon;
+      APP.categories[idx].subs = cleanSubs;
+
+      if (oldName && oldName !== name) {
+        (APP.tasks || []).forEach(t => { if (t && t.category === oldName) t.category = name; });
+        (APP.missionLibrary || []).forEach(m => { if (m && m.category === oldName) m.category = name; });
+        (APP.savedTitleMetadata || []).forEach(meta => {
+          if (meta && (meta.categoryId === catId || meta.categoryName === oldName)) meta.categoryName = name;
+        });
+      }
+      showToast(`تم تعديل التصنيف "${name}" وتفريعاته وحفظه بشكل دائم`);
+    }
+  } else {
+    APP.categories.unshift({
+      id: 'cat_' + Date.now(),
+      name: name,
+      icon: icon,
+      subs: cleanSubs
+    });
+    showToast(`تمت إضافة التصنيف "${name}" وحفظه بشكل دائم`);
+  }
+
+  saveData();
+  closeModal('modal-category-form');
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+};
+
+// Explicit "حفظ التغييرات" Handler in #settings-tab-categories
+function saveAllCategoriesChanges() {
+  if (!APP || !Array.isArray(APP.categories)) return;
+
+  // 1. Check if there is any pending new category in the top bar
+  const topNewCat = (document.getElementById('cfg-inline-new-cat-name')?.value || '').trim();
+  if (topNewCat) {
+    addPrimaryCategoryFromSettingsBar();
+  }
+
+  // 2. Check if there are any pending inline edits or pending new subcategory inputs across all category cards
+  APP.categories.forEach((cat, idx) => {
+    const catEditBox = document.getElementById(`cat-header-edit-${idx}`);
+    const catNameInp = document.getElementById(`cat-inline-name-input-${idx}`);
+    if (catEditBox && catEditBox.style.display !== 'none' && catNameInp && catNameInp.value.trim()) {
+      cat.name = catNameInp.value.trim();
+    }
+
+    const pendingSubInp = document.getElementById(`new-sub-inline-input-${idx}`);
+    if (pendingSubInp && pendingSubInp.value.trim()) {
+      const val = pendingSubInp.value.trim();
+      if (!Array.isArray(cat.subs)) cat.subs = [];
+      if (!cat.subs.includes(val)) cat.subs.unshift(val);
+      pendingSubInp.value = '';
+    }
+
+    if (Array.isArray(cat.subs)) {
+      cat.subs.forEach((_, sIdx) => {
+        const subEditBox = document.getElementById(`sub-edit-box-${idx}-${sIdx}`);
+        const subEditInp = document.getElementById(`sub-edit-input-${idx}-${sIdx}`);
+        if (subEditBox && subEditBox.style.display !== 'none' && subEditInp && subEditInp.value.trim()) {
+          cat.subs[sIdx] = subEditInp.value.trim();
+        }
+      });
+    }
+  });
+
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+  showToast('تم حفظ جميع تعديلات التصنيفات الرئيسية والتفريعات الفرعية بنجاح في الذاكرة الدائمة');
+}
+
+// Ensure Category & Subcategory Comboboxes Always Read Live from APP.categories (LocalStorage)
+const _origRenderSmartComboMenuV13 = renderSmartComboMenu;
+renderSmartComboMenu = function(type, showAll = false) {
+  loadV13MirrorsFromLocalStorage();
+
+  if (type === 'cat' && APP) {
+    const menu = document.getElementById('cat-combo-menu');
+    if (!menu) return;
+    const input = document.getElementById('tf-category');
+    const rawVal = input ? input.value.trim() : '';
+    const q = showAll ? '' : rawVal.toLowerCase();
+
+    const cats = APP.categories || [];
+    const exactMatch = cats.some(c => c.name.trim().toLowerCase() === rawVal.toLowerCase());
+
+    let html = '';
+    if (rawVal && !exactMatch) {
+      const encNew = encodeURIComponent(rawVal);
+      html += `<div class="smart-combo-create" onclick="saveNewCategoryInline(decodeURIComponent('${encNew}'))">
+        ➕ إضافة وحفظ التصنيف الجديد: "${escapeHtml(rawVal)}"
+      </div>`;
+    }
+
+    const filtered = q ? cats.filter(c => c.name.toLowerCase().includes(q)) : cats;
+    html += `<div class="smart-combo-header"><span>التصنيفات الرئيسية المحفوظة (${filtered.length})</span><span>اختر لعرض تفريعاته</span></div>`;
+
+    filtered.forEach(c => {
+      const enc = encodeURIComponent(c.name);
+      const subsCount = Array.isArray(c.subs) ? c.subs.length : 0;
+      html += `<div class="smart-combo-item" onclick="selectSuggestedCategory('${enc}')">
+        <span class="smart-combo-item-main">${c.icon || '📁'} ${escapeHtml(c.name)}</span>
+        <span class="smart-combo-item-meta">${subsCount} تفريعات</span>
+      </div>`;
+    });
+
+    menu.innerHTML = html;
+    return;
+  }
+
+  if (type === 'subcat' && APP) {
+    const menu = document.getElementById('subcat-combo-menu');
+    if (!menu) return;
+    const catInput = document.getElementById('tf-category');
+    const subInput = document.getElementById('tf-subcategory');
+    const catName = catInput ? catInput.value.trim() : '';
+    const rawSub = subInput ? subInput.value.trim() : '';
+    const q = showAll ? '' : rawSub.toLowerCase();
+
+    const catObj = (APP.categories || []).find(c => c.name === catName || c.name.toLowerCase() === catName.toLowerCase());
+    const subs = catObj && Array.isArray(catObj.subs) ? catObj.subs : [];
+    const exactMatch = subs.some(s => s.toLowerCase() === rawSub.toLowerCase());
+
+    let html = '';
+    if (rawSub && !exactMatch) {
+      const encNew = encodeURIComponent(rawSub);
+      html += `<div class="smart-combo-create" onclick="saveNewSubcategoryInline(decodeURIComponent('${encNew}'))">
+        ➕ حفظ "${escapeHtml(rawSub)}" كتفريع فرعي ضمن هذا التصنيف
+      </div>`;
+    }
+
+    const filtered = q ? subs.filter(s => s.toLowerCase().includes(q)) : subs;
+    html += `<div class="smart-combo-header"><span>التفريعات المرتبطة بـ "${escapeHtml(catName || 'التصنيف المحدد')}" (${filtered.length})</span></div>`;
+
+    if (filtered.length === 0) {
+      html += `<div style="padding:0.65rem 0.85rem; font-size:0.8rem; color:var(--text-muted); text-align:center;">لا توجد تفريعات مسجلة لهذا التصنيف حالياً — اكتب التفريع واضغط لحفظه.</div>`;
+    } else {
+      filtered.forEach(s => {
+        const enc = encodeURIComponent(s);
+        html += `<div class="smart-combo-item" onclick="selectSuggestedSubcategory('${enc}')">
+          <span class="smart-combo-item-main">🔸 ${escapeHtml(s)}</span>
+          <span class="smart-combo-item-meta" onclick="event.stopPropagation(); addSubtaskOperation('${escapeHtml(catName || 'عام')}', decodeURIComponent('${enc}'));">➕ أضف كعملية</span>
+        </div>`;
+      });
+    }
+
+    menu.innerHTML = html;
+    return;
+  }
+
+  return _origRenderSmartComboMenuV13(type, showAll);
+};
+
+// Also ensure Immediate Delete in Saved Titles, Destinations, and Templates without failing
+deleteSavedTitleInSettings = function(idx) {
+  if (!APP.savedTitles || idx < 0 || idx >= APP.savedTitles.length) return;
+  const targetTitle = APP.savedTitles[idx];
+  APP.savedTitles.splice(idx, 1);
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsSavedTitles();
+  recordUserModification();
+  showToast(`تم حذف العنوان المحفوظ: "${targetTitle}"`);
+};
+
+deleteDestination = function(idx) {
+  if (!APP.courts || !APP.courts[idx]) return;
+  const dName = APP.courts[idx].name;
+  APP.courts.splice(idx, 1);
+  saveData();
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsDestinations();
+  recordUserModification();
+  showToast(`تم حذف الوجهة "${dName}" من دليل الوجهات بشكل دائم`);
+};
+
+deleteTemplate = function(idx) {
+  if (!APP.templates || !APP.templates[idx]) return;
+  const tplTitle = APP.templates[idx].title;
+  APP.templates.splice(idx, 1);
+  saveData();
+  renderSettingsTemplates();
+  renderDashboard();
+  recordUserModification();
+  showToast(`تم حذف القالب السريع: "${tplTitle}"`);
+};
+
+// ---------------------------------------------------------
+// REQUIREMENT 2 & 3: UNIFIED USER SETTINGS & GENERALIZED SIGNATORY TITLE/ROLE
+// ---------------------------------------------------------
+renderDedicatedUserSettings = function() {
+  if (!APP) return;
+  loadV13MirrorsFromLocalStorage();
+  ensureUserBasicTasksInitialized();
+
+  const p = APP.profile || {};
+  const s = APP.settings || {};
+
+  const nameInp = document.getElementById('usr-cfg-name');
+  const roleInp = document.getElementById('usr-cfg-role');
+  const frameInp = document.getElementById('usr-cfg-framework');
+  const deptInp = document.getElementById('usr-cfg-department');
+  const stampInp = document.getElementById('usr-cfg-stamp');
+
+  const fullName = p.fullName || s.userName || 'محمد ايت حمادي';
+  const jobTitle = p.jobTitle || s.userRole || 'إطار إداري وتقني';
+  const framework = p.framework || p.grade || s.userFramework || 'منتدب قضائي / إطار تقني';
+  const dept = p.organization || s.department || 'المديرية الإقليمية للعدل بسطات';
+  const stamp = s.reportApprovalText || p.officialStampText || s.officialStampText || 'تأشيرة السيد المدير الإقليمي';
+
+  if (nameInp) nameInp.value = fullName;
+  if (roleInp) roleInp.value = jobTitle;
+  if (frameInp) frameInp.value = framework;
+  if (deptInp) deptInp.value = dept;
+  if (stampInp) stampInp.value = stamp;
+
+  renderUserBasicTasksList();
+};
+
+saveDedicatedUserSettings = function() {
+  if (!APP) return;
+  ensureUserBasicTasksInitialized();
+
+  const nameVal = (document.getElementById('usr-cfg-name')?.value || '').trim() || 'محمد ايت حمادي';
+  const roleVal = (document.getElementById('usr-cfg-role')?.value || '').trim() || 'إطار إداري وتقني';
+  const frameVal = (document.getElementById('usr-cfg-framework')?.value || '').trim() || '';
+  const deptVal = (document.getElementById('usr-cfg-department')?.value || '').trim() || 'المديرية الإقليمية للعدل بسطات';
+  const stampVal = (document.getElementById('usr-cfg-stamp')?.value || '').trim() || 'تأشيرة السيد المدير الإقليمي';
+
+  const pendingBasicTask = (document.getElementById('usr-new-basic-task-input')?.value || '').trim();
+  if (pendingBasicTask) {
+    addBasicUserTask();
+  }
+
+  if (!APP.profile) APP.profile = {};
+  if (!APP.settings) APP.settings = {};
+
+  APP.profile.fullName = nameVal;
+  APP.profile.jobTitle = roleVal;
+  APP.profile.framework = frameVal;
+  APP.profile.grade = frameVal;
+  APP.profile.organization = deptVal;
+  APP.profile.service = deptVal;
+  APP.profile.officialStampText = stampVal;
+  APP.profile.isCustomModified = true;
+  APP.profile.updatedAt = new Date().toISOString();
+
+  APP.settings.userName = nameVal;
+  APP.settings.userRole = roleVal;
+  APP.settings.userFramework = frameVal;
+  APP.settings.department = deptVal;
+  APP.settings.officialStampText = stampVal;
+  APP.settings.reportApprovalText = stampVal;
+  APP.settings.basicRoutineTasks = APP.profile.basicRoutineTasks;
+
+  // Sync hidden compatibility fields in #settings-tab-identity & #view-report
+  const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+  setVal('cfg-user-name', nameVal);
+  setVal('cfg-user-role', roleVal);
+  setVal('cfg-user-grade', frameVal);
+  setVal('cfg-user-dept', deptVal);
+  setVal('cfg-user-service', deptVal);
+  setVal('cfg-stamp-text', stampVal);
+  setVal('report-stamp-input', stampVal);
+
+  saveData();
+  applyIdentityToUI();
+  renderDedicatedUserSettings();
+  if (typeof loadTaskIntoReport === 'function') {
+    const empEl = document.getElementById('report-employee-name');
+    if (empEl) empEl.value = `${nameVal} (${roleVal}${frameVal ? ' - ' + frameVal : ''})`;
+    const deptEl = document.getElementById('report-dept-name');
+    if (deptEl) deptEl.value = deptVal;
+    updateReportPreview();
+  }
+
+  const badge = document.getElementById('usr-save-confirm-badge');
+  if (badge) {
+    badge.style.display = 'inline-flex';
+  }
+  recordUserModification();
+  showToast('تم حفظ إعدادات المستخدم والبيانات المهنية بنجاح في الذاكرة الدائمة');
+};
+
+// Also ensure saveIdentitySettings reads employee data from User Settings (APP.profile) without overwriting it with stale values
+saveIdentitySettings = function() {
+  if (!APP) return;
+  if (!APP.settings) APP.settings = {};
+  if (!APP.profile) APP.profile = {};
+
+  const getVal = (id, fallback = '') => {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : fallback;
+  };
+
+  const sysName = getVal('cfg-system-name', APP.settings.systemName || 'نظام تدبير المهام اليومية');
+  const ministryName = getVal('cfg-ministry-name', APP.profile.ministry || 'المملكة المغربية - وزارة العدل');
+  const workplace = getVal('cfg-user-workplace', APP.profile.workplace || 'المديرية الإقليمية للعدل بسطات');
+  const domain = getVal('cfg-user-domain', APP.profile.mainDomain || 'التدبير الإداري والتقني واللوجستي');
+  const stampText = getVal('cfg-stamp-text', APP.settings.officialStampText || 'تأشيرة السيد المدير الإقليمي');
+
+  APP.settings.systemName = sysName;
+  APP.settings.ministry = ministryName;
+  APP.settings.officialStampText = stampText;
+  APP.settings.reportApprovalText = stampText;
+
+  APP.profile.ministry = ministryName;
+  APP.profile.workplace = workplace;
+  APP.profile.mainDomain = domain;
+  APP.profile.officialStampText = stampText;
+  APP.profile.updatedAt = new Date().toISOString();
+
+  const usrStamp = document.getElementById('usr-cfg-stamp');
+  if (usrStamp) usrStamp.value = stampText;
+  const repStamp = document.getElementById('report-stamp-input');
+  if (repStamp) repStamp.value = stampText;
+
+  if (!APP.settings.sidebarLabels) APP.settings.sidebarLabels = {};
+  const mapNav = ['dashboard', 'today', 'backlog', 'calendar', 'tasks', 'report', 'trash', 'settings'];
+  mapNav.forEach(k => {
+    const inp = document.getElementById(`cfg-nav-${k}`);
+    if (inp && inp.value.trim()) {
+      APP.settings.sidebarLabels[k] = inp.value.trim();
+    }
+  });
+
+  saveData();
+  applyIdentityToUI();
+  if (currentActiveView === 'report') updateReportPreview();
+  recordUserModification();
+  showToast('تم حفظ إعدادات الواجهة والمظهر بنجاح');
+};
+
+// Ensure Report View Always Reads Employee Data & Signatory Title Automatically from Unified User Settings
+onReportSpecificStampChanged = function(val) {
+  if (!APP) return;
+  const clean = (val || '').trim();
+  if (!APP.settings) APP.settings = {};
+  if (!APP.profile) APP.profile = {};
+  APP.settings.reportApprovalText = clean;
+  APP.settings.officialStampText = clean;
+  APP.profile.officialStampText = clean;
+  const usrStamp = document.getElementById('usr-cfg-stamp');
+  if (usrStamp) usrStamp.value = clean;
+  const cfgStamp = document.getElementById('cfg-stamp-text');
+  if (cfgStamp) cfgStamp.value = clean;
+  saveData();
+  updateReportPreview();
+};
+
+const _origOnReportTaskSelectChangedV13 = onReportTaskSelectChanged;
+onReportTaskSelectChanged = function() {
+  loadV13MirrorsFromLocalStorage();
+  _origOnReportTaskSelectChangedV13();
+  const p = APP.profile || {};
+  const s = APP.settings || {};
+  const fullName = p.fullName || s.userName || 'محمد ايت حمادي';
+  const jobTitle = p.jobTitle || s.userRole || 'إطار إداري وتقني';
+  const framework = p.framework || p.grade || s.userFramework || '';
+  const dept = p.organization || s.department || 'المديرية الإقليمية للعدل بسطات';
+
+  const empName = document.getElementById('report-employee-name');
+  if (empName) empName.value = `${fullName} (${jobTitle}${framework ? ' - ' + framework : ''})`;
+  const deptName = document.getElementById('report-dept-name');
+  if (deptName) deptName.value = dept;
+  updateReportPreview();
+};
+
+// Update updateReportPreview so empDisplay, roleDisplay, orgDisplay, and approvalWording always reflect User Settings & Signatory Role
+const _origUpdateReportPreviewV13 = updateReportPreview;
+updateReportPreview = function() {
+  loadV13MirrorsFromLocalStorage();
+  _origUpdateReportPreviewV13();
+  const sheet = document.getElementById('mission-report-sheet');
+  if (!sheet || !APP) return;
+
+  const p = APP.profile || {};
+  const s = APP.settings || {};
+  const stampInputVal = document.getElementById('report-stamp-input')?.value;
+  const approvalWording = (stampInputVal !== undefined && stampInputVal.trim() !== '')
+    ? stampInputVal.trim()
+    : (s.reportApprovalText || p.officialStampText || s.officialStampText || 'تأشيرة السيد المدير الإقليمي');
+
+  const approvalBlock = document.getElementById('report-preview-approval-block');
+  if (approvalBlock) {
+    approvalBlock.innerText = `${approvalWording} :`;
+  }
+};
+
+// ---------------------------------------------------------
+// REQUIREMENT 4: 100% COMPREHENSIVE JSON BACKUP & RESTORE
+// ---------------------------------------------------------
+exportFullSystemJSON = function() {
+  loadV13MirrorsFromLocalStorage();
+  if (!APP) return;
+  const fullBackupPayload = Object.assign({}, APP, {
+    backupVersion: '13.0',
+    exportedAt: new Date().toISOString(),
+    tasks: APP.tasks || [],
+    categories: APP.categories || [],
+    courts: APP.courts || [],
+    savedTitles: APP.savedTitles || [],
+    savedTitleMetadata: APP.savedTitleMetadata || [],
+    templates: APP.templates || [],
+    missionLibrary: APP.missionLibrary || [],
+    profile: APP.profile || {},
+    settings: Object.assign({}, APP.settings || {}, {
+      v13Initialized: true,
+      officialStampText: APP.settings?.officialStampText || APP.profile?.officialStampText || 'تأشيرة السيد المدير الإقليمي',
+      reportApprovalText: APP.settings?.reportApprovalText || APP.settings?.officialStampText || 'تأشيرة السيد المدير الإقليمي'
+    }),
+    userSettings: {
+      fullName: APP.profile?.fullName || APP.settings?.userName || '',
+      jobTitle: APP.profile?.jobTitle || APP.settings?.userRole || '',
+      framework: APP.profile?.framework || APP.profile?.grade || APP.settings?.userFramework || '',
+      department: APP.profile?.organization || APP.settings?.department || '',
+      signatoryRole: APP.settings?.reportApprovalText || APP.settings?.officialStampText || '',
+      basicRoutineTasks: APP.profile?.basicRoutineTasks || APP.settings?.basicRoutineTasks || []
+    },
+    trash: APP.trash || [],
+    auditLog: APP.auditLog || []
+  });
+
+  const dataStr = JSON.stringify(fullBackupPayload, null, 2);
+  downloadFile(dataStr, `نسخة_احتياطية_شاملة_نظام_المهام_${getTodayISO()}.json`, 'application/json');
+  try {
+    localStorage.setItem(CHANGES_COUNTER_KEY, '0');
+    localStorage.setItem(LAST_BACKUP_ISO_KEY, getTodayISO());
+    checkBackupReminder();
+    updateStorageQuotaUI();
+  } catch (e) {}
+  showToast('تم تصدير النسخة الاحتياطية الشاملة (JSON) بكافة المهام والتصنيفات وإعدادات المستخدم بنجاح');
+  return fullBackupPayload;
+};
+
+const _origImportBackupDataObjectV13 = importBackupDataObject;
+importBackupDataObject = function(rawInput, skipConfirm) {
+  let parsed = null;
+  try {
+    parsed = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
+  } catch (err) {
+    return _origImportBackupDataObjectV13(rawInput, skipConfirm);
+  }
+
+  if (parsed && typeof parsed === 'object' && Array.isArray(parsed.tasks)) {
+    if (!parsed.settings) parsed.settings = {};
+    parsed.settings.v13Initialized = true;
+
+    // Restore userSettings block if present
+    if (parsed.userSettings && typeof parsed.userSettings === 'object') {
+      if (!parsed.profile) parsed.profile = {};
+      if (parsed.userSettings.fullName) {
+        parsed.profile.fullName = parsed.userSettings.fullName;
+        parsed.settings.userName = parsed.userSettings.fullName;
+      }
+      if (parsed.userSettings.jobTitle) {
+        parsed.profile.jobTitle = parsed.userSettings.jobTitle;
+        parsed.settings.userRole = parsed.userSettings.jobTitle;
+      }
+      if (parsed.userSettings.framework !== undefined) {
+        parsed.profile.framework = parsed.userSettings.framework;
+        parsed.profile.grade = parsed.userSettings.framework;
+        parsed.settings.userFramework = parsed.userSettings.framework;
+      }
+      if (parsed.userSettings.department) {
+        parsed.profile.organization = parsed.userSettings.department;
+        parsed.settings.department = parsed.userSettings.department;
+      }
+      if (parsed.userSettings.signatoryRole) {
+        parsed.profile.officialStampText = parsed.userSettings.signatoryRole;
+        parsed.settings.officialStampText = parsed.userSettings.signatoryRole;
+        parsed.settings.reportApprovalText = parsed.userSettings.signatoryRole;
+      }
+      if (Array.isArray(parsed.userSettings.basicRoutineTasks)) {
+        parsed.profile.basicRoutineTasks = parsed.userSettings.basicRoutineTasks;
+        parsed.settings.basicRoutineTasks = parsed.userSettings.basicRoutineTasks;
+      }
+    }
+
+    // Clear old V13 mirrors before importing so the imported JSON becomes the exact new truth in LocalStorage
+    try {
+      if (Array.isArray(parsed.categories)) localStorage.setItem(V13_CATS_KEY, JSON.stringify(parsed.categories));
+      if (Array.isArray(parsed.courts)) localStorage.setItem(V13_COURTS_KEY, JSON.stringify(parsed.courts));
+      if (Array.isArray(parsed.savedTitles)) localStorage.setItem(V13_TITLES_KEY, JSON.stringify(parsed.savedTitles));
+      if (Array.isArray(parsed.templates)) localStorage.setItem(V13_TPLS_KEY, JSON.stringify(parsed.templates));
+      localStorage.setItem(V13_USER_KEY, JSON.stringify({
+        profile: parsed.profile || {},
+        settings: parsed.settings || {}
+      }));
+    } catch (e) {}
+  }
+
+  const res = _origImportBackupDataObjectV13(parsed, skipConfirm);
+  if (res && res.success) {
+    syncV13MirrorsToLocalStorage();
+    refreshAllCategoryAndDestinationDropdowns();
+    renderDedicatedUserSettings();
+    renderSettingsCategories();
+    renderSettingsDestinations();
+    renderSettingsSavedTitles();
+    applyIdentityToUI();
+  }
+  return res;
+};
+
+// Mobile Viewport Restraint for Dropdowns (Req 6: max-height: 190px; z-index: 9999)
+const _origApplyDynamicViewportRestraintV13 = applyDynamicViewportRestraintToDropdown;
+applyDynamicViewportRestraintToDropdown = function(menuEl) {
+  if (!menuEl) return;
+  if (window.innerWidth <= 768) {
+    menuEl.style.setProperty('max-height', '190px', 'important');
+    menuEl.style.setProperty('overflow-y', 'auto', 'important');
+    menuEl.style.setProperty('z-index', '9999', 'important');
+    return;
+  }
+  _origApplyDynamicViewportRestraintV13(menuEl);
+};
+
+// Boot Hook for Directive v13.0
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    loadV13MirrorsFromLocalStorage();
+    syncV13MirrorsToLocalStorage();
+    refreshAllCategoryAndDestinationDropdowns();
+    renderDedicatedUserSettings();
+    renderSettingsCategories();
+    applyIdentityToUI();
+  }, 320);
+});
 
   </script>
 </body>

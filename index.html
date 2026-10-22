@@ -8364,6 +8364,108 @@ input[type="date"].form-control,
   }
 }
 
+  
+/* ========================================================
+   MASTER ENGINEERING DIRECTIVE V41.0 — COMPREHENSIVE SETTINGS
+   UI RE-ARCHITECTURE & FINAL MOBILE FIXES
+   ======================================================== */
+
+/* PART I: Settings Navigation Sub-Bar — Zero Truncation on Desktop & Square 40x40 Icon-Only on Mobile */
+.settings-nav-bar {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.45rem !important;
+  padding: 0.55rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+.settings-nav-btn,
+button.settings-nav-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.45rem !important;
+  padding: 0.5rem 0.9rem !important;
+  min-height: 40px !important;
+  height: auto !important;
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  border: 1px solid var(--border-strong) !important;
+  color: var(--text-main) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+}
+
+.settings-nav-btn.active,
+button.settings-nav-btn.active {
+  background: transparent !important;
+  border: 1.5px solid var(--primary) !important;
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+}
+
+.settings-nav-btn svg.outline-svg-icon {
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0 !important;
+}
+
+.settings-nav-btn .settings-tab-text {
+  display: inline-block !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.2 !important;
+}
+
+@media (max-width: 768px) {
+  .settings-nav-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
+    padding: 0.5rem !important;
+    overflow: hidden !important;
+  }
+
+  .settings-nav-btn .settings-tab-text {
+    display: none !important;
+  }
+
+  .settings-nav-btn,
+  button.settings-nav-btn {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 0 !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 40px !important;
+  }
+}
+
   </style>
 </head>
 <body class="dark-mode">
@@ -9388,17 +9490,47 @@ input[type="date"].form-control,
         </div>
 
         <!-- Control Center Tabs (With Dedicated User Settings & Security PIN Protection) -->
-        <div class="settings-nav-bar" role="tablist">
-          <button type="button" class="settings-nav-btn active" id="stab-user-btn" onclick="switchSettingsTab('user')">👤 المستخدم</button>
-          <button type="button" class="settings-nav-btn" id="stab-security-btn" onclick="switchSettingsTab('security')">🔒 PIN</button>
-          <button type="button" class="settings-nav-btn" id="stab-titles-btn" onclick="switchSettingsTab('titles')">📌 التدخلات</button>
-          <button type="button" class="settings-nav-btn" id="stab-destinations-btn" onclick="switchSettingsTab('destinations')">📍 الوجهات</button>
-          <button type="button" class="settings-nav-btn" id="stab-categories-btn" onclick="switchSettingsTab('categories')">🏷️ التصنيفات</button>
-          <button type="button" class="settings-nav-btn" id="stab-identity-btn" onclick="switchSettingsTab('identity')">🎨 المظهر</button>
-          <button type="button" class="settings-nav-btn" id="stab-backup-btn" onclick="switchSettingsTab('backup')">💾 البيانات</button>
-          <button type="button" class="settings-nav-btn" id="stab-library-btn" onclick="switchSettingsTab('library')">📚 المكتبة</button>
-          <button type="button" class="settings-nav-btn" id="stab-templates-btn" onclick="switchSettingsTab('templates')">⚡ القوالب</button>
-          <button type="button" class="settings-nav-btn" id="stab-about-btn" onclick="switchSettingsTab('about')">ℹ️ حول</button>
+        <div class="settings-nav-bar" role="tablist" aria-label="أقسام مركز التحكم والإعدادات">
+          <button type="button" class="settings-nav-btn active" id="stab-user-btn" onclick="switchSettingsTab('user')" title="المستخدم" aria-label="المستخدم">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="settings-tab-text">المستخدم</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-security-btn" onclick="switchSettingsTab('security')" title="رمز الحماية PIN" aria-label="رمز الحماية PIN">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span class="settings-tab-text">PIN</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-titles-btn" onclick="switchSettingsTab('titles')" title="التدخلات" aria-label="التدخلات">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+            <span class="settings-tab-text">التدخلات</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-destinations-btn" onclick="switchSettingsTab('destinations')" title="الوجهات" aria-label="الوجهات">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span class="settings-tab-text">الوجهات</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-categories-btn" onclick="switchSettingsTab('categories')" title="التصنيفات" aria-label="التصنيفات">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+            <span class="settings-tab-text">التصنيفات</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-identity-btn" onclick="switchSettingsTab('identity')" title="المظهر" aria-label="المظهر">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+            <span class="settings-tab-text">المظهر</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-backup-btn" onclick="switchSettingsTab('backup')" title="البيانات" aria-label="البيانات">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            <span class="settings-tab-text">البيانات</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-library-btn" onclick="switchSettingsTab('library')" title="المكتبة" aria-label="المكتبة">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span class="settings-tab-text">المكتبة</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-templates-btn" onclick="switchSettingsTab('templates')" title="القوالب" aria-label="القوالب">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            <span class="settings-tab-text">القوالب</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-about-btn" onclick="switchSettingsTab('about')" title="حول" aria-label="حول">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span class="settings-tab-text">حول</span>
+          </button>
         </div>
 
         <!-- REQUIREMENT 2 & 3: DEDICATED "USER SETTINGS" SECTION (إعدادات المستخدم) — Pure Arabic & Single Source of Truth -->

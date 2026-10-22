@@ -25899,58 +25899,179 @@ window.addEventListener('DOMContentLoaded', () => {
 // CLOUD FIRESTORE REAL-TIME ENGINE (COLLECTION: 'tasks')
 // ========================================================
 
+const FIRESTORE_META_DOC_ID = '__app_metadata__';
+let isApplyingRemoteSnapshot = false;
+let metadataSyncTimer = null;
+let hasReceivedInitialFirestoreSnapshot = false;
+
 function sanitizeTaskForFirestore(rawObj) {
   if (!rawObj || typeof rawObj !== 'object') return {};
   return JSON.parse(JSON.stringify(rawObj));
 }
 
-function syncTaskToFirestore(taskObj) {
-  if (!taskObj || !taskObj.id) return Promise.resolve();
-  if (!tasksCollection && typeof firebase !== 'undefined' && firebase.firestore) {
-    tasksCollection = firebase.firestore().collection('tasks');
+function handleFirestoreError(err, contextLabel) {
+  console.error("Firestore error (" + contextLabel + "):", err);
+  if (err && (err.code === 'permission-denied' || String(err.message || '').includes('Missing or insufficient permissions'))) {
+    showToast("⚠️ قواعد الأمان (Rules) في Firebase تمنع الحفظ! افتح Firestore Database > Rules واجعلها allow read, write: if true;", "danger");
+  } else {
+    showToast("تعذر المزامنة مع Firestore: " + (err && err.message ? err.message : contextLabel), "warning");
   }
-  if (!tasksCollection) return Promise.resolve();
+}
+
+function ensureTasksCollectionRef() {
+  if (!tasksCollection && typeof firebase !== 'undefined' && firebase.firestore) {
+    db = firebase.firestore();
+    tasksCollection = db.collection('tasks');
+  }
+  return tasksCollection;
+}
+
+// Save non-task app metadata (categories, courts, savedTitles, profile, settings, templates, missionLibrary)
+// inside collection('tasks').doc('__app_metadata__') so 100% of user customizations & JSON imports persist across refreshes!
+function syncAppMetadataToFirestoreImmediate() {
+  if (!APP || isApplyingRemoteSnapshot) return Promise.resolve();
+  const col = ensureTasksCollectionRef();
+  if (!col) return Promise.resolve();
+
+  const metaPayload = sanitizeTaskForFirestore({
+    isSystemMetadataDoc: true,
+    updatedAt: new Date().toISOString(),
+    categories: APP.categories || [],
+    courts: APP.courts || [],
+    savedTitles: APP.savedTitles || [],
+    savedTitleMetadata: APP.savedTitleMetadata || [],
+    templates: APP.templates || [],
+    missionLibrary: APP.missionLibrary || [],
+    profile: APP.profile || {},
+    settings: APP.settings || {},
+    auditLog: (APP.auditLog || []).slice(0, 200)
+  });
+
+  return col.doc(FIRESTORE_META_DOC_ID).set(metaPayload, { merge: true }).catch(err => {
+    handleFirestoreError(err, 'حفظ الإعدادات والتصنيفات');
+  });
+}
+
+function scheduleMetadataSyncToFirestore() {
+  if (isApplyingRemoteSnapshot) return;
+  if (metadataSyncTimer) clearTimeout(metadataSyncTimer);
+  metadataSyncTimer = setTimeout(() => {
+    syncAppMetadataToFirestoreImmediate();
+  }, 350);
+}
+
+function syncTaskToFirestore(taskObj) {
+  if (!taskObj || !taskObj.id || taskObj.id === FIRESTORE_META_DOC_ID) return Promise.resolve();
+  const col = ensureTasksCollectionRef();
+  if (!col) return Promise.resolve();
   const docId = String(taskObj.id);
   const payload = sanitizeTaskForFirestore(taskObj);
   if (payload.isDeleted === undefined) {
     payload.isDeleted = false;
   }
-  return tasksCollection.doc(docId).set(payload, { merge: true }).catch(err => {
-    console.error("Firestore save/update error:", err);
-    showToast("تعذر الاتصال بقاعدة البيانات السحابية Firestore", "warning");
+  return col.doc(docId).set(payload, { merge: true }).catch(err => {
+    handleFirestoreError(err, 'حفظ المهمة');
   });
 }
 
 function updateTaskFieldsInFirestore(taskId, fieldsObj) {
-  if (!taskId) return Promise.resolve();
-  if (!tasksCollection && typeof firebase !== 'undefined' && firebase.firestore) {
-    tasksCollection = firebase.firestore().collection('tasks');
-  }
-  if (!tasksCollection) return Promise.resolve();
+  if (!taskId || taskId === FIRESTORE_META_DOC_ID) return Promise.resolve();
+  const col = ensureTasksCollectionRef();
+  if (!col) return Promise.resolve();
   const docId = String(taskId);
   const cleanFields = sanitizeTaskForFirestore(fieldsObj);
-  return tasksCollection.doc(docId).set(cleanFields, { merge: true }).catch(err => {
-    console.error("Firestore status update error:", err);
-    showToast("تعذر تحديث حالة المهمة في Firestore", "warning");
+  return col.doc(docId).set(cleanFields, { merge: true }).catch(err => {
+    handleFirestoreError(err, 'تحديث حالة المهمة');
   });
 }
 
 function deleteTaskFromFirestore(taskId) {
-  if (!taskId) return Promise.resolve();
-  if (!tasksCollection && typeof firebase !== 'undefined' && firebase.firestore) {
-    tasksCollection = firebase.firestore().collection('tasks');
-  }
-  if (!tasksCollection) return Promise.resolve();
+  if (!taskId || taskId === FIRESTORE_META_DOC_ID) return Promise.resolve();
+  const col = ensureTasksCollectionRef();
+  if (!col) return Promise.resolve();
   const docId = String(taskId);
-  return tasksCollection.doc(docId).delete().catch(err => {
-    console.error("Firestore delete error:", err);
-    showToast("تعذر حذف المهمة من Firestore", "warning");
+  return col.doc(docId).delete().catch(err => {
+    handleFirestoreError(err, 'حذف المهمة');
   });
+}
+
+// Batch-sync all tasks, trash, and metadata to Firestore (used on JSON Import or Initial Seed)
+async function syncEntireAppToFirestoreBatch(replaceExistingTasks = false) {
+  if (!APP) return;
+  const col = ensureTasksCollectionRef();
+  if (!col || !db) return;
+
+  try {
+    const activeTasks = Array.isArray(APP.tasks) ? APP.tasks : [];
+    const trashedTasks = Array.isArray(APP.trash) ? APP.trash : [];
+    const newIdsSet = new Set([
+      FIRESTORE_META_DOC_ID,
+      ...activeTasks.map(t => String(t.id)),
+      ...trashedTasks.map(t => String(t.id))
+    ]);
+
+    const operations = [];
+
+    if (replaceExistingTasks) {
+      const existingSnap = await col.get();
+      existingSnap.forEach(doc => {
+        if (!newIdsSet.has(doc.id)) {
+          operations.push({ type: 'delete', ref: col.doc(doc.id) });
+        }
+      });
+    }
+
+    activeTasks.forEach(t => {
+      if (!t || !t.id) return;
+      const payload = sanitizeTaskForFirestore(t);
+      payload.isDeleted = false;
+      operations.push({ type: 'set', ref: col.doc(String(t.id)), data: payload });
+    });
+
+    trashedTasks.forEach(t => {
+      if (!t || !t.id) return;
+      const payload = sanitizeTaskForFirestore(t);
+      payload.isDeleted = true;
+      operations.push({ type: 'set', ref: col.doc(String(t.id)), data: payload });
+    });
+
+    const metaPayload = sanitizeTaskForFirestore({
+      isSystemMetadataDoc: true,
+      updatedAt: new Date().toISOString(),
+      categories: APP.categories || [],
+      courts: APP.courts || [],
+      savedTitles: APP.savedTitles || [],
+      savedTitleMetadata: APP.savedTitleMetadata || [],
+      templates: APP.templates || [],
+      missionLibrary: APP.missionLibrary || [],
+      profile: APP.profile || {},
+      settings: APP.settings || {},
+      auditLog: (APP.auditLog || []).slice(0, 200)
+    });
+    operations.push({ type: 'set', ref: col.doc(FIRESTORE_META_DOC_ID), data: metaPayload });
+
+    // Commit in chunks of 400 (Firestore batch limit is 500)
+    const CHUNK_SIZE = 400;
+    for (let i = 0; i < operations.length; i += CHUNK_SIZE) {
+      const batch = db.batch();
+      const slice = operations.slice(i, i + CHUNK_SIZE);
+      slice.forEach(op => {
+        if (op.type === 'delete') batch.delete(op.ref);
+        else batch.set(op.ref, op.data, { merge: true });
+      });
+      await batch.commit();
+    }
+  } catch (err) {
+    handleFirestoreError(err, 'مزامنة البيانات الشاملة');
+    throw err;
+  }
 }
 
 function refreshAllViewsFromFirestoreSnapshot() {
   if (!APP) return;
   try {
+    syncV13MirrorsToCloudFirestore();
+    applyIdentityToUI();
     populateAllDropdowns();
     updateNavBadges();
     renderRecentSidebarTasks();
@@ -25962,6 +26083,10 @@ function refreshAllViewsFromFirestoreSnapshot() {
     renderTasksTable();
     renderCalendar();
     renderTrashTable();
+    renderDedicatedUserSettings();
+    renderSettingsCategories();
+    renderSettingsDestinations();
+    renderSettingsSavedTitles();
     if (typeof renderMissionLibraryView === 'function') {
       renderMissionLibraryView();
     }
@@ -25978,63 +26103,110 @@ function refreshAllViewsFromFirestoreSnapshot() {
 }
 
 function initFirestoreRealtimeListener() {
-  if (!tasksCollection && typeof firebase !== 'undefined' && firebase.firestore) {
-    tasksCollection = firebase.firestore().collection('tasks');
-  }
-  if (!tasksCollection) return;
+  const col = ensureTasksCollectionRef();
+  if (!col) return;
 
   if (unsubscribeTasksSnapshot) {
     try { unsubscribeTasksSnapshot(); } catch (e) {}
   }
 
-  unsubscribeTasksSnapshot = tasksCollection.onSnapshot((snapshot) => {
+  unsubscribeTasksSnapshot = col.onSnapshot((snapshot) => {
     if (!APP) return;
-    const activeTasks = [];
-    const trashedTasks = [];
+    isApplyingRemoteSnapshot = true;
+    try {
+      const activeTasks = [];
+      const trashedTasks = [];
+      let metaDocData = null;
 
-    snapshot.forEach((doc) => {
-      const data = doc.data() || {};
-      const taskItem = Object.assign({}, data, { id: doc.id });
-      if (taskItem.isDeleted) {
-        trashedTasks.push(taskItem);
-      } else {
-        if (typeof normalizeTaskStatusAndProgress === 'function') {
-          normalizeTaskStatusAndProgress(taskItem);
+      snapshot.forEach((doc) => {
+        const data = doc.data() || {};
+        if (doc.id === FIRESTORE_META_DOC_ID || data.isSystemMetadataDoc) {
+          metaDocData = data;
+          return;
         }
-        activeTasks.push(taskItem);
+        const taskItem = Object.assign({}, data, { id: doc.id });
+        if (taskItem.isDeleted) {
+          trashedTasks.push(taskItem);
+        } else {
+          if (typeof normalizeTaskStatusAndProgress === 'function') {
+            normalizeTaskStatusAndProgress(taskItem);
+          }
+          activeTasks.push(taskItem);
+        }
+      });
+
+      // Restore categories, courts, savedTitles, profile, settings, templates, missionLibrary from __app_metadata__
+      if (metaDocData) {
+        if (Array.isArray(metaDocData.categories) && metaDocData.categories.length > 0) {
+          APP.categories = metaDocData.categories;
+        }
+        if (Array.isArray(metaDocData.courts) && metaDocData.courts.length > 0) {
+          APP.courts = metaDocData.courts;
+        }
+        if (Array.isArray(metaDocData.savedTitles)) {
+          APP.savedTitles = metaDocData.savedTitles;
+        }
+        if (Array.isArray(metaDocData.savedTitleMetadata)) {
+          APP.savedTitleMetadata = metaDocData.savedTitleMetadata;
+        }
+        if (Array.isArray(metaDocData.templates) && metaDocData.templates.length > 0) {
+          APP.templates = metaDocData.templates;
+        }
+        if (Array.isArray(metaDocData.missionLibrary) && metaDocData.missionLibrary.length > 0) {
+          APP.missionLibrary = metaDocData.missionLibrary;
+        }
+        if (metaDocData.profile && typeof metaDocData.profile === 'object') {
+          APP.profile = Object.assign({}, APP.profile || {}, metaDocData.profile);
+        }
+        if (metaDocData.settings && typeof metaDocData.settings === 'object') {
+          APP.settings = Object.assign({}, APP.settings || {}, metaDocData.settings);
+          APP.settings.v13Initialized = true;
+        }
+        if (Array.isArray(metaDocData.auditLog) && metaDocData.auditLog.length > 0) {
+          APP.auditLog = metaDocData.auditLog;
+        }
       }
-    });
 
-    activeTasks.sort(compareTasksNewestFirst);
-    trashedTasks.sort((a, b) => String(b.deletedAt || '').localeCompare(String(a.deletedAt || '')));
+      activeTasks.sort(compareTasksNewestFirst);
+      trashedTasks.sort((a, b) => String(b.deletedAt || '').localeCompare(String(a.deletedAt || '')));
 
-    APP.tasks = activeTasks;
-    APP.trash = trashedTasks;
+      APP.tasks = activeTasks;
+      APP.trash = trashedTasks;
 
-    // Maintain savedTitles from live Firestore tasks for smart autocomplete
-    if (!Array.isArray(APP.savedTitles)) APP.savedTitles = [];
-    activeTasks.forEach(t => {
-      if (t.title && !APP.savedTitles.includes(t.title.trim())) {
-        APP.savedTitles.push(t.title.trim());
-      }
-    });
+      if (!Array.isArray(APP.savedTitles)) APP.savedTitles = [];
+      activeTasks.forEach(t => {
+        if (t.title && !APP.savedTitles.includes(t.title.trim())) {
+          APP.savedTitles.push(t.title.trim());
+        }
+      });
 
-    refreshAllViewsFromFirestoreSnapshot();
+      hasReceivedInitialFirestoreSnapshot = true;
+      refreshAllViewsFromFirestoreSnapshot();
+    } finally {
+      isApplyingRemoteSnapshot = false;
+    }
   }, (error) => {
-    console.error("Firestore onSnapshot listener error:", error);
+    handleFirestoreError(error, 'المزامنة اللحظية onSnapshot');
   });
 }
 
-// Override saveData so it never uses browser cloudStorage and only updates live UI badges
+// Keep in-memory mirrors synchronized AND push metadata changes to Firestore!
 saveData = function() {
   try {
+    if (APP && APP.settings) {
+      APP.settings.v13Initialized = true;
+    }
+    syncV13MirrorsToCloudFirestore();
     updateNavBadges();
     renderRecentSidebarTasks();
     if (typeof updateStorageQuotaUI === 'function') {
       updateStorageQuotaUI();
     }
+    if (!isApplyingRemoteSnapshot) {
+      scheduleMetadataSyncToFirestore();
+    }
   } catch (err) {
-    console.error("Error updating UI state:", err);
+    console.error("Error updating state:", err);
   }
   return true;
 };
@@ -26053,6 +26225,7 @@ handleTaskFormSubmit = function(e) {
   if (savedTask) {
     savedTask.isDeleted = false;
     syncTaskToFirestore(savedTask);
+    scheduleMetadataSyncToFirestore();
   }
 };
 
@@ -26063,6 +26236,7 @@ executeFastCapture = function() {
   if (res && res.saved && res.task) {
     res.task.isDeleted = false;
     syncTaskToFirestore(res.task);
+    scheduleMetadataSyncToFirestore();
   }
   return res;
 };
@@ -26074,6 +26248,7 @@ quickCreateTaskFromText = function(text, forceDest = null, forceCat = null) {
   if (APP && Array.isArray(APP.tasks) && APP.tasks[0]) {
     APP.tasks[0].isDeleted = false;
     syncTaskToFirestore(APP.tasks[0]);
+    scheduleMetadataSyncToFirestore();
   }
 };
 
@@ -26132,10 +26307,11 @@ promoteTaskToMissionLibrary = function(taskId) {
     updateTaskFieldsInFirestore(t.id, {
       missionId: t.missionId || ''
     });
+    scheduleMetadataSyncToFirestore();
   }
 };
 
-// 8. Soft Delete Task (Move to Trash or Delete in Firestore) -> Direct Firestore 'tasks' Collection Update
+// 8. Soft Delete Task (Move to Trash in Firestore) -> Direct Firestore 'tasks' Collection Update
 const _preFirestoreSoftDeleteTask = softDeleteTask;
 softDeleteTask = function(id) {
   _preFirestoreSoftDeleteTask(id);
@@ -26197,21 +26373,100 @@ confirmEmptyTrash = function() {
   );
 };
 
-// 12. Sync Bulk Operations (Import JSON, Safe Delete, Yearly Archive Wipe) with Firestore 'tasks' Collection
-const _preFirestoreImportBackupDataObject = importBackupDataObject;
+// 12. Full JSON Import -> Preserves imported JSON in memory AND commits all tasks + metadata to Firestore in batches!
 importBackupDataObject = function(rawInput, skipConfirm) {
-  const res = _preFirestoreImportBackupDataObject(rawInput, skipConfirm);
-  if (res && res.success && APP) {
-    (APP.tasks || []).forEach(t => {
-      t.isDeleted = false;
-      syncTaskToFirestore(t);
-    });
-    (APP.trash || []).forEach(t => {
-      t.isDeleted = true;
-      syncTaskToFirestore(t);
-    });
+  const feedbackEl = document.getElementById('restore-validation-feedback');
+  let parsed = null;
+  try {
+    parsed = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
+  } catch (err) {
+    if (feedbackEl) {
+      feedbackEl.style.display = 'block';
+      feedbackEl.style.color = 'var(--danger)';
+      feedbackEl.innerText = 'فشل الفحص: الملف المحدد ليس بصيغة JSON صحيحة.';
+    }
+    showToast('ملف غير صالح: صيغة JSON تالفة', 'warning');
+    return { success: false, error: 'INVALID_JSON_SYNTAX' };
   }
-  return res;
+
+  const check = validateBackupJSON(parsed);
+  if (!check.valid) {
+    if (feedbackEl) {
+      feedbackEl.style.display = 'block';
+      feedbackEl.style.color = 'var(--danger)';
+      feedbackEl.innerText = check.reason;
+    }
+    showToast(check.reason, 'warning');
+    return { success: false, error: check.reason };
+  }
+
+  if (!parsed.settings) parsed.settings = {};
+  parsed.settings.v13Initialized = true;
+
+  if (parsed.userSettings && typeof parsed.userSettings === 'object') {
+    if (!parsed.profile) parsed.profile = {};
+    if (parsed.userSettings.fullName) {
+      parsed.profile.fullName = parsed.userSettings.fullName;
+      parsed.settings.userName = parsed.userSettings.fullName;
+    }
+    if (parsed.userSettings.jobTitle) {
+      parsed.profile.jobTitle = parsed.userSettings.jobTitle;
+      parsed.settings.userRole = parsed.userSettings.jobTitle;
+    }
+    if (parsed.userSettings.framework !== undefined) {
+      parsed.profile.framework = parsed.userSettings.framework;
+      parsed.profile.grade = parsed.userSettings.framework;
+      parsed.settings.userFramework = parsed.userSettings.framework;
+    }
+    if (parsed.userSettings.department) {
+      parsed.profile.organization = parsed.userSettings.department;
+      parsed.settings.department = parsed.userSettings.department;
+    }
+    if (parsed.userSettings.signatoryRole) {
+      parsed.profile.officialStampText = parsed.userSettings.signatoryRole;
+      parsed.settings.officialStampText = parsed.userSettings.signatoryRole;
+      parsed.settings.reportApprovalText = parsed.userSettings.signatoryRole;
+    }
+    if (Array.isArray(parsed.userSettings.basicRoutineTasks)) {
+      parsed.profile.basicRoutineTasks = parsed.userSettings.basicRoutineTasks;
+      parsed.settings.basicRoutineTasks = parsed.userSettings.basicRoutineTasks;
+    }
+  }
+
+  // Update in-memory stores BEFORE refreshing UI so initSystem/mirrors never overwrite the imported JSON!
+  APP = parsed;
+  syncV13MirrorsToCloudFirestore();
+  ensureDataIntegrity();
+  syncV13MirrorsToCloudFirestore();
+  refreshAllViewsFromFirestoreSnapshot();
+
+  showToast(`جاري رفع ومزامنة ${APP.tasks.length} مهمة وكافة الإعدادات مع قاعدة البيانات السحابية Firestore...`);
+  syncEntireAppToFirestoreBatch(true).then(() => {
+    if (feedbackEl) {
+      feedbackEl.style.display = 'block';
+      feedbackEl.style.color = 'var(--success)';
+      feedbackEl.innerText = `تم استيراد وحفظ ${APP.tasks.length} مهمة وكافة الإعدادات في قاعدة بيانات Firestore بنجاح تام!`;
+    }
+    showToast(`تم حفظ جميع المهام (${APP.tasks.length}) والإعدادات في السحابة (Firestore) بنجاح!`);
+  }).catch(() => {});
+
+  return { success: true, taskCount: APP.tasks.length };
+};
+
+// 13. Safe Delete & Yearly Rollover -> Also delete from Firestore
+const _preFirestoreConfirmSafeDeleteData = confirmSafeDeleteData;
+confirmSafeDeleteData = function(mode) {
+  const existingIds = (APP && Array.isArray(APP.tasks)) ? APP.tasks.map(t => t.id) : [];
+  const existingTrashIds = (APP && Array.isArray(APP.trash)) ? APP.trash.map(t => t.id) : [];
+  _preFirestoreConfirmSafeDeleteData(mode);
+  setTimeout(() => {
+    if (APP && Array.isArray(APP.tasks) && APP.tasks.length === 0) {
+      existingIds.forEach(id => deleteTaskFromFirestore(id));
+      if (mode === 'all_data') {
+        existingTrashIds.forEach(id => deleteTaskFromFirestore(id));
+      }
+    }
+  }, 300);
 };
 
 // Start the real-time Firestore listener on boot

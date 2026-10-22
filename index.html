@@ -8330,6 +8330,336 @@ button.universal-add-outline-btn,
   }
 }
 
+  
+/* ========================================================
+   MASTER ENGINEERING DIRECTIVE v35.0 — DEFCON 1:
+   ULTIMATE NATIVE MOBILE UI/UX OVERHAUL, GLOBAL OUTLINE
+   BUTTON STANDARDIZATION & STRICT ANTI-OVERFLOW CONTAINMENT
+   ======================================================== */
+
+/* PART I.1 — KILL HORIZONTAL SCROLL & STRICT BOX-MODEL CONTAINMENT */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box !important;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+svg, svg *, .sidebar-toggle-btn {
+  max-width: none;
+  overflow-wrap: normal;
+}
+
+/* PART II.1 — GLOBAL "OUTLINE" BUTTON STANDARDIZATION
+   Strip solid dark/heavy backgrounds from ALL action buttons (Save, Add, Filter,
+   Reset, Print, Cancel, Sidebar Actions, etc.) -> Transparent background,
+   colored border, and matching colored icon/text */
+.btn,
+button.btn,
+.btn-primary,
+.btn-secondary,
+.btn-success,
+.btn-danger,
+.btn-danger-outline,
+.btn-outline,
+.action-icon-btn,
+.header-icon-btn,
+.theme-toggle-btn,
+.universal-add-outline-btn,
+.sidebar-action-btn,
+.sidebar-action-btn.primary-action,
+.sidebar-action-btn.quick-action,
+#settings-unified-save-btn,
+#settings-unified-save-btn.is-dirty,
+#settings-lock-now-btn,
+#tf-submit-btn,
+#tf-cancel-btn,
+#fc-save-btn,
+#btn-print-tasks-summary,
+#btn-print-mission-report,
+#btn-clear-task-filters,
+#btn-reset-report,
+#empty-trash-btn,
+#lib-add-mission-btn,
+#usr-add-basic-task-btn,
+#top-storage-backup-now-btn,
+.sub-filter-pill,
+.workflow-subview-btn,
+.settings-nav-btn,
+.cat-pill-btn,
+.library-chip-btn,
+.page-btn,
+.actions-trigger-btn,
+.btn-inline-plus,
+.inline-input-add-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Primary Outline Buttons (Save, Add, Print, Primary Actions) */
+.btn-primary,
+button.btn-primary,
+.sidebar-action-btn.primary-action,
+#settings-unified-save-btn,
+#tf-submit-btn,
+#fc-save-btn,
+#btn-print-tasks-summary,
+#btn-print-mission-report,
+.universal-add-outline-btn,
+#lib-add-mission-btn,
+#usr-add-basic-task-btn {
+  border: 1.5px solid var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+.sidebar-action-btn.primary-action .action-icon,
+.sidebar-action-btn.primary-action .action-label {
+  color: var(--primary) !important;
+}
+
+/* Quick Action / Warning Outline Buttons */
+.sidebar-action-btn.quick-action,
+#settings-unified-save-btn.is-dirty {
+  border: 1.5px solid #f59e0b !important;
+  color: #f59e0b !important;
+  animation: none !important;
+}
+
+.sidebar-action-btn.quick-action .action-icon,
+.sidebar-action-btn.quick-action .action-label {
+  color: #f59e0b !important;
+}
+
+/* Success Outline Buttons */
+.btn-success,
+button.btn-success,
+.btn-inline-plus {
+  border: 1.5px solid var(--success) !important;
+  color: var(--success) !important;
+}
+
+/* Danger Outline Buttons (Delete, Cancel, Empty Trash) */
+.btn-danger,
+.btn-danger-outline,
+button.btn-danger,
+button.btn-danger-outline,
+#tf-cancel-btn,
+#empty-trash-btn {
+  border: 1.5px solid var(--danger) !important;
+  color: var(--danger) !important;
+}
+
+/* Secondary & Neutral Outline Buttons (Filter, Reset, Header Icons, Nav Pills) */
+.btn-secondary,
+.btn-outline,
+.header-icon-btn,
+.theme-toggle-btn,
+#btn-clear-task-filters,
+#btn-reset-report,
+#settings-lock-now-btn,
+.sub-filter-pill,
+.workflow-subview-btn,
+.settings-nav-btn,
+.cat-pill-btn,
+.library-chip-btn,
+.page-btn,
+.actions-trigger-btn {
+  border: 1px solid var(--border-strong) !important;
+  color: var(--text-main) !important;
+}
+
+/* Active Filter / Tab / Pagination Outline State (Transparent background + Primary colored border & text) */
+.sub-filter-pill.active,
+.filter-pill.active,
+.workflow-subview-btn.active,
+.settings-nav-btn.active,
+.cat-pill-btn.active,
+.library-chip-btn.active,
+.page-btn.active,
+.dest-count-opt.active,
+.chart-opt-btn.active {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 1.5px solid var(--primary) !important;
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+/* Hover States for Outline Buttons */
+.btn:hover,
+.action-icon-btn:hover,
+.header-icon-btn:hover,
+.theme-toggle-btn:hover,
+.sidebar-action-btn:hover,
+#settings-unified-save-btn:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  opacity: 0.85 !important;
+}
+
+/* PART III.1 — CALENDAR WEEKEND DIFFERENTIATION (NO "عطلة" TEXT) */
+.calendar-cell.weekend {
+  background: var(--bg-weekend) !important;
+}
+
+.calendar-cell.weekend .cell-num {
+  color: var(--primary) !important;
+  font-weight: 700 !important;
+}
+
+/* PART IV — UNIVERSAL SECTION TOGGLES (BORDERLESS CHEVRON SYSTEM & 50/50 EXCEPTION) */
+.universal-card-toggle-btn,
+#dash-today-collapse-btn,
+.accordion-chevron {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+#dash-compact-analytics-card .universal-card-toggle-btn,
+#dash-recent-activity-card .universal-card-toggle-btn {
+  display: none !important;
+}
+
+/* ========================================================
+   PART I.2 & PART II.2 — MOBILE 375PX QA CONTAINMENT &
+   ICON-ONLY ACTION BUTTONS (<= 768px)
+   ======================================================== */
+@media (max-width: 768px) {
+  /* 1. Force 1-Column Vertical Stacking on ALL Stat Grids, Charts, Activities & Cards */
+  .grid-5,
+  .dash-kpi-grid,
+  #view-dashboard .grid-5,
+  .grid-4,
+  #dash-profile-library-card > .grid-4,
+  #dash-profile-library-card.mobile-expanded > .grid-4,
+  #view-library > .grid-4,
+  #mexec-modal-body .grid-4,
+  .dash-analytics-split-grid,
+  #dash-analytics-split-grid,
+  .recent-activity-dual-body,
+  #dash-recent-activity-body,
+  #dash-external-trips-list,
+  #dash-internal-trips-list,
+  .grid-3,
+  .grid-2,
+  .mission-library-grid,
+  .tasks-filter-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.65rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #view-dashboard .grid-5 > .card.kpi-stat-card,
+  #view-dashboard .grid-5 > .card.kpi-stat-card:nth-child(5) {
+    grid-column: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .compact-pie-layout {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.65rem !important;
+  }
+
+  /* 2. Icon-Only Mobile Mode: Strip text from ALL action buttons on mobile */
+  .btn-text-label,
+  .sidebar-action-btn .action-label,
+  .cal-nav-arrow-btn .btn-text-label,
+  .adaptive-plus-btn .btn-text-label,
+  .adaptive-icon-btn .btn-text-label,
+  #top-storage-backup-now-btn .btn-text-label,
+  #empty-trash-btn .btn-text-label,
+  #lib-add-mission-btn .btn-text-label {
+    display: none !important;
+  }
+
+  .universal-add-outline-btn,
+  .adaptive-plus-btn,
+  .adaptive-icon-btn,
+  .cal-nav-arrow-btn,
+  #cal-prev-month-btn,
+  #cal-next-month-btn,
+  #cal-today-btn,
+  #empty-trash-btn,
+  #btn-clear-task-filters,
+  #btn-reset-report,
+  #btn-print-tasks-summary,
+  #btn-print-mission-report,
+  #lib-add-mission-btn,
+  #usr-add-basic-task-btn,
+  #settings-unified-save-btn,
+  #settings-lock-now-btn,
+  button:has(.btn-text-label) {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    font-size: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Ensure Sidebar Add (+) and Quick Entry buttons are square outline icon-only on mobile */
+  #app-sidebar .sidebar-action-btn,
+  #sidebar .sidebar-action-btn {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+  }
+
+  /* Protect Top Header Icons on 375px Mobile Screen */
+  #app-header,
+  .app-header {
+    padding: 0 0.5rem !important;
+    gap: 0.3rem !important;
+  }
+
+  #app-header .header-tools {
+    gap: 0.25rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  #app-header .header-icon-btn,
+  #app-header .theme-toggle-btn {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+
   </style>
 </head>
 <body class="dark-mode">
@@ -9069,7 +9399,7 @@ button.universal-add-outline-btn,
                 <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 <span class="btn-text-label">الشهر التالي</span>
               </button>
-              <button type="button" class="btn btn-sm btn-secondary" id="cal-today-btn" onclick="resetCalToToday()" title="اليوم" style="padding:0.3rem 0.6rem !important; min-height:36px !important;">اليوم</button>
+              <button type="button" class="btn btn-sm btn-outline cal-nav-arrow-btn" id="cal-today-btn" onclick="resetCalToToday()" title="اليوم" aria-label="اليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span class="btn-text-label">اليوم</span></button>
             </div>
           </div>
 
@@ -12380,7 +12710,7 @@ function renderCalendar() {
     cell.onclick = () => openDayInspector(dateStr);
 
     let badgeHtml = count > 0 ? `<span class="cell-task-badge">${count}</span>` : '';
-    let previewDest = count > 0 ? (dayTasks[0].destination ? '📍 ' + dayTasks[0].destination.split(' ')[0] : '') : (isWeekend ? '<span style="color:var(--text-muted); font-size:0.65rem;">عطلة</span>' : '');
+    let previewDest = count > 0 ? (dayTasks[0].destination ? '📍 ' + dayTasks[0].destination.split(' ')[0] : '') : '';
 
     cell.innerHTML = `
       <div class="cell-top">
@@ -17656,7 +17986,7 @@ renderCalendar = function() {
 
     let previewDest = dayState.total > 0
       ? (dayTasks[0].destination ? '📍 ' + escapeHtml(dayTasks[0].destination.split(' ')[0]) : escapeHtml(dayTasks[0].title.slice(0, 14)))
-      : (isWeekend ? '<span style="color:var(--text-muted); font-size:0.65rem;">عطلة</span>' : '');
+      : '';
 
     cell.innerHTML = `
       <div class="cell-top">

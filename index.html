@@ -8193,6 +8193,143 @@ button[onclick*="printMissionReport"] {
   }
 }
 
+
+/* ========================================================
+   MASTER ENGINEERING DIRECTIVE v34.0 — DEFCON 1:
+   UNIVERSAL OUTLINE ADD (+) BUTTONS, ICON-ONLY RESET/CLEAR/TRASH,
+   HEADER PROTECTION & ZERO-REGRESSION RESPONSIVENESS
+   ======================================================== */
+
+/* PART I — THE NEW UNIVERSAL "ADD" BUTTON (+) STANDARDIZATION */
+/* Transparent, square outline button with a blue border containing ONLY the centered (+) icon */
+.universal-add-outline-btn,
+button.universal-add-outline-btn,
+.btn.universal-add-outline-btn,
+.action-icon-btn.universal-add-outline-btn,
+#lib-add-mission-btn,
+#usr-add-basic-task-btn {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  aspect-ratio: 1 / 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 1.5px solid var(--primary) !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+  flex-shrink: 0 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  cursor: pointer !important;
+}
+
+.universal-add-outline-btn:hover,
+.universal-add-outline-btn:focus-visible,
+#lib-add-mission-btn:hover,
+#usr-add-basic-task-btn:hover {
+  background: var(--primary-soft) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+  transform: translateY(-1px) !important;
+}
+
+.universal-add-outline-btn svg,
+#lib-add-mission-btn svg,
+#usr-add-basic-task-btn svg {
+  width: 18px !important;
+  height: 18px !important;
+  stroke: currentColor !important;
+  fill: none !important;
+  stroke-width: 2 !important;
+  margin: 0 !important;
+  display: block !important;
+}
+
+.universal-add-outline-btn .btn-text-label,
+#lib-add-mission-btn .btn-text-label,
+#usr-add-basic-task-btn .btn-text-label {
+  display: none !important;
+}
+
+/* PART II.1 & II.2 — TRASH, CLEAR FILTERS & RESET REPORT BUTTONS (ICON-ONLY EVERYWHERE) */
+#empty-trash-btn,
+#btn-clear-task-filters,
+#btn-reset-report {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  aspect-ratio: 1 / 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  font-size: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+#btn-clear-task-filters,
+#btn-reset-report {
+  border: 1px solid var(--border-strong) !important;
+  color: var(--text-secondary) !important;
+}
+
+#btn-clear-task-filters:hover,
+#btn-reset-report:hover {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  background: var(--primary-soft) !important;
+}
+
+#empty-trash-btn {
+  border: 1px solid var(--danger) !important;
+  color: var(--danger) !important;
+}
+
+/* Ensure Add (+), Trash, Clear Filters, Reset, and Header Icons NEVER disappear on mobile */
+@media (max-width: 768px) {
+  .universal-add-outline-btn,
+  #lib-add-mission-btn,
+  #usr-add-basic-task-btn,
+  #empty-trash-btn,
+  #btn-clear-task-filters,
+  #btn-reset-report {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+  }
+}
+
   </style>
 </head>
 <body class="dark-mode">
@@ -8593,7 +8730,7 @@ button[onclick*="printMissionReport"] {
               <span id="dash-today-inline-empty-hint" style="display:none; font-size:0.78rem; font-weight:500; color:var(--text-muted);">— لا توجد مهام مبرمجة لليوم حالياً</span>
             </div>
             <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
-              <button type="button" class="btn btn-sm btn-primary adaptive-plus-btn" onclick="openNewTaskModal()" title="إضافة مهمة لليوم" aria-label="إضافة مهمة لليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span class="btn-text-label">إضافة مهمة</span></button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTaskModal()" title="إضافة مهمة لليوم" aria-label="إضافة مهمة لليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
               <button type="button" class="btn btn-sm btn-outline" style="padding:0.22rem 0.6rem; font-size:0.76rem;" onclick="switchView('today')" title="لوحة اليوم"><span class="btn-text-label">لوحة اليوم</span> ☀️</button>
               <button type="button" class="universal-card-toggle-btn" id="dash-today-collapse-btn" onclick="toggleDashTodaySection()" title="طي أو توسيع قسم مهام اليوم"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
             </div>
@@ -8724,8 +8861,8 @@ button[onclick*="printMissionReport"] {
           <div class="card-header">
             <div class="card-title"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> القوالب السريعة ومهام المكتبة الفورية</div>
             <div style="display:inline-flex; align-items:center; gap:0.35rem;">
-              <button class="btn btn-sm btn-outline adaptive-icon-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span class="btn-text-label">مهمة للمكتبة</span></button>
-              <button class="btn btn-sm btn-outline adaptive-icon-btn" onclick="openNewTemplateModal()" title="إضافة قالب سريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span class="btn-text-label">قالب سريع</span></button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTemplateModal()" title="إضافة قالب سريع" aria-label="إضافة قالب سريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
               <button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
             </div>
           </div>
@@ -8747,7 +8884,7 @@ button[onclick*="printMissionReport"] {
             <span style="display:none;" id="lib-prof-resp-summary"></span>
           </div>
           <div style="display:inline-flex; gap:0.45rem; align-items:center; flex-wrap:nowrap; flex-shrink:0;">
-            <button type="button" class="action-icon-btn btn-primary" id="lib-add-mission-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+            <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" id="lib-add-mission-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
           </div>
         </div>
 
@@ -8794,7 +8931,7 @@ button[onclick*="printMissionReport"] {
               <button class="btn btn-sm btn-icon btn-outline help-btn" onclick="openContextualHelp('today')" title="دليل المساعدة والإرشادات">❓</button>
             </div>
             <div style="display:inline-flex; align-items:center; gap:0.5rem; flex-shrink:0; flex-wrap:nowrap;">
-              <button type="button" class="btn btn-sm btn-primary adaptive-plus-btn" style="flex-shrink:0;" onclick="openNewTaskModal()" title="إضافة مهمة" aria-label="إضافة مهمة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span class="btn-text-label">إضافة مهمة</span></button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTaskModal()" title="إضافة مهمة" aria-label="إضافة مهمة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
             </div>
           </div>
         </div>
@@ -8880,7 +9017,7 @@ button[onclick*="printMissionReport"] {
               <button class="btn btn-sm btn-icon btn-outline help-btn" onclick="openContextualHelp('backlog')" title="دليل المساعدة والإرشادات">❓</button>
             </div>
             <div style="display:inline-flex; align-items:center; gap:0.5rem; flex-shrink:0; flex-wrap:nowrap;">
-              <button type="button" class="btn btn-sm btn-primary adaptive-plus-btn" style="flex-shrink:0;" onclick="openNewBacklogTaskModal()" title="إضافة مهمة جديدة" aria-label="إضافة مهمة جديدة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span class="btn-text-label">إضافة مهمة جديدة</span></button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewBacklogTaskModal()" title="إضافة مهمة جديدة" aria-label="إضافة مهمة جديدة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
             </div>
           </div>
         </div>
@@ -8960,7 +9097,7 @@ button[onclick*="printMissionReport"] {
                 <option value="timeline">الجدول الزمني الميداني (اليوم أولاً، ثم القادم)</option>
                 <option value="priority">حسب الأولوية (العاجلة أولاً)</option>
               </select>
-              <button class="btn btn-sm btn-outline" onclick="resetAllTaskFilters()" title="مسح الفلاتر"><span class="btn-text-label">مسح الفلاتر</span> ↺</button>
+              <button type="button" class="action-icon-btn btn-outline" id="btn-clear-task-filters" onclick="resetAllTaskFilters()" title="مسح الفلاتر" aria-label="مسح الفلاتر"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
               <button type="button" class="action-icon-btn btn-primary" id="btn-print-tasks-summary" onclick="printFilteredTasksSummaryReport()" title="طباعة الكشف" aria-label="طباعة الكشف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></button>
             </div>
           </div>
@@ -9097,7 +9234,7 @@ button[onclick*="printMissionReport"] {
               <button class="btn btn-sm btn-icon btn-outline help-btn" onclick="openContextualHelp('report')" title="دليل المساعدة والإرشادات">❓</button>
             </div>
             <div style="display:flex; gap:0.5rem;">
-              <button class="btn btn-sm btn-outline" onclick="loadTaskIntoReport()" title="إعادة تعيين">🔄 <span class="btn-text-label">إعادة تعيين</span></button>
+              <button type="button" class="action-icon-btn btn-outline" id="btn-reset-report" onclick="loadTaskIntoReport()" title="إعادة تعيين" aria-label="إعادة تعيين"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
               <button type="button" class="action-icon-btn btn-primary" id="btn-print-mission-report" onclick="printMissionReport()" title="طباعة التقرير" aria-label="طباعة التقرير"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></button>
             </div>
           </div>
@@ -9290,7 +9427,7 @@ button[onclick*="printMissionReport"] {
 
               <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:0.85rem;">
                 <input type="text" id="usr-new-basic-task-input" class="form-control" style="flex:1;" placeholder="اكتب مهمة أساسية معتادة (مثال: مراقبة الشبكة المعلوماتية وتفقد الخوادم)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addBasicUserTask();}">
-                <button type="button" class="btn btn-primary" id="usr-add-basic-task-btn" onclick="addBasicUserTask()" title="إضافة إلى المهام الأساسية المعتادة">+ <span class="btn-text-label">إضافة</span></button>
+                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" id="usr-add-basic-task-btn" onclick="addBasicUserTask()" title="إضافة إلى المهام الأساسية المعتادة" aria-label="إضافة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
               </div>
 
               <div id="usr-basic-tasks-list" style="display:flex; flex-direction:column; gap:0.45rem;">
@@ -9362,7 +9499,7 @@ button[onclick*="printMissionReport"] {
                 <select id="cfg-new-saved-title-cat" class="form-control" style="flex:1; min-width:170px;">
                   <option value="">-- ربط بصنف (اختياري) --</option>
                 </select>
-                <button type="button" class="btn btn-primary" onclick="addSavedTitleFromSettings()" title="إضافة وحفظ العنوان">➕ <span class="btn-text-label">إضافة وحفظ العنوان</span></button>
+                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addSavedTitleFromSettings()" title="إضافة وحفظ العنوان" aria-label="إضافة وحفظ العنوان"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
               </div>
             </div>
 
@@ -9383,7 +9520,7 @@ button[onclick*="printMissionReport"] {
                 <p class="page-concise-subtitle" style="margin:0;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> <span>الوجهات</span></p>
                 
               </div>
-              <button class="btn btn-sm btn-primary" onclick="openDestinationModal()" title="إضافة وجهة جديدة">➕ <span class="btn-text-label">إضافة وجهة جديدة</span></button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openDestinationModal()" title="إضافة وجهة جديدة" aria-label="إضافة وجهة جديدة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
             </div>
             <div class="table-container" style="min-height:auto;">
               <table class="data-table">
@@ -9414,7 +9551,7 @@ button[onclick*="printMissionReport"] {
               </div>
               <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
                 <span id="categories-save-confirm-badge" class="badge-soft badge-success" style="display:inline-flex; align-items:center; gap:0.3rem; font-weight:800; font-size:0.76rem; padding:0.28rem 0.65rem;">✓ محفوظ تلقائياً</span>
-                <button type="button" class="btn btn-sm btn-outline" onclick="openCategoryModal()" title="تصنيف جديد">➕ <span class="btn-text-label">نافذة تصنيف جديد</span></button>
+                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openCategoryModal()" title="إضافة تصنيف جديد" aria-label="إضافة تصنيف جديد"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
                 <button type="button" class="btn btn-sm btn-primary" id="btn-save-all-categories" onclick="saveAllCategoriesChanges()">💾 حفظ التغييرات</button>
               </div>
             </div>
@@ -9425,7 +9562,7 @@ button[onclick*="printMissionReport"] {
               <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
                 <input type="text" id="cfg-inline-new-cat-name" class="form-control" style="flex:2; min-width:200px;" placeholder="اكتب اسم التصنيف الرئيسي الجديد..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addPrimaryCategoryFromSettingsBar();}">
                 <input type="text" id="cfg-inline-new-cat-sub" class="form-control" style="flex:2; min-width:180px;" placeholder="تفريعات أولية مفصولة بفاصلة (اختياري)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addPrimaryCategoryFromSettingsBar();}">
-                <button type="button" class="btn btn-primary" onclick="addPrimaryCategoryFromSettingsBar()" title="إضافة وحفظ التصنيف">➕ <span class="btn-text-label">إضافة وحفظ التصنيف</span></button>
+                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addPrimaryCategoryFromSettingsBar()" title="إضافة وحفظ التصنيف" aria-label="إضافة وحفظ التصنيف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
               </div>
             </div>
 
@@ -9693,7 +9830,7 @@ button[onclick*="printMissionReport"] {
               </div>
               <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
                 <button class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('library')" title="شاشة المكتبة الكاملة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><span class="btn-text-label">شاشة المكتبة الكاملة</span></button>
-                <button type="button" class="action-icon-btn btn-primary" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
               </div>
             </div>
             <div id="cfg-library-list-container" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
@@ -9705,7 +9842,7 @@ button[onclick*="printMissionReport"] {
           <div class="card">
             <div class="card-header">
               <p class="page-concise-subtitle" style="margin:0;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> <span>إدارة القوالب الجاهزة للتسجيل السريع للمهام</span></p>
-              <button class="btn btn-sm btn-primary" onclick="openNewTemplateModal()" title="قالب جديد">➕ <span class="btn-text-label">قالب جديد</span></button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTemplateModal()" title="إضافة قالب جديد" aria-label="إضافة قالب جديد"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
             </div>
             <div id="cfg-templates-list-container" style="display:flex; flex-direction:column; gap:0.75rem;"></div>
           </div>
@@ -10030,7 +10167,7 @@ button[onclick*="printMissionReport"] {
       </div>
       <div class="modal-body">
         <div style="display:flex; justify-content:flex-end; margin-bottom:0.75rem;">
-          <button type="button" class="btn btn-sm btn-primary adaptive-plus-btn" onclick="openNewTaskForInspectedDay()" title="إضافة مهمة لهذا اليوم" aria-label="إضافة مهمة لهذا اليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><span class="btn-text-label">إضافة مهمة لهذا اليوم</span></button>
+          <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTaskForInspectedDay()" title="إضافة مهمة لهذا اليوم" aria-label="إضافة مهمة لهذا اليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
         </div>
         <div id="inspector-tasks-container" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
       </div>
@@ -10149,7 +10286,7 @@ button[onclick*="printMissionReport"] {
           <label class="form-label" for="cf-modal-new-sub">التفريعات (التصنيفات الفرعية) المرتبطة بهذا التصنيف:</label>
           <div style="display:flex; gap:0.4rem; margin-bottom:0.55rem;">
             <input type="text" id="cf-modal-new-sub" class="form-control" placeholder="اكتب تفريعاً فرعياً جديداً..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubInCategoryModal();}">
-            <button type="button" class="btn btn-sm btn-primary" onclick="addSubInCategoryModal()" style="white-space:nowrap;">➕ إضافة تفريع</button>
+            <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addSubInCategoryModal()" title="إضافة تفريع" aria-label="إضافة تفريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
           </div>
           <div id="cf-modal-subs-list" style="display:flex; flex-direction:column; gap:0.35rem; max-height:190px; overflow-y:auto; padding:0.35rem; background:var(--bg-muted); border-radius:var(--radius-sm); border:1px solid var(--border-subtle);"></div>
         </div>
@@ -10260,7 +10397,7 @@ button[onclick*="printMissionReport"] {
             </div>
             <div style="display:flex; gap:0.4rem; margin-bottom:0.55rem;">
               <input type="text" id="mlf-new-subtask-input" class="form-control" placeholder="اكتب عملية فرعية (مثال: تشخيص العطل، فحص المكونات، إعداد التقرير...)" onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubtaskToMissionModal();}">
-              <button type="button" class="btn btn-sm btn-primary" onclick="addSubtaskToMissionModal()">➕ إضافة عملية</button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addSubtaskToMissionModal()" title="إضافة عملية" aria-label="إضافة عملية"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
             </div>
             <div id="mlf-subtasks-list" style="display:flex; flex-direction:column; gap:0.35rem; max-height:200px; overflow-y:auto;"></div>
           </div>
@@ -12460,7 +12597,7 @@ function renderTasksTable() {
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:2.2rem; color:var(--text-muted);">
       <div style="font-size:1.4rem; margin-bottom:0.4rem;">🔍</div>
       <div style="font-weight:700; margin-bottom:0.5rem;">لا توجد مهام مطابقة لخيارات البحث والتصفية المحددة.</div>
-      <button type="button" class="btn btn-sm btn-outline" onclick="resetAllTaskFilters()">↺ إعادة ضبط الفلاتر وعرض كل المهام</button>
+      <button type="button" class="action-icon-btn btn-outline" onclick="resetAllTaskFilters()" title="مسح الفلاتر" aria-label="مسح الفلاتر"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
     </td></tr>`;
     return;
   }
@@ -13789,7 +13926,7 @@ function renderSettingsCategories() {
       <div id="cat-subs-${idx}" style="background:var(--bg-muted); padding:0.75rem; border-radius:var(--radius-md); border-top:1px solid var(--border-subtle);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
           <span style="font-weight:700; font-size:0.78rem; color:var(--text-muted);">التصنيفات الفرعية المرتبطة بهذا التصنيف:</span>
-          <button class="btn btn-sm btn-primary" style="padding:0.15rem 0.5rem; font-size:0.72rem;" onclick="promptAddSubcategory(${idx})">➕ إضافة تفريع جديد</button>
+          <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="promptAddSubcategory(${idx})" title="إضافة تفريع جديد" aria-label="إضافة تفريع جديد"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:0.4rem;">
           ${subChipsHtml || '<span style="font-size:0.75rem; color:var(--text-muted);">لا توجد تفريعات حالياً. اضغط "➕ إضافة تفريع جديد" للإضافة.</span>'}
@@ -16281,7 +16418,7 @@ function renderMissionLibraryView() {
           <div style="font-weight:700; margin-bottom:0.5rem;">لا توجد مهام مطابقة في المكتبة حسب الفلتر الحالي.</div>
           <div style="display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap;">
             <button type="button" class="btn btn-sm btn-outline adaptive-icon-btn" onclick="setLibraryFilter('all'); document.getElementById('lib-search-input').value=''; document.getElementById('lib-category-filter').value=''; renderMissionLibraryView();" title="عرض جميع مهام المكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg><span class="btn-text-label">عرض جميع مهام المكتبة</span></button>
-            <button type="button" class="action-icon-btn btn-primary" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+            <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
           </div>
         </div>
       `;
@@ -19582,7 +19719,7 @@ renderSettingsCategories = function() {
           <span style="font-weight:800; font-size:0.8rem; color:var(--primary);">🔹 التفريعات والعمليات الفرعية المرتبطة بصنف «${escapeHtml(cat.name)}»:</span>
           <div style="display:flex; gap:0.4rem; flex:1; max-width:420px;">
             <input type="text" id="new-sub-inline-input-${idx}" class="form-control" style="padding:0.28rem 0.6rem; font-size:0.8rem;" placeholder="اكتب تفريعاً أو عملية فرعية جديدة لهذا الصنف..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubcategoryInline(${idx});}">
-            <button type="button" class="btn btn-sm btn-primary" style="white-space:nowrap;" onclick="addSubcategoryInline(${idx})">➕ إضافة تفريع</button>
+            <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addSubcategoryInline(${idx})" title="إضافة تفريع" aria-label="إضافة تفريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
           </div>
         </div>
         <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:0.45rem;">
@@ -23365,7 +23502,7 @@ renderSettingsCategories = function() {
           <span style="font-weight:800; font-size:0.8rem; color:var(--primary);">التفريعات والعمليات الفرعية المرتبطة بصنف «${escapeHtml(cat.name)}»:</span>
           <div style="display:flex; gap:0.4rem; flex:1; max-width:440px;">
             <input type="text" id="new-sub-inline-input-${idx}" class="form-control" style="padding:0.28rem 0.6rem; font-size:0.82rem;" placeholder="اكتب تفريعاً أو عملية فرعية جديدة لهذا الصنف..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubcategoryInline(${idx});}">
-            <button type="button" class="btn btn-sm btn-primary" style="white-space:nowrap;" onclick="addSubcategoryInline(${idx})">➕ إضافة تفريع</button>
+            <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addSubcategoryInline(${idx})" title="إضافة تفريع" aria-label="إضافة تفريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
           </div>
         </div>
         <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:0.45rem;">

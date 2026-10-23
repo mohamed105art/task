@@ -10011,6 +10011,509 @@ body.auth-gate-locked {
   background: radial-gradient(circle at top, rgba(15, 76, 129, 0.38), rgba(9, 13, 22, 0.96)) !important;
 }
 
+  
+/* ============================================================================
+   MASTER ENGINEERING DIRECTIVE V84.0 — SURGICAL UI/UX, RESPONSIVE CONTAINMENT,
+   CALENDAR UNIFORM CIRCLE, HEADER PROTECTION & COMPACT MODALS
+   ============================================================================ */
+
+/* 1. Req 2.1 & 4.1: Hide Today Empty Hint in Dashboard & Hide Duplicate Domain Badge in Library */
+#dash-today-inline-empty-hint,
+#lib-prof-domain-badge {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+#dash-today-section-card.is-zero-tasks #dash-today-collapsible-body {
+  display: none !important;
+}
+#dash-today-section-card.is-zero-tasks #dash-today-card-header {
+  margin-bottom: 0 !important;
+}
+
+/* 2. Req 2.2: Dashboard Customization Toggle Switches in Settings -> Appearance */
+.dash-toggles-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  gap: 0.6rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.dash-toggle-item {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.65rem !important;
+  padding: 0.6rem 0.85rem !important;
+  background: var(--bg-muted) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+}
+
+.dash-toggle-item-label {
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  color: var(--text-main) !important;
+  min-width: 0 !important;
+  flex: 1 1 0% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.dash-switch-wrap {
+  position: relative !important;
+  display: inline-block !important;
+  width: 42px !important;
+  height: 24px !important;
+  flex: 0 0 42px !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+}
+
+.dash-switch-wrap input {
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+}
+
+.dash-switch-slider {
+  position: absolute !important;
+  cursor: pointer !important;
+  inset: 0 !important;
+  background-color: rgba(148, 163, 184, 0.35) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 999px !important;
+  transition: 0.2s ease !important;
+}
+
+.dash-switch-slider::before {
+  position: absolute !important;
+  content: "" !important;
+  height: 18px !important;
+  width: 18px !important;
+  left: 3px !important;
+  bottom: 2px !important;
+  background-color: #ffffff !important;
+  border-radius: 50% !important;
+  transition: 0.2s ease !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dash-switch-wrap input:checked + .dash-switch-slider {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+.dash-switch-wrap input:checked + .dash-switch-slider::before {
+  transform: translateX(16px) !important;
+}
+
+/* 3. Req 3.1: Calendar View — Uniform Fixed-Size Circle Directly Under Day Number */
+.calendar-cell {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: center !important;
+}
+
+.calendar-cell .cell-top {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 4px !important;
+  width: 100% !important;
+}
+
+.calendar-cell .cell-num,
+.calendar-cell .day-number {
+  display: block !important;
+  text-align: center !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+}
+
+.calendar-cell .cell-task-badge,
+.calendar-cell .task-badge,
+.calendar-cell .cal-uniform-count-circle {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  max-width: 22px !important;
+  min-height: 22px !important;
+  max-height: 22px !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  margin: 1px auto 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  flex: 0 0 22px !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 4. Req 6.1: Universal Card Header & Modal Header Protection (Left Buttons Fixed, Right Title Truncated with Ellipsis) */
+.card-header,
+.compact-analytics-header,
+.header-row-pinned,
+.accordion-header,
+#library-profile-banner,
+#settings-top-unified-header > div,
+.modal-header:not(#modal-auth-login-gate .modal-header) {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.card-header > :first-child,
+.compact-analytics-header > :first-child,
+.header-row-pinned > :first-child,
+.accordion-header > :first-child,
+#library-profile-banner > :first-child,
+#settings-top-unified-header > div > :first-child,
+.modal-header:not(#modal-auth-login-gate .modal-header) > :first-child {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  flex-wrap: nowrap !important;
+}
+
+.card-header .card-title,
+.card-header .page-concise-subtitle,
+.card-header .page-concise-subtitle span,
+.card-header > :first-child > span:first-of-type,
+.compact-analytics-header > :first-child > span:nth-of-type(2),
+.header-row-pinned .page-concise-subtitle,
+.header-row-pinned .page-concise-subtitle span,
+.accordion-header > :first-child > strong,
+#library-profile-banner .page-concise-subtitle,
+#library-profile-banner .page-concise-subtitle span,
+#settings-top-unified-header .page-main-heading,
+#settings-top-unified-header .page-main-heading span,
+.modal-header:not(#modal-auth-login-gate .modal-header) .modal-title,
+.modal-header:not(#modal-auth-login-gate .modal-header) .modal-title span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.card-header > :last-child:not(:first-child),
+.compact-analytics-header > :last-child:not(:first-child),
+.header-row-pinned > :last-child:not(:first-child),
+.accordion-header > :last-child:not(:first-child),
+#library-profile-banner > :last-child:not(:first-child),
+#settings-top-unified-header > div > :last-child:not(:first-child),
+.modal-header .modal-top-actions {
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.35rem !important;
+  flex-wrap: nowrap !important;
+  margin: 0 !important;
+}
+
+#view-report .card-header #btn-print-mission-report,
+#view-report .card-header #btn-reset-report {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  flex: 0 0 36px !important;
+  flex-shrink: 0 !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+}
+
+/* 5. Req 7.3: Unify & Compact All Modals Sizing Across Desktop & Mobile */
+.modal-backdrop {
+  padding: 12px !important;
+  box-sizing: border-box !important;
+}
+.modal-backdrop.active {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: opacity 0.15s ease-out !important;
+}
+
+.modal,
+.modal-card,
+#modal-user-account-auth .modal,
+#modal-auth-login-gate .modal,
+#modal-contextual-help .modal,
+#modal-destination-form .modal,
+#modal-category-form .modal,
+#modal-template-form .modal {
+  width: min(calc(100vw - 24px), 460px) !important;
+  max-width: 460px !important;
+  margin: auto !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  max-height: 88vh !important;
+  max-height: 88dvh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+#modal-task-form > .modal,
+#modal-mission-library-form > .modal,
+#modal-mission-executions > .modal,
+#modal-day-inspector > .modal,
+#modal-task-preview > .modal {
+  width: min(calc(100vw - 24px), 520px) !important;
+  max-width: 520px !important;
+  margin: auto !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  max-height: 88vh !important;
+  max-height: 88dvh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+#modal-fast-capture > .modal {
+  width: min(calc(100vw - 24px), 420px) !important;
+  max-width: 420px !important;
+  margin: auto !important;
+  border-radius: 16px !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+#modal-custom-dialog > .modal,
+#modal-unsaved-guard > .modal,
+#modal-about-app > .modal {
+  width: min(calc(100vw - 24px), 400px) !important;
+  max-width: 400px !important;
+  margin: auto !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.modal:not(#modal-fast-capture > .modal) > .modal-body,
+.modal-card > .modal-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* 6. Req 5.1 & Req 7.1: Strict Mobile Containment, Equal Margins, 4 Rounded Corners & Line-Icon User Profile Buttons */
+@media (min-width: 769px) {
+  #btn-settings-manage-account .user-auth-btn-text,
+  #btn-settings-signout .user-auth-btn-text {
+    display: inline !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Req 7.1: Hide text inside "إدارة الحساب" & "تسجيل الخروج" on mobile — show Line Icons only */
+  #settings-user-auth-card {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.5rem !important;
+    padding: 0.75rem 0.85rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #settings-user-auth-card > div:first-child {
+    min-width: 0 !important;
+    flex: 1 1 0% !important;
+    overflow: hidden !important;
+  }
+
+  #settings-auth-display-name,
+  #settings-auth-email-uid {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+  }
+
+  #btn-settings-manage-account .user-auth-btn-text,
+  #btn-settings-signout .user-auth-btn-text {
+    display: none !important;
+  }
+
+  #btn-settings-manage-account,
+  #btn-settings-signout {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Req 5.1: Fix #main-content, .app-view, all grids, and all cards so NO card ever overflows left edge */
+  #app-main,
+  #content-wrapper,
+  #app-sidebar ~ #app-main,
+  #sidebar ~ #app-main {
+    margin-inline-start: 64px !important;
+    width: calc(100vw - 64px) !important;
+    max-width: calc(100vw - 64px) !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  #main-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0.75rem 10px 3rem 10px !important;
+    margin: 0 !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .app-view,
+  #view-dashboard,
+  #view-library,
+  #view-today,
+  #view-backlog,
+  #view-calendar,
+  #view-tasks,
+  #view-report,
+  #view-trash,
+  #view-settings {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-inline: 0 !important;
+    padding-inline: 0 !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .dash-analytics-split-grid,
+  #dash-analytics-split-grid,
+  .recent-activity-dual-body,
+  #dash-recent-activity-body,
+  .mission-library-grid,
+  #lib-missions-grid,
+  .lib-kpi-summary-grid,
+  #lib-kpi-summary-grid,
+  #dash-kpi-bar-grid,
+  .grid-5,
+  .grid-4,
+  .grid-3,
+  .grid-2,
+  #dash-external-trips-list,
+  #dash-internal-trips-list,
+  .tasks-filter-grid,
+  .dash-toggles-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.65rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-inline: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .card,
+  .mission-lib-card,
+  #dash-compact-analytics-card,
+  #dash-recent-activity-card,
+  .kpi-stat-card,
+  .accordion-item,
+  .storage-quota-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-inline: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+  }
+
+  .mission-lib-card > div,
+  .mission-lib-card .mission-exec-badge,
+  .mission-lib-card .mission-type-badge,
+  .mission-lib-card .mission-subtasks-preview,
+  #dash-compact-analytics-card > div,
+  #dash-recent-activity-card > div,
+  .recent-activity-col,
+  .recent-activity-list,
+  .recent-activity-item,
+  .compact-pie-layout,
+  .compact-chart-legend,
+  .compact-legend-item {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .mission-lib-card .mission-exec-badge {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+  }
+
+  #dash-chart-subtitle-badge {
+    display: none !important;
+  }
+}
+
   </style>
   <!-- Firebase App, Authentication & Cloud Firestore SDKs (CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -10277,7 +10780,7 @@ body.auth-gate-locked {
           <span id="dash-user-dept-display"></span>
         </div>
         <!-- Horizontal Bar 1: Key Metrics (100% Width, Balanced Visual Identity & Real Sub-Metrics) -->
-        <div class="grid-5" style="margin-bottom:1.15rem;">
+        <div class="grid-5" id="dash-kpi-bar-grid" style="margin-bottom:1.15rem;">
           <div class="card kpi-stat-card kpi-primary" onclick="resetAllTaskFilters(); switchView('tasks');" title="انقر لعرض السجل الكامل للمهام والعمليات">
             <div class="kpi-card-top">
               <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary);">إجمالي المهام المسجلة</span>
@@ -10423,14 +10926,14 @@ body.auth-gate-locked {
             <div class="recent-activity-col">
               <div class="recent-activity-col-title">
                 <svg class="outline-svg-icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                <span>أحدث 3 مهام مضافة</span>
+                <span id="dash-recent-tasks-col-title">أحدث 3 مهام</span>
               </div>
               <div class="recent-activity-list" id="dash-recent-3-tasks"></div>
             </div>
             <div class="recent-activity-col">
               <div class="recent-activity-col-title">
                 <svg class="outline-svg-icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span>أحدث 3 وجهات مضافة</span>
+                <span id="dash-recent-dests-col-title">أحدث 3 وجهات</span>
               </div>
               <div class="recent-activity-list" id="dash-recent-3-destinations"></div>
             </div>
@@ -10445,7 +10948,7 @@ body.auth-gate-locked {
             <div class="card-title" style="flex-wrap:wrap; gap:0.5rem;">
               <span style="display:inline-flex;align-items:center;gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg> مهام اليوم المبرمجة والجارية</span>
               <span class="today-plain-task-count" id="dash-today-count-badge" style="font-size:0.8rem; font-weight:700; color:var(--text-muted); background:transparent !important; border:none !important; padding:0 0.25rem !important; box-shadow:none !important;">0 مهام</span>
-              <span id="dash-today-inline-empty-hint" style="display:none; font-size:0.78rem; font-weight:500; color:var(--text-muted);">— لا توجد مهام مبرمجة لليوم حالياً</span>
+              <span id="dash-today-inline-empty-hint" style="display:none !important;"></span>
             </div>
             <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
               <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTaskModal()" title="إضافة مهمة لليوم" aria-label="إضافة مهمة لليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
@@ -10464,7 +10967,7 @@ body.auth-gate-locked {
         </div>
 
         <!-- Horizontal Bar 3: المهام المبرمجة مستقبلاً -->
-        <div class="card" style="margin-bottom:1.25rem; border-right:3.5px solid var(--purple);">
+        <div class="card" id="dash-future-section-card" style="margin-bottom:1.25rem; border-right:3.5px solid var(--purple);">
           <div class="card-header">
             <div class="card-title">
               <span style="display:inline-flex;align-items:center;gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> المهام المبرمجة مستقبلاً</span>
@@ -10481,7 +10984,7 @@ body.auth-gate-locked {
         </div>
 
         <!-- Horizontal Bar 3: مهام متأخرة أو تحتاج تسوية واستكمال (Full Width, Compact 2-3 items + More Link) -->
-        <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card" id="dash-pending-section-card" style="margin-bottom:1.25rem;">
           <div class="card-header">
             <div class="card-title">
               <span style="display:inline-flex;align-items:center;gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> مهام متأخرة أو تحتاج تسوية واستكمال</span>
@@ -10498,7 +11001,7 @@ body.auth-gate-locked {
         </div>
 
         <!-- Horizontal Bar 4: تنقلات المدن والإدارات الخارجية (Full Width 100%) -->
-        <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card" id="dash-external-trips-card" style="margin-bottom:1.25rem;">
           <div class="card-header">
             <div class="card-title"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> تنقلات المدن والإدارات الخارجية</div>
             <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button type="button" class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('tasks')" title="سجل المهام والعمليات" aria-label="سجل المهام والعمليات"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg><span class="btn-text-label">السجل</span></button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
@@ -10506,8 +11009,8 @@ body.auth-gate-locked {
           <div id="dash-external-trips-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0.6rem;"></div>
         </div>
 
-        <!-- Horizontal Bar 5: مهام الدائرة القضائية بسطات (محلي) (Full Width 100%) -->
-        <div class="card" style="margin-bottom:1.25rem;">
+        <!-- Horizontal Bar 5: مهام الدائرة القضائية بسطات (محلي) (Full Width 100% - Default Hidden per Req 2.2) -->
+        <div class="card" id="dash-internal-trips-card" style="margin-bottom:1.25rem; display:none;">
           <div class="card-header">
             <div class="card-title"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M3 21h18"></path><path d="M5 21V7l7-4 7 4v14"></path><path d="M9 9h1m4 0h1m-6 4h1m4 0h1m-5 8v-5h4v5"></path></svg> مهام الدائرة القضائية بسطات (محلي)</div>
             <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button type="button" class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('settings'); switchSettingsTab('destinations');" title="دليل الوجهات والمحاكم" aria-label="دليل الوجهات والمحاكم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="btn-text-label">الوجهات</span></button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
@@ -10575,7 +11078,7 @@ body.auth-gate-locked {
         </div>
 
         <!-- Quick Templates Chips Bar -->
-        <div class="card">
+        <div class="card" id="dash-quick-templates-card">
           <div class="card-header">
             <div class="card-title"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> القوالب السريعة ومهام المكتبة الفورية</div>
             <div style="display:inline-flex; align-items:center; gap:0.35rem;">
@@ -10594,7 +11097,7 @@ body.auth-gate-locked {
         <div class="card" id="library-profile-banner" style="padding:0.85rem 1.15rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
           <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
             <p class="page-concise-subtitle" style="margin:0;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> <span>الاختصاصات المهنية والعمليات</span></p>
-            <span class="badge-soft badge-primary" id="lib-prof-domain-badge" style="font-weight:700; font-size:0.75rem;">التدبير الإداري والتقني واللوجستي</span>
+            <span class="badge-soft badge-primary" id="lib-prof-domain-badge" style="display:none !important;" aria-hidden="true"></span>
             <span style="display:none;" id="lib-prof-name-role"></span>
             <span style="display:none;" id="lib-prof-org-chip"></span>
             <span style="display:none;" id="lib-prof-srv-chip"></span>
@@ -11196,14 +11699,14 @@ body.auth-gate-locked {
                 <div style="font-size:0.76rem; color:var(--text-muted); margin-top:0.15rem;" id="settings-auth-email-uid">mohamed105@gmail.com</div>
               </div>
             </div>
-            <div style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
-              <button type="button" class="btn btn-sm btn-outline" onclick="openUserAccountAuthModal()" style="display:inline-flex; align-items:center; gap:0.4rem;">
+            <div class="user-auth-card-actions" style="display:inline-flex; align-items:center; gap:0.45rem; flex-wrap:nowrap; flex-shrink:0;">
+              <button type="button" class="btn btn-sm btn-outline user-profile-adaptive-btn" id="btn-settings-manage-account" onclick="openUserAccountAuthModal()" title="إدارة الحساب" aria-label="إدارة الحساب" style="display:inline-flex; align-items:center; gap:0.4rem;">
                 <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <span>إدارة الحساب</span>
+                <span class="user-auth-btn-text">إدارة الحساب</span>
               </button>
-              <button type="button" class="btn btn-sm btn-danger-outline" onclick="signOutUserSession()" style="display:inline-flex; align-items:center; gap:0.4rem;">
+              <button type="button" class="btn btn-sm btn-danger-outline user-profile-adaptive-btn" id="btn-settings-signout" onclick="signOutUserSession()" title="تسجيل الخروج" aria-label="تسجيل الخروج" style="display:inline-flex; align-items:center; gap:0.4rem;">
                 <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                <span>تسجيل الخروج</span>
+                <span class="user-auth-btn-text">تسجيل الخروج</span>
               </button>
             </div>
           </div>
@@ -11506,6 +12009,16 @@ body.auth-gate-locked {
               <div class="form-group"><label class="form-label">الإعدادات:</label><input type="text" id="cfg-nav-settings" class="form-control" value="الإعدادات"></div>
             </div>
 
+            <!-- Dashboard Sections Customization Toggles (Requirement 2.2) -->
+            <h4 style="font-size:0.92rem; font-weight:700; margin:1.25rem 0 0.5rem; border-top:1px solid var(--border-subtle); padding-top:1rem; display:flex; align-items:center; gap:0.4rem;">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <span>تخصيص إظهار وإخفاء أقسام وبطاقات لوحة القيادة:</span>
+            </h4>
+            <p style="font-size:0.76rem; color:var(--text-muted); margin:0 0 0.75rem 0;">
+              تحكم بحرية في إظهار أو إخفاء أي قسم أو بطاقة في لوحة القيادة الرئيسية (قسم «مهام الدائرة القضائية بسطات (محلي)» مخفي افتراضياً ويمكنك تفعيله متى شئت):
+            </p>
+            <div id="cfg-dashboard-sections-toggles-box" class="dash-toggles-grid"></div>
+
             <div style="margin-top:1.25rem; display:flex; justify-content:flex-end;">
               <button class="btn btn-primary" onclick="saveIdentitySettings()">💾 حفظ بيانات البطاقة التقنية والمظهر</button>
             </div>
@@ -11609,7 +12122,11 @@ body.auth-gate-locked {
                     يمكنك حذف المهام المسجلة فقط (مع الإبقاء على كافة التصنيفات، الوجهات، والإعدادات) أو مسح جميع البيانات، مع حماية كاملة عبر نافذة التحذير والتأكيد المسبق ولقطة الأمان التلقائية.
                   </p>
                 </div>
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+                  <button type="button" class="btn btn-danger btn-sm" id="btn-zero-out-all-tasks" onclick="confirmZeroOutAndWipeAllTasks()" title="تصفير وإخلاء جميع المهام ليصبح العداد صفراً (0)" style="padding:0.4rem 0.75rem; font-weight:700;">
+                    <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    <span>تصفير وإخلاء جميع المهام (0)</span>
+                  </button>
                   <button type="button" class="btn btn-danger-outline btn-sm adaptive-icon-btn" id="btn-safe-delete-tasks-only" onclick="confirmSafeDeleteData('tasks_only')" title="حذف المهام فقط"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg><span class="btn-text-label">حذف المهام فقط</span></button>
                   <button type="button" class="btn btn-danger btn-sm adaptive-icon-btn" id="btn-safe-delete-all-data" onclick="confirmSafeDeleteData('all_data')" title="حذف جميع البيانات"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><span class="btn-text-label">حذف جميع البيانات</span></button>
                 </div>
@@ -12065,9 +12582,13 @@ body.auth-gate-locked {
         </div>
       </div>
       <div class="modal-body">
-        <p id="cdlg-message" style="font-size:0.88rem; color:var(--text-main); margin:0 0 0.75rem 0; line-height:1.6;"></p>
-        <div id="cdlg-input-wrap" style="display:none;">
+        <p id="cdlg-message" style="font-size:0.88rem; color:var(--text-main); margin:0 0 0.85rem 0; line-height:1.65; font-weight:600;"></p>
+        <div id="cdlg-input-wrap" style="display:none; margin-bottom:0.85rem;">
           <input type="text" id="cdlg-input" class="form-control" placeholder="أدخل النص هنا..." onkeydown="if(event.key==='Enter'){event.preventDefault(); closeCustomDialog(true);}">
+        </div>
+        <div id="cdlg-inline-actions" style="display:flex; justify-content:flex-end; align-items:center; gap:0.5rem; padding-top:0.65rem; border-top:1px solid var(--border-subtle);">
+          <button type="button" class="btn btn-sm btn-outline" id="cdlg-inline-cancel-btn" onclick="closeCustomDialog(false)" style="padding:0.35rem 0.85rem;">إلغاء</button>
+          <button type="button" class="btn btn-sm btn-danger" id="cdlg-inline-confirm-btn" onclick="closeCustomDialog(true)" style="padding:0.35rem 0.95rem; font-weight:700;">تأكيد</button>
         </div>
       </div>
 
@@ -23888,6 +24409,7 @@ function exportYearlyArchiveHTML() {
     th { background: #0f4c81; color: #ffffff; font-weight: 700; text-align: center; }
     tr:nth-child(even) { background: #f8fafc; }
     @media print { body { padding: 0; background: #fff; } .no-print { display: none !important; } .archive-container { border: none; box-shadow: none; } }
+  
   </style>
 </head>
 <body>
@@ -33568,6 +34090,626 @@ applyV82OwnerDataMigration(false);
 enforceDeletedEntitiesFilterOnAppState();
 refreshAllViewsFromFirestoreSnapshot();
 renderDedicatedUserSettings();
+
+
+// ============================================================================
+// MASTER ENGINEERING DIRECTIVE V84.0 — CHRONOLOGICAL EXECUTION-DATE SORTING,
+// DASHBOARD CUSTOMIZATION TOGGLES, UNIFORM CALENDAR CIRCLE & ZERO-TASK WIPE
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// 1. REQUIREMENT 1.1 & 1.2: Strict Chronological Sorting by Actual Execution Date
+// ----------------------------------------------------------------------------
+function getTaskActualExecutionDateISO(t) {
+  if (!t || typeof t !== 'object') return '';
+  const raw = String(t.taskDate || t.dueDate || t.original_date || t.completedDate || t.completionDate || '').trim();
+  if (!raw) return '';
+  if (/^\d{4}-\d{2}-\d{2}/.test(raw)) {
+    return raw.slice(0, 10);
+  }
+  const dmy = raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+  if (dmy) {
+    return `${dmy[3]}-${dmy[2].padStart(2, '0')}-${dmy[1].padStart(2, '0')}`;
+  }
+  return raw;
+}
+window.getTaskActualExecutionDateISO = getTaskActualExecutionDateISO;
+
+function getTaskTieBreakerMs(t) {
+  if (!t || typeof t !== 'object') return 0;
+  const cMs = t.createdAt ? Date.parse(t.createdAt) : NaN;
+  if (!isNaN(cMs)) return cMs;
+  const uMs = t.updatedAt ? Date.parse(t.updatedAt) : NaN;
+  if (!isNaN(uMs)) return uMs;
+  if (t.id) {
+    const m = String(t.id).match(/(\d{10,15})/);
+    if (m) return Number(m[1]);
+  }
+  return 0;
+}
+
+// Strict descending comparator (Newest to Oldest) based on actual task execution date (taskDate)
+function compareTasksByExecutionDateDesc(a, b) {
+  const dateA = getTaskActualExecutionDateISO(a);
+  const dateB = getTaskActualExecutionDateISO(b);
+
+  if (dateA && dateB && dateA !== dateB) {
+    return dateB.localeCompare(dateA);
+  }
+  if (dateA && !dateB) return -1;
+  if (!dateA && dateB) return 1;
+
+  // Same execution date: break ties deterministically
+  const tieDiff = getTaskTieBreakerMs(b) - getTaskTieBreakerMs(a);
+  if (tieDiff !== 0) return tieDiff;
+  return String(b?.id || '').localeCompare(String(a?.id || ''));
+}
+
+function compareTasksByExecutionDateAsc(a, b) {
+  const dateA = getTaskActualExecutionDateISO(a);
+  const dateB = getTaskActualExecutionDateISO(b);
+
+  if (dateA && dateB && dateA !== dateB) {
+    return dateA.localeCompare(dateB);
+  }
+  if (dateA && !dateB) return -1;
+  if (!dateA && dateB) return 1;
+
+  const tieDiff = getTaskTieBreakerMs(a) - getTaskTieBreakerMs(b);
+  if (tieDiff !== 0) return tieDiff;
+  return String(a?.id || '').localeCompare(String(b?.id || ''));
+}
+
+compareTasksNewestFirst = compareTasksByExecutionDateDesc;
+compareTasksForRecentList = compareTasksByExecutionDateDesc;
+compareTasksOldestFirst = compareTasksByExecutionDateAsc;
+window.compareTasksNewestFirst = compareTasksNewestFirst;
+window.compareTasksForRecentList = compareTasksForRecentList;
+window.compareTasksOldestFirst = compareTasksOldestFirst;
+
+// Ensure "المهام التي أنجزت مؤخراً" in Today view (#today-done-list) sorts ALL completed tasks by execution date BEFORE slicing top 15
+const _preV84RenderTodayBoard = renderTodayBoard;
+renderTodayBoard = function() {
+  if (APP && Array.isArray(APP.tasks)) {
+    APP.tasks.sort(compareTasksNewestFirst);
+  }
+  const res = _preV84RenderTodayBoard.apply(this, arguments);
+  // Explicitly re-render #today-done-list sorted by actual execution date descending
+  if (APP && Array.isArray(APP.tasks) && typeof renderAccordionTaskList === 'function') {
+    const isDoneTask = (t) => t && !t.isDeleted && (t.status === 'منجزة' || t.status === 'مكتملة');
+    const sortedDone = APP.tasks.filter(isDoneTask).sort(compareTasksNewestFirst).slice(0, 15);
+    renderAccordionTaskList('today-done-list', sortedDone, 'لم يتم تسجيل مهام منجزة مؤخراً.', false);
+    const el = document.getElementById('today-done-list');
+    if (el && typeof replaceEmojiWithOutlineInElement === 'function') {
+      replaceEmojiWithOutlineInElement(el);
+    }
+    if (typeof enforceUniformSquareOutlineActionButtons === 'function') {
+      enforceUniformSquareOutlineActionButtons();
+    }
+  }
+  return res;
+};
+window.renderTodayBoard = renderTodayBoard;
+
+// Ensure "آخر النشاطات" in Dashboard (#dash-recent-3-tasks & #dash-recent-3-destinations) strictly follows Req 1.2
+renderDashboardRecentActivityPanel = function() {
+  const tasksTitleEl = document.getElementById('dash-recent-tasks-col-title');
+  if (tasksTitleEl) tasksTitleEl.innerText = 'أحدث 3 مهام';
+  const destsTitleEl = document.getElementById('dash-recent-dests-col-title');
+  if (destsTitleEl) destsTitleEl.innerText = 'أحدث 3 وجهات';
+
+  const allActive = getPrimaryTasksStore().filter(t => t && !t.isDeleted);
+  const todayISO = getTodayISO();
+  const executedOrCurrent = allActive.filter(t => {
+    const d = getTaskActualExecutionDateISO(t);
+    return !t.isBacklog && d && (d <= todayISO || t.status === 'منجزة' || t.status === 'مكتملة');
+  });
+  const tasks = executedOrCurrent.length > 0 ? executedOrCurrent : allActive;
+  const sortedByExecDate = [...tasks].sort(compareTasksNewestFirst);
+
+  // 1. "أحدث 3 مهام" — sorted strictly by actual execution date (taskDate) descending
+  const recentTasksEl = document.getElementById('dash-recent-3-tasks');
+  if (recentTasksEl) {
+    recentTasksEl.innerHTML = '';
+    const recent3Tasks = sortedByExecDate.slice(0, 3);
+    if (recent3Tasks.length === 0) {
+      recentTasksEl.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); padding:0.5rem;">لا توجد مهام مسجلة</div>`;
+    } else {
+      recent3Tasks.forEach(t => {
+        const isDone = (t.status === 'منجزة' || t.status === 'مكتملة');
+        const row = document.createElement('div');
+        row.className = 'recent-activity-item';
+        const execDate = getTaskActualExecutionDateISO(t);
+        const destLabel = t.destination || t.court || '';
+        row.title = `${t.title}${destLabel ? ' — ' + destLabel : ''}${execDate ? ' (' + execDate + ')' : ''}`;
+        row.onclick = () => openTaskPreview(t.id);
+        row.innerHTML = `
+          <div style="display:flex; align-items:center; gap:0.35rem; min-width:0; flex:1;">
+            <span style="color:${isDone ? 'var(--success)' : 'var(--primary)'}; display:inline-flex; flex-shrink:0;">${isDone ? ICONS_V6.checkCircle : ICONS_V6.clock}</span>
+            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700; color:var(--text-main);">${escapeHtml(t.title)}</span>
+          </div>
+          <span style="font-size:0.68rem; color:var(--text-muted); white-space:nowrap; flex-shrink:0;">${execDate ? formatDateShort(execDate) : 'مبرمجة'}</span>
+        `;
+        recentTasksEl.appendChild(row);
+      });
+    }
+  }
+
+  // 2. "أحدث 3 وجهات" — latest 3 destinations actually visited based on execution dates of newest tasks
+  const recentDestsEl = document.getElementById('dash-recent-3-destinations');
+  if (recentDestsEl) {
+    recentDestsEl.innerHTML = '';
+    const visitedDests = [];
+    const seenDestKeys = new Set();
+
+    sortedByExecDate.forEach(t => {
+      if (visitedDests.length >= 3) return;
+      const rawDest = String(t.destination || t.court || '').trim();
+      if (!rawDest) return;
+      const normKey = normalizeEntityKey(rawDest);
+      if (!normKey || seenDestKeys.has(normKey)) return;
+      seenDestKeys.add(normKey);
+
+      const courtObj = (APP && Array.isArray(APP.courts))
+        ? APP.courts.find(c => c && normalizeEntityKey(c.name) === normKey)
+        : null;
+      visitedDests.push({
+        name: courtObj ? courtObj.name : rawDest,
+        city: courtObj ? (courtObj.city || 'سطات') : (t.city || 'سطات'),
+        lastExecDate: getTaskActualExecutionDateISO(t)
+      });
+    });
+
+    if (visitedDests.length === 0) {
+      recentDestsEl.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); padding:0.5rem;">لا توجد وجهات مسجلة</div>`;
+    } else {
+      visitedDests.forEach(d => {
+        const row = document.createElement('div');
+        row.className = 'recent-activity-item';
+        row.title = `${d.name}${d.lastExecDate ? ' — آخر تنفيذ: ' + d.lastExecDate : ''}`;
+        row.onclick = () => filterTasksByDest(d.name);
+        row.innerHTML = `
+          <div style="display:flex; align-items:center; gap:0.35rem; min-width:0; flex:1;">
+            <span style="color:var(--success); display:inline-flex; flex-shrink:0;">${ICONS_V6.pin}</span>
+            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700; color:var(--text-main);">${escapeHtml(d.name)}</span>
+          </div>
+          <span style="font-size:0.68rem; color:var(--text-secondary); white-space:nowrap; flex-shrink:0;">${d.lastExecDate ? formatDateShort(d.lastExecDate) : escapeHtml(d.city || 'سطات')}</span>
+        `;
+        recentDestsEl.appendChild(row);
+      });
+    }
+  }
+};
+window.renderDashboardRecentActivityPanel = renderDashboardRecentActivityPanel;
+
+// ----------------------------------------------------------------------------
+// 2. REQUIREMENT 2.1, 2.2 & 2.3: Dashboard Customizations & Toggle Switches
+// ----------------------------------------------------------------------------
+const DASHBOARD_SECTIONS_SCHEMA = [
+  { key: 'kpis', cardId: 'dash-kpi-bar-grid', label: 'المؤشرات الإحصائية السريعة (أعلى اللوحة)', defaultVisible: true },
+  { key: 'analyticsChart', cardId: 'dash-compact-analytics-card', label: 'المبيان التحليلي لتوزيع المهام', defaultVisible: true },
+  { key: 'recentActivity', cardId: 'dash-recent-activity-card', label: 'آخر النشاطات (أحدث 3 مهام وأحدث 3 وجهات)', defaultVisible: true },
+  { key: 'todayTasks', cardId: 'dash-today-section-card', label: 'مهام اليوم المبرمجة والجارية', defaultVisible: true },
+  { key: 'futureTasks', cardId: 'dash-future-section-card', label: 'المهام المبرمجة مستقبلاً', defaultVisible: true },
+  { key: 'pendingTasks', cardId: 'dash-pending-section-card', label: 'مهام متأخرة أو تحتاج تسوية واستكمال', defaultVisible: true },
+  { key: 'externalTrips', cardId: 'dash-external-trips-card', label: 'تنقلات المدن والإدارات الخارجية', defaultVisible: true },
+  { key: 'internalTrips', cardId: 'dash-internal-trips-card', label: 'مهام الدائرة القضائية بسطات (محلي)', defaultVisible: false },
+  { key: 'libraryMetrics', cardId: 'dash-profile-library-card', label: 'مؤشرات المكتبة والإنجازات المهنية', defaultVisible: true },
+  { key: 'quickTemplates', cardId: 'dash-quick-templates-card', label: 'القوالب السريعة ومهام المكتبة الفورية', defaultVisible: true }
+];
+
+const DASH_SECTIONS_VISIBILITY_STORAGE_KEY = 'ops_v84_dash_sections_visibility';
+
+function getDashboardSectionsVisibilityMap() {
+  const map = {};
+  DASHBOARD_SECTIONS_SCHEMA.forEach(item => {
+    map[item.key] = item.defaultVisible;
+  });
+
+  try {
+    const raw = CLOUD_MEMORY_STORE.getItem(DASH_SECTIONS_VISIBILITY_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') {
+        DASHBOARD_SECTIONS_SCHEMA.forEach(item => {
+          if (typeof parsed[item.key] === 'boolean') {
+            map[item.key] = parsed[item.key];
+          }
+        });
+      }
+    }
+  } catch (e) {}
+
+  if (typeof APP !== 'undefined' && APP && APP.settings && APP.settings.dashboardSectionsVisibility && typeof APP.settings.dashboardSectionsVisibility === 'object') {
+    DASHBOARD_SECTIONS_SCHEMA.forEach(item => {
+      if (typeof APP.settings.dashboardSectionsVisibility[item.key] === 'boolean') {
+        map[item.key] = APP.settings.dashboardSectionsVisibility[item.key];
+      }
+    });
+  }
+
+  if (typeof APP !== 'undefined' && APP) {
+    if (!APP.settings) APP.settings = {};
+    APP.settings.dashboardSectionsVisibility = map;
+  }
+  return map;
+}
+window.getDashboardSectionsVisibilityMap = getDashboardSectionsVisibilityMap;
+
+function applyDashboardSectionsVisibility() {
+  const visMap = getDashboardSectionsVisibilityMap();
+  DASHBOARD_SECTIONS_SCHEMA.forEach(item => {
+    const el = document.getElementById(item.cardId);
+    if (!el) return;
+    const isVis = visMap[item.key] !== false;
+    if (isVis) {
+      el.style.removeProperty('display');
+    } else {
+      el.style.setProperty('display', 'none', 'important');
+    }
+  });
+
+  // If both analyticsChart and recentActivity are hidden, hide their parent split grid too
+  const splitGrid = document.getElementById('dash-analytics-split-grid');
+  if (splitGrid) {
+    if (visMap.analyticsChart === false && visMap.recentActivity === false) {
+      splitGrid.style.setProperty('display', 'none', 'important');
+    } else {
+      splitGrid.style.removeProperty('display');
+    }
+  }
+}
+window.applyDashboardSectionsVisibility = applyDashboardSectionsVisibility;
+
+function renderDashboardSectionsTogglesUI() {
+  const box = document.getElementById('cfg-dashboard-sections-toggles-box');
+  if (!box) return;
+  const visMap = getDashboardSectionsVisibilityMap();
+  box.innerHTML = '';
+
+  DASHBOARD_SECTIONS_SCHEMA.forEach(item => {
+    const checked = visMap[item.key] !== false;
+    const row = document.createElement('div');
+    row.className = 'dash-toggle-item';
+    row.innerHTML = `
+      <span class="dash-toggle-item-label" title="${escapeHtml(item.label)}">${escapeHtml(item.label)}</span>
+      <label class="dash-switch-wrap" title="${checked ? 'ظاهر في لوحة القيادة' : 'مخفي من لوحة القيادة'}">
+        <input type="checkbox" id="dash-vis-toggle-${item.key}" data-dash-section="${item.key}" ${checked ? 'checked' : ''} onchange="toggleDashboardSectionVisibility('${item.key}', this.checked)">
+        <span class="dash-switch-slider"></span>
+      </label>
+    `;
+    box.appendChild(row);
+  });
+}
+window.renderDashboardSectionsTogglesUI = renderDashboardSectionsTogglesUI;
+
+function toggleDashboardSectionVisibility(sectionKey, isVisible) {
+  const visMap = getDashboardSectionsVisibilityMap();
+  visMap[sectionKey] = Boolean(isVisible);
+  if (typeof APP !== 'undefined' && APP) {
+    if (!APP.settings) APP.settings = {};
+    APP.settings.dashboardSectionsVisibility = visMap;
+  }
+  try {
+    CLOUD_MEMORY_STORE.setItem(DASH_SECTIONS_VISIBILITY_STORAGE_KEY, JSON.stringify(visMap));
+  } catch (e) {}
+
+  applyDashboardSectionsVisibility();
+  renderDashboardSectionsTogglesUI();
+
+  if (typeof bumpLocalMetaRevision === 'function') bumpLocalMetaRevision('toggle_dash_section');
+  saveData();
+  if (typeof syncV13MirrorsToCloudFirestore === 'function') syncV13MirrorsToCloudFirestore();
+  if (typeof syncAppMetadataToFirestoreImmediate === 'function') syncAppMetadataToFirestoreImmediate();
+
+  const secObj = DASHBOARD_SECTIONS_SCHEMA.find(x => x.key === sectionKey);
+  const label = secObj ? secObj.label : sectionKey;
+  showToast(isVisible ? `تم إظهار قسم «${label}» في لوحة القيادة` : `تم إخفاء قسم «${label}» من لوحة القيادة`);
+}
+window.toggleDashboardSectionVisibility = toggleDashboardSectionVisibility;
+
+// Hook switchSettingsTab('identity') so toggles are always rendered fresh
+const _preV84SwitchSettingsTab = switchSettingsTab;
+switchSettingsTab = function(tabKey) {
+  const res = _preV84SwitchSettingsTab.apply(this, arguments);
+  if (tabKey === 'identity') {
+    renderDashboardSectionsTogglesUI();
+  }
+  return res;
+};
+window.switchSettingsTab = switchSettingsTab;
+
+// Upgrade renderDashboard for Req 2.1 (0 tasks compact state without sentence), Req 2.2 (visibility toggles), and Req 2.3 ("13 تنفيذاً" only)
+const _preV84RenderDashboard = renderDashboard;
+renderDashboard = function() {
+  const res = _preV84RenderDashboard.apply(this, arguments);
+  if (!APP) return res;
+
+  // Req 2.1: When 0 tasks today on Dashboard, show ONLY title + "0 مهام", remove empty sentence & collapse empty container
+  const todayStr = getTodayISO();
+  const scheduledToday = (APP.tasks || []).filter(t => t && !t.isDeleted && !t.isBacklog && t.taskDate === todayStr && !isTaskCompleted(t));
+  const todayCard = document.getElementById('dash-today-section-card');
+  const todayBody = document.getElementById('dash-today-collapsible-body');
+  const todayContainer = document.getElementById('dash-today-tasks-container');
+  const todayHint = document.getElementById('dash-today-inline-empty-hint');
+  const todayBadge = document.getElementById('dash-today-count-badge');
+
+  if (todayHint) {
+    todayHint.innerText = '';
+    todayHint.style.setProperty('display', 'none', 'important');
+  }
+  if (scheduledToday.length === 0) {
+    if (todayBadge) todayBadge.innerText = '0 مهام';
+    if (todayContainer) todayContainer.innerHTML = '';
+    if (todayBody) todayBody.style.display = 'none';
+    if (todayCard) {
+      todayCard.classList.add('is-compact-mode', 'is-zero-tasks');
+    }
+  } else {
+    if (todayCard) {
+      todayCard.classList.remove('is-zero-tasks');
+    }
+  }
+
+  // Req 2.3: In #dash-top-library-missions, show ONLY "X تنفيذاً" and remove "(X منجزة)"
+  const topBox = document.getElementById('dash-top-library-missions');
+  if (topBox && typeof getAllLibrarySummaryStats === 'function') {
+    const summary = getAllLibrarySummaryStats();
+    topBox.innerHTML = '';
+    const topList = [...(summary.missionsWithStats || [])]
+      .filter(x => x && x.mission && x.mission.status !== 'archived')
+      .sort((a, b) => b.stats.totalExecutions - a.stats.totalExecutions)
+      .slice(0, 5);
+
+    topList.forEach(({ mission: m, stats }) => {
+      const item = document.createElement('div');
+      item.style.cssText = 'display:flex; justify-content:space-between; align-items:center; gap:0.5rem; padding:0.4rem 0.65rem; background:var(--bg-card); border-radius:var(--radius-sm); border:1px solid var(--border-subtle); font-size:0.78rem; cursor:pointer; min-width:0;';
+      item.onclick = () => openMissionExecutionsModal(m.id);
+      item.innerHTML = `
+        <span style="font-weight:700; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1;">${escapeHtml(m.title)}</span>
+        <span style="font-weight:800; color:${stats.totalExecutions > 0 ? 'var(--primary)' : 'var(--text-muted)'}; white-space:nowrap; flex-shrink:0;">${stats.totalExecutions} تنفيذاً</span>
+      `;
+      topBox.appendChild(item);
+    });
+  }
+
+  // Req 2.2: Apply Dashboard sections visibility preferences
+  applyDashboardSectionsVisibility();
+
+  return res;
+};
+window.renderDashboard = renderDashboard;
+
+// Also ensure toggleDashTodaySection never reveals #dash-today-inline-empty-hint or empty text when 0 tasks
+const _preV84ToggleDashTodaySection = toggleDashTodaySection;
+toggleDashTodaySection = function() {
+  const todayStr = getTodayISO();
+  const scheduledTodayCount = ((APP && APP.tasks) || []).filter(t => t && !t.isDeleted && !t.isBacklog && t.taskDate === todayStr && !isTaskCompleted(t)).length;
+  const hint = document.getElementById('dash-today-inline-empty-hint');
+  if (hint) {
+    hint.innerText = '';
+    hint.style.setProperty('display', 'none', 'important');
+  }
+  if (scheduledTodayCount === 0) {
+    const bodyBox = document.getElementById('dash-today-collapsible-body');
+    const card = document.getElementById('dash-today-section-card');
+    if (bodyBox) bodyBox.style.display = 'none';
+    if (card) card.classList.add('is-compact-mode', 'is-zero-tasks');
+    return;
+  }
+  return _preV84ToggleDashTodaySection.apply(this, arguments);
+};
+window.toggleDashTodaySection = toggleDashTodaySection;
+
+// ----------------------------------------------------------------------------
+// 3. REQUIREMENT 3.1: Calendar View — Uniform Circle Directly Under Day Number
+// ----------------------------------------------------------------------------
+renderCalendar = function() {
+  const container = document.getElementById('calendar-days-grid');
+  if (!container || !APP) return;
+  container.innerHTML = '';
+
+  const year = calCurrentMonth.getFullYear();
+  const month = calCurrentMonth.getMonth();
+
+  const titleEl = document.getElementById('cal-month-title');
+  if (titleEl) titleEl.innerText = `${MOROCCAN_MONTHS[month]} ${year}`;
+
+  const dayHeaders = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  dayHeaders.forEach((dh, idx) => {
+    const h = document.createElement('div');
+    h.className = 'calendar-day-header';
+    if (idx === 0 || idx === 6) h.style.color = 'var(--primary)';
+    h.innerText = dh;
+    container.appendChild(h);
+  });
+
+  const firstDayIndex = new Date(year, month, 1).getDay();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+  const todayStr = getTodayISO();
+
+  for (let i = firstDayIndex - 1; i >= 0; i--) {
+    const cell = document.createElement('div');
+    cell.className = 'calendar-cell other-month';
+    cell.innerHTML = `<div class="cell-top"><span class="cell-num day-number">${prevMonthDays - i}</span></div>`;
+    container.appendChild(cell);
+  }
+
+  for (let day = 1; day <= totalDays; day++) {
+    const dayDate = new Date(year, month, day);
+    const dayOfWeek = dayDate.getDay();
+    const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const dayTasks = (APP.tasks || []).filter(t => t && !t.isDeleted && getTaskActualExecutionDateISO(t) === dateStr);
+    const dayState = computeCalendarDayState(dayTasks, dateStr, todayStr);
+
+    const cell = document.createElement('div');
+    cell.className = `calendar-cell ${isWeekend ? 'weekend' : ''} ${dateStr === todayStr ? 'today' : ''} ${dayState.borderClass}`.trim();
+    cell.setAttribute('data-date', dateStr);
+    cell.setAttribute('data-color-state', dayState.borderClass || 'none');
+    cell.title = dayState.total > 0 ? `${dateStr}: ${dayState.total} مهام` : dateStr;
+    cell.onclick = () => openDayInspector(dateStr);
+
+    // Uniform fixed-size circle directly under day number containing ONLY total count (no checkmark, no fraction)
+    let circleBg = 'var(--primary)';
+    if (dayState.borderClass === 'border-success') circleBg = 'var(--success)';
+    else if (dayState.borderClass === 'border-danger') circleBg = 'var(--danger)';
+    else if (dayState.borderClass === 'border-warning') circleBg = 'var(--warning)';
+
+    const badgeHtml = dayState.total > 0
+      ? `<span class="cell-task-badge task-badge cal-uniform-count-circle" style="background:${circleBg} !important; color:#ffffff !important;" title="${dayState.total}">${dayState.total}</span>`
+      : '';
+
+    cell.innerHTML = `
+      <div class="cell-top">
+        <span class="cell-num day-number">${day}</span>
+        ${badgeHtml}
+      </div>
+    `;
+    container.appendChild(cell);
+  }
+};
+window.renderCalendar = renderCalendar;
+
+// ----------------------------------------------------------------------------
+// 4. REQUIREMENT 4.1: Keep Library Banner Clean ("الاختصاصات المهنية والعمليات" only)
+// ----------------------------------------------------------------------------
+const _preV84RenderMissionLibraryView = renderMissionLibraryView;
+renderMissionLibraryView = function() {
+  const res = _preV84RenderMissionLibraryView.apply(this, arguments);
+  const domBadge = document.getElementById('lib-prof-domain-badge');
+  if (domBadge) {
+    domBadge.innerText = '';
+    domBadge.style.setProperty('display', 'none', 'important');
+  }
+  return res;
+};
+window.renderMissionLibraryView = renderMissionLibraryView;
+
+// ----------------------------------------------------------------------------
+// 5. REQUIREMENT 7.2: "تصفير وإخلاء جميع المهام" with Confirmation Modal
+// ----------------------------------------------------------------------------
+const V84_INTENTIONAL_ZERO_WIPE_KEY = 'ops_v84_intentional_zero_wipe';
+
+function executeZeroOutAllTasksNow() {
+  if (!APP) return;
+  try {
+    CLOUD_MEMORY_STORE.setItem(PRE_RESTORE_SNAPSHOT_KEY, JSON.stringify(APP));
+  } catch (e) {}
+
+  const allExistingIds = [
+    ...((APP.tasks || []).map(t => String(t?.id || ''))),
+    ...((APP.trash || []).map(t => String(t?.id || ''))),
+    ...(V82_MIGRATED_TASKS_LIST.map(t => String(t.id)))
+  ].filter(Boolean);
+
+  if (typeof recordDeletedEntity === 'function' && allExistingIds.length > 0) {
+    recordDeletedEntity('tasks', ...allExistingIds);
+  }
+
+  APP.tasks = [];
+  APP.trash = [];
+  if (!APP.settings) APP.settings = {};
+  APP.settings.tasksIntentionallyWipedZero = true;
+  try {
+    CLOUD_MEMORY_STORE.setItem(V84_INTENTIONAL_ZERO_WIPE_KEY, '1');
+  } catch (e) {}
+
+  if (typeof bumpLocalMetaRevision === 'function') bumpLocalMetaRevision('zero_out_all_tasks');
+  saveData();
+  if (typeof syncV13MirrorsToCloudFirestore === 'function') syncV13MirrorsToCloudFirestore();
+  if (typeof syncAppMetadataToFirestoreImmediate === 'function') syncAppMetadataToFirestoreImmediate();
+  if (typeof deleteTaskFromFirestore === 'function') {
+    allExistingIds.forEach(id => deleteTaskFromFirestore(id));
+  }
+
+  if (typeof logSystemOperation === 'function') {
+    logSystemOperation('delete', 'تصفير وإخلاء جميع المهام', 'تم حذف جميع المهام وتصفير العداد (0)', 'تم الإبقاء على الإعدادات والتصنيفات والوجهات');
+  }
+
+  renderDashboard();
+  renderTodayBoard();
+  renderBacklogTable();
+  renderTasksTable();
+  if (typeof renderTrashTable === 'function') renderTrashTable();
+  renderCalendar();
+  if (typeof renderMissionLibraryView === 'function') renderMissionLibraryView();
+  if (typeof renderRecentSidebarTasks === 'function') renderRecentSidebarTasks();
+  if (typeof updateNavBadges === 'function') updateNavBadges();
+  if (typeof updateStorageQuotaUI === 'function') updateStorageQuotaUI();
+  if (typeof updateMultiUserAuthUI === 'function') updateMultiUserAuthUI();
+
+  showToast('تم حذف جميع المهام نهائياً وإخلاء التطبيق بنجاح (العداد: 0)');
+}
+window.executeZeroOutAllTasksNow = executeZeroOutAllTasksNow;
+
+function confirmZeroOutAndWipeAllTasks() {
+  openCustomConfirmDialog(
+    'تصفير وإخلاء جميع المهام',
+    'هل أنت متأكد من رغبتك في حذف جميع المهام نهائياً وإخلاء التطبيق؟',
+    function() {
+      executeZeroOutAllTasksNow();
+    }
+  );
+}
+window.confirmZeroOutAndWipeAllTasks = confirmZeroOutAndWipeAllTasks;
+
+// Route confirmSafeDeleteData('tasks_only') and confirmSafeDeleteData('all_data') to use the exact required confirmation prompt & clean zero-out
+confirmSafeDeleteData = function(mode) {
+  openCustomConfirmDialog(
+    mode === 'all_data' ? 'حذف جميع البيانات وإخلاء التطبيق' : 'تصفير وإخلاء جميع المهام',
+    'هل أنت متأكد من رغبتك في حذف جميع المهام نهائياً وإخلاء التطبيق؟',
+    function() {
+      executeZeroOutAllTasksNow();
+    }
+  );
+};
+window.confirmSafeDeleteData = confirmSafeDeleteData;
+
+// Ensure rollbackLastRestore also restores deletedEntitiesRegistry and clears intentional zero-wipe flag
+if (typeof rollbackLastRestore === 'function') {
+  const _preV84RollbackLastRestore = rollbackLastRestore;
+  rollbackLastRestore = function() {
+    const snapStr = CLOUD_MEMORY_STORE.getItem(PRE_RESTORE_SNAPSHOT_KEY);
+    if (snapStr) {
+      try {
+        const snapObj = JSON.parse(snapStr);
+        const prevReg = (snapObj && snapObj.settings && snapObj.settings.deletedEntitiesRegistry)
+          ? snapObj.settings.deletedEntitiesRegistry
+          : createEmptyDeletedRegistry();
+        saveDeletedEntitiesRegistry(prevReg);
+        CLOUD_MEMORY_STORE.removeItem(V84_INTENTIONAL_ZERO_WIPE_KEY);
+      } catch (e) {}
+    }
+    return _preV84RollbackLastRestore.apply(this, arguments);
+  };
+  window.rollbackLastRestore = rollbackLastRestore;
+}
+
+// Ensure applyV82OwnerDataMigration respects intentional zero-wipe
+const _preV84ApplyV82OwnerDataMigration = applyV82OwnerDataMigration;
+applyV82OwnerDataMigration = function(forceSyncToCloud = false) {
+  const isWiped = (CLOUD_MEMORY_STORE.getItem(V84_INTENTIONAL_ZERO_WIPE_KEY) === '1') || (APP && APP.settings && APP.settings.tasksIntentionallyWipedZero === true);
+  if (isWiped && !forceSyncToCloud) {
+    return false;
+  }
+  return _preV84ApplyV82OwnerDataMigration.apply(this, arguments);
+};
+window.applyV82OwnerDataMigration = applyV82OwnerDataMigration;
+
+// Initialize V84.0 enhancements immediately on boot
+if (APP && Array.isArray(APP.tasks)) {
+  APP.tasks.sort(compareTasksNewestFirst);
+}
+applyDashboardSectionsVisibility();
+renderDashboardSectionsTogglesUI();
+renderDashboard();
+renderTodayBoard();
+renderBacklogTable();
+renderTasksTable();
+renderCalendar();
 
 </script>
 </body>

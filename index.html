@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>نظام تدبير المهام اليومية - المديرية الإقليمية للعدل</title>
-  <link rel="icon" type="image/svg+xml" id="app-favicon-link" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f4c81'/><text x='50' y='68' font-size='54' text-anchor='middle' fill='%23D4AF37'>⚖️</text></svg>">
+  <link rel="icon" type="image/svg+xml" id="app-favicon-link" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%230f4c81'/><stop offset='100%' stop-color='%231d4ed8'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23bg)'/><rect x='18' y='22' width='52' height='50' rx='9' fill='none' stroke='%23ffffff' stroke-width='5'/><line x1='18' y1='36' x2='70' y2='36' stroke='%23ffffff' stroke-width='4.5'/><line x1='32' y1='14' x2='32' y2='26' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/><line x1='56' y1='14' x2='56' y2='26' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/><rect x='28' y='44' width='8' height='8' rx='2' fill='%2393c5fd'/><rect x='41' y='44' width='8' height='8' rx='2' fill='%2393c5fd'/><rect x='28' y='56' width='8' height='8' rx='2' fill='%2393c5fd'/><circle cx='68' cy='66' r='18' fill='%230f4c81' stroke='%2338bdf8' stroke-width='4.5'/><polyline points='68,56 68,66 75,70' fill='none' stroke='%23ffffff' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -9894,30 +9894,121 @@ button.lib-exec-count-btn .lib-mini-count-badge,
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-.google-auth-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  padding: 0.55rem 1.05rem;
-  border-radius: var(--radius-sm);
+/* Hide entire application container when user is not signed in */
+body.auth-gate-locked #app-container {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+body.auth-gate-locked {
+  background: var(--bg-body, #0b1120) !important;
+  overflow: hidden !important;
+}
+
+.google-auth-btn,
+.auth-modal-action-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  padding: 0.55rem 0.9rem !important;
+  border-radius: var(--radius-sm) !important;
   border: 1px solid var(--border-color);
   background: var(--bg-card);
   color: var(--text-main);
-  font-family: var(--font-main);
-  font-size: 0.84rem;
-  font-weight: 800;
+  font-family: var(--font-main) !important;
+  font-size: 0.83rem !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
   cursor: pointer;
   transition: all 0.18s ease;
+  box-sizing: border-box !important;
+  text-align: center !important;
+  white-space: normal !important;
+  word-break: break-word !important;
 }
-.google-auth-btn:hover {
+.google-auth-btn:hover,
+.auth-modal-action-btn:hover {
   border-color: var(--primary);
   box-shadow: 0 3px 10px rgba(37, 99, 235, 0.14);
 }
+.auth-modal-action-btn.btn-primary {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
+}
+.auth-modal-action-btn.btn-danger-outline {
+  background: rgba(239, 68, 68, 0.08) !important;
+  color: var(--danger) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+.auth-modal-action-btn svg,
+.google-auth-btn svg {
+  width: 17px !important;
+  height: 17px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Strict Header & Close Button Alignment for Auth Modals on Mobile & Desktop */
+#modal-user-account-auth .modal,
+#modal-auth-login-gate .modal {
+  width: calc(100vw - 24px) !important;
+  max-width: 540px !important;
+  margin: 12px auto !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+#modal-user-account-auth .modal-header,
+#modal-auth-login-gate .modal-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.5rem !important;
+  padding: 0.85rem 1rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+#modal-user-account-auth .modal-header > div:first-child,
+#modal-auth-login-gate .modal-header > div:first-child {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+#modal-user-account-auth .modal-title,
+#modal-auth-login-gate .modal-title {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.45rem !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  font-size: 0.94rem !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+#modal-user-account-auth .modal-title span,
+#modal-auth-login-gate .modal-title span {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+#modal-user-account-auth .modal-top-actions {
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+}
 #modal-auth-login-gate.active {
   display: flex !important;
-  backdrop-filter: blur(10px);
-  background: rgba(9, 13, 22, 0.82);
+  align-items: center !important;
+  justify-content: center !important;
+  backdrop-filter: blur(12px);
+  background: radial-gradient(circle at top, rgba(15, 76, 129, 0.38), rgba(9, 13, 22, 0.96)) !important;
 }
 
   </style>
@@ -9966,7 +10057,7 @@ button.lib-exec-count-btn .lib-mini-count-badge,
         <div class="sidebar-header">
           <div class="brand-box" id="sidebar-brand-box" onclick="switchView('dashboard')" title="اللوحة الرئيسية">
             <div class="brand-logo-container" id="sidebar-logo-box" style="width:38px; height:38px; max-width:38px; max-height:38px; overflow:hidden;">
-              <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f4c81'/><text x='50' y='68' font-size='54' text-anchor='middle' fill='%23D4AF37'>⚖️</text></svg>" data-std-logo="./logo.png" class="brand-logo" style="width:38px !important; height:38px !important; max-width:38px !important; max-height:38px !important; object-fit:contain !important; background-color:transparent !important;" alt="Logo" onerror="this.onerror=null; this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🏛️</text></svg>';">
+              <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%230f4c81'/><stop offset='100%' stop-color='%231d4ed8'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23bg)'/><rect x='18' y='22' width='52' height='50' rx='9' fill='none' stroke='%23ffffff' stroke-width='5'/><line x1='18' y1='36' x2='70' y2='36' stroke='%23ffffff' stroke-width='4.5'/><line x1='32' y1='14' x2='32' y2='26' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/><line x1='56' y1='14' x2='56' y2='26' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/><rect x='28' y='44' width='8' height='8' rx='2' fill='%2393c5fd'/><rect x='41' y='44' width='8' height='8' rx='2' fill='%2393c5fd'/><rect x='28' y='56' width='8' height='8' rx='2' fill='%2393c5fd'/><circle cx='68' cy='66' r='18' fill='%230f4c81' stroke='%2338bdf8' stroke-width='4.5'/><polyline points='68,56 68,66 75,70' fill='none' stroke='%23ffffff' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/></svg>" data-std-logo="./logo.png" class="brand-logo" style="width:38px !important; height:38px !important; max-width:38px !important; max-height:38px !important; object-fit:contain !important; background-color:transparent !important;" alt="Logo" onerror="this.onerror=null; this.src=&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%230f4c81'/><stop offset='100%' stop-color='%231d4ed8'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23bg)'/><rect x='18' y='22' width='52' height='50' rx='9' fill='none' stroke='%23ffffff' stroke-width='5'/><line x1='18' y1='36' x2='70' y2='36' stroke='%23ffffff' stroke-width='4.5'/><line x1='32' y1='14' x2='32' y2='26' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/><line x1='56' y1='14' x2='56' y2='26' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/><rect x='28' y='44' width='8' height='8' rx='2' fill='%2393c5fd'/><rect x='41' y='44' width='8' height='8' rx='2' fill='%2393c5fd'/><rect x='28' y='56' width='8' height='8' rx='2' fill='%2393c5fd'/><circle cx='68' cy='66' r='18' fill='%230f4c81' stroke='%2338bdf8' stroke-width='4.5'/><polyline points='68,56 68,66 75,70' fill='none' stroke='%23ffffff' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/></svg>&quot;;">
             </div>
             <div class="brand-text">
               <span class="brand-title" id="sidebar-sys-name">نظام تدبير المهام</span>
@@ -11638,7 +11729,6 @@ button.lib-exec-count-btn .lib-mini-count-badge,
       <div class="modal-header">
         <div>
           <h3 class="modal-title" style="font-size:1.02rem; display:inline-flex; align-items:center; gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span>الإدخال السريع للمهام</span></h3>
-          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">حقلان اختياريان فقط (الصنف الرئيسي والوجهة) مع إسناد تاريخ اليوم تلقائياً.</div>
         </div>
         <div class="modal-top-actions">
           <button type="button" class="action-icon-btn modal-action-save-btn" id="fc-save-btn" onclick="executeFastCapture()" title="حفظ سريع" aria-label="حفظ سريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
@@ -12263,79 +12353,97 @@ button.lib-exec-count-btn .lib-mini-count-badge,
 
   <!-- MODAL: USER ACCOUNT, GOOGLE AUTHENTICATION, MULTI-USER SWITCHER & SAFE MIGRATION -->
   <div id="modal-user-account-auth" class="modal-backdrop" style="z-index: 3250 !important;">
-    <div class="modal modal-card" style="max-width: 640px !important;">
+    <div class="modal modal-card">
       <div class="modal-header">
         <div>
-          <h3 class="modal-title" style="display:inline-flex; align-items:center; gap:0.45rem; font-size:1.02rem;">
+          <h3 class="modal-title">
             <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span>إدارة هوية المستخدم والعزل السحابي (Google Auth & Firestore)</span>
+            <span>حساب المستخدم والمزامنة السحابية</span>
           </h3>
         </div>
         <div class="modal-top-actions">
           <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-user-account-auth')" title="إغلاق" aria-label="إغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
       </div>
-      <div class="modal-body" style="padding: 1.15rem !important; max-height: 78vh; overflow-y: auto;">
+      <div class="modal-body" style="padding: 1rem !important; max-height: 78vh; overflow-y: auto; overflow-x: hidden;">
         <!-- Active User Summary Card -->
-        <div style="background:var(--bg-muted); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.95rem; margin-bottom:0.95rem;">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem;">
-            <div style="display:flex; align-items:center; gap:0.75rem;">
-              <div class="header-user-auth-avatar" id="modal-auth-avatar" style="width:46px; height:46px; font-size:1.1rem;">م</div>
-              <div>
-                <div style="font-weight:800; font-size:0.96rem; color:var(--text-main);" id="modal-auth-name">محمد ايت حمادي</div>
-                <div style="font-size:0.78rem; color:var(--text-secondary);" id="modal-auth-email">البريد الإلكتروني: حساب المالك الأساسي</div>
-                <div style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono); margin-top:0.15rem;" id="modal-auth-uid">UID: owner_mohamed_ait_hammadi</div>
+        <div style="background:var(--bg-muted); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.9rem; margin-bottom:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.65rem;">
+            <div style="display:flex; align-items:center; gap:0.65rem; min-width:0; flex:1 1 200px;">
+              <div class="header-user-auth-avatar" id="modal-auth-avatar" style="width:42px; height:42px; font-size:1rem; flex-shrink:0;">م</div>
+              <div style="min-width:0; flex:1;">
+                <div style="font-weight:800; font-size:0.92rem; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="modal-auth-name">غير مسجل الدخول</div>
+                <div style="font-size:0.75rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="modal-auth-email">البريد الإلكتروني: —</div>
+                <div style="font-size:0.7rem; color:var(--text-muted); font-family:var(--font-mono); margin-top:0.1rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" id="modal-auth-uid">UID: —</div>
               </div>
             </div>
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:0.35rem;">
-              <span class="badge-soft badge-success" id="modal-auth-status-pill" style="font-size:0.74rem; font-weight:800;">مساحة معزولة نشطة ✓</span>
-              <span style="font-size:0.73rem; color:var(--text-muted);" id="modal-auth-tasks-count">عدد المهام في هذا الحساب: 75</span>
+            <div style="display:flex; flex-direction:column; align-items:flex-start; gap:0.25rem;">
+              <span class="badge-soft badge-success" id="modal-auth-status-pill" style="font-size:0.72rem; font-weight:800;">مساحة معزولة نشطة</span>
+              <span style="font-size:0.72rem; color:var(--text-muted);" id="modal-auth-tasks-count">عدد المهام: 0</span>
             </div>
           </div>
-          <div style="margin-top:0.8rem; padding-top:0.75rem; border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-            <span style="font-size:0.75rem; color:var(--text-muted);" id="modal-auth-firestore-path">المسار السحابي المعزول: <code>users/owner_mohamed_ait_hammadi/tasks</code></span>
-            <div style="display:flex; gap:0.45rem; flex-wrap:wrap;">
-              <button type="button" class="btn btn-sm btn-primary" onclick="closeModal('modal-user-account-auth'); switchView('settings'); switchSettingsTab('user');">⚙️ تعديل الملف الشخصي</button>
-              <button type="button" class="btn btn-sm btn-danger-outline" id="btn-modal-signout" onclick="signOutUserSession()">🚪 تسجيل الخروج</button>
+          <div style="margin-top:0.75rem; padding-top:0.7rem; border-top:1px solid var(--border-subtle); display:flex; flex-direction:column; gap:0.55rem;">
+            <div style="font-size:0.72rem; color:var(--text-muted); word-break:break-all;" id="modal-auth-firestore-path">المسار السحابي المعزول: <code>users/—/tasks</code></div>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap:0.5rem; width:100%;">
+              <button type="button" class="auth-modal-action-btn btn-primary" onclick="closeModal('modal-user-account-auth'); switchView('settings'); switchSettingsTab('user');">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span>تعديل الملف الشخصي</span>
+              </button>
+              <button type="button" class="auth-modal-action-btn btn-danger-outline" id="btn-modal-signout" onclick="signOutUserSession()">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <span>تسجيل الخروج</span>
+              </button>
             </div>
           </div>
         </div>
 
         <!-- Google Sign-In & Account Switching Section -->
-        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:0.95rem; margin-bottom:0.95rem;">
-          <div style="font-weight:800; font-size:0.88rem; margin-bottom:0.45rem; color:var(--text-main);">🔑 الربط والتبديل عبر Google Authentication أو الحسابات المعزولة</div>
-          <p style="font-size:0.76rem; color:var(--text-muted); margin:0 0 0.75rem 0; line-height:1.55;">
-            يُخزن كل مستخدم بياناته ومهامه وإعداداته في مساحة مستقلة تماماً مرتبطة بمعرفه الفريد (<code>uid</code>) في Firestore والذاكرة المحلية، دون أي تداخل بين المستخدمين.
+        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:0.9rem; margin-bottom:0.85rem;">
+          <div style="font-weight:800; font-size:0.85rem; margin-bottom:0.35rem; color:var(--text-main); display:flex; align-items:center; gap:0.4rem;">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span>تبديل الحساب أو الدخول عبر Google</span>
+          </div>
+          <p style="font-size:0.74rem; color:var(--text-muted); margin:0 0 0.65rem 0; line-height:1.5;">
+            يُخزن كل مستخدم بياناته ومهامه وإعداداته في مساحة مستقلة مرتبطة بمعرفه الفريد (<code>uid</code>) دون أي تداخل بين المستخدمين.
           </p>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.75rem;">
+          <div style="display:flex; flex-direction:column; gap:0.5rem;">
             <button type="button" class="google-auth-btn" id="btn-google-popup-login" onclick="signInWithGoogleAccount()">
               <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 11.2 0 13.5s.6 4.5 1.6 6.5l3.7-2.9z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
               <span>تسجيل الدخول بحساب Google</span>
             </button>
-            <button type="button" class="btn btn-sm btn-outline" id="btn-switch-owner-account" onclick="activateUserSessionByProfile({ uid: 'owner_mohamed_ait_hammadi', displayName: 'محمد ايت حمادي', email: 'mohamed.aithammadi@justice.gov.ma', isOwnerAccount: true, authProvider: 'owner_session' })">
-              🏛️ حساب المالك (محمد ايت حمادي)
-            </button>
-            <button type="button" class="btn btn-sm btn-outline" id="btn-toggle-custom-account-form" onclick="const f=document.getElementById('custom-isolated-user-form'); if(f) f.style.display = f.style.display==='none' ? 'block' : 'none';">
-              👤 + دخول بحساب مستخدم جديد / آخر
+            <button type="button" class="auth-modal-action-btn" id="btn-toggle-custom-account-form" onclick="const f=document.getElementById('custom-isolated-user-form'); if(f) f.style.display = f.style.display==='none' ? 'block' : 'none';">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+              <span>دخول بحساب Gmail آخر / مستخدم جديد</span>
             </button>
           </div>
 
-          <!-- Quick New/Custom User Account Switcher (for Multi-User use & Offline/Sandbox Environments) -->
-          <div id="custom-isolated-user-form" style="display:none; background:var(--bg-muted); padding:0.8rem; border-radius:var(--radius-sm); border:1px dashed var(--border-color); margin-top:0.55rem;">
-            <div style="font-size:0.78rem; font-weight:800; margin-bottom:0.5rem; color:var(--text-main);">إنشاء أو فتح مساحة مستخدم مستقلة (حساب فارغ ومعزول بـ UID خاص):</div>
-            <div class="grid-2" style="margin-bottom:0.55rem;">
+          <!-- Quick New/Custom User Account Switcher -->
+          <div id="custom-isolated-user-form" style="display:none; background:var(--bg-muted); padding:0.8rem; border-radius:var(--radius-sm); border:1px solid var(--border-color); margin-top:0.6rem;">
+            <div style="font-size:0.76rem; font-weight:800; margin-bottom:0.5rem; color:var(--text-main);">الدخول بالبريد الإلكتروني (Gmail) أو إنشاء حساب مستخدم جديد:</div>
+            <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.6rem;">
               <div>
-                <label class="form-label" style="font-size:0.74rem;">الاسم الكامل للمستخدم:</label>
-                <input type="text" id="auth-custom-user-name" class="form-control" placeholder="مثال: ذ. عبد الإله العلوي...">
+                <label class="form-label" style="font-size:0.73rem;">البريد الإلكتروني (Gmail):</label>
+                <input type="email" id="auth-custom-user-email" class="form-control" placeholder="name@gmail.com">
               </div>
               <div>
-                <label class="form-label" style="font-size:0.74rem;">البريد الإلكتروني (Google / المهني):</label>
-                <input type="email" id="auth-custom-user-email" class="form-control" placeholder="example@gmail.com">
+                <label class="form-label" style="font-size:0.73rem;">الاسم الكامل للمستخدم:</label>
+                <input type="text" id="auth-custom-user-name" class="form-control" placeholder="الاسم الكامل (اختياري عند الدخول لحساب مسجل)...">
+              </div>
+              <div class="grid-2" style="gap:0.45rem;">
+                <div>
+                  <label class="form-label" style="font-size:0.73rem;">الصفة الوظيفية:</label>
+                  <input type="text" id="auth-custom-user-role" class="form-control" placeholder="إطار إداري وتقني...">
+                </div>
+                <div>
+                  <label class="form-label" style="font-size:0.73rem;">مقر العمل / المصلحة:</label>
+                  <input type="text" id="auth-custom-user-workplace" class="form-control" placeholder="مقر العمل الرئيسي...">
+                </div>
               </div>
             </div>
-            <div style="display:flex; justify-content:flex-end; gap:0.45rem;">
-              <button type="button" class="btn btn-sm btn-primary" onclick="signInWithCustomIsolatedAccount()">✓ فتح المساحة المستقلة لهذا المستخدم</button>
-            </div>
+            <button type="button" class="auth-modal-action-btn btn-primary" onclick="signInWithCustomIsolatedAccount()">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>متابعة وفتح مساحة الحساب</span>
+            </button>
           </div>
 
           <!-- Registered Device Accounts List -->
@@ -12343,46 +12451,46 @@ button.lib-exec-count-btn .lib-mini-count-badge,
         </div>
 
         <!-- Controlled Data Migration & JSON Backup Linking to Current Account -->
-        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-inline-start:4px solid var(--warning); border-radius:var(--radius-md); padding:0.95rem; margin-bottom:0.95rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.45rem; margin-bottom:0.45rem;">
-            <div style="font-weight:800; font-size:0.88rem; color:var(--text-main);">📦 ترحيل البيانات الحالية أو استيراد نسخة JSON الاحتياطية إلى هذا الحساب فقط</div>
-            <span class="badge-soft badge-primary" id="modal-migration-status-badge" style="font-size:0.7rem; font-weight:800;">جاهز للترحيل الآمن</span>
+        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-inline-start:4px solid var(--warning); border-radius:var(--radius-md); padding:0.9rem; margin-bottom:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.4rem;">
+            <div style="font-weight:800; font-size:0.84rem; color:var(--text-main); display:flex; align-items:center; gap:0.4rem;">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>استيراد وترحيل نسخة احتياطية (JSON)</span>
+            </div>
+            <span class="badge-soft badge-primary" id="modal-migration-status-badge" style="font-size:0.68rem; font-weight:800;">جاهز للترحيل الآمن</span>
           </div>
-          <p style="font-size:0.76rem; color:var(--text-muted); margin:0 0 0.7rem 0; line-height:1.55;">
-            يربط هذا الإجراء بيانات النسخة الاحتياطية (JSON) أو البيانات التاريخية الأصلية (75 مهمة) بحساب المستخدم النشط حالياً فقط (مع منع التكرار <code>Idempotent Upsert</code> وحفظ نسخة تراجع فورية).
+          <p style="font-size:0.74rem; color:var(--text-muted); margin:0 0 0.65rem 0; line-height:1.5;">
+            يربط هذا الإجراء بيانات ملف النسخة الاحتياطية (JSON) بحساب المستخدم النشط حالياً فقط مع منع التكرار وحفظ نسخة تراجع فورية.
           </p>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
+          <div style="display:flex; flex-direction:column; gap:0.45rem;">
             <input type="file" id="auth-modal-json-file-input" accept=".json" style="display:none;" onchange="handleAuthModalJsonMigrationFile(event)">
-            <button type="button" class="btn btn-sm btn-primary" onclick="document.getElementById('auth-modal-json-file-input').click()">
-              📥 استيراد وترحيل ملف JSON إلى حسابي
+            <button type="button" class="auth-modal-action-btn btn-primary" onclick="document.getElementById('auth-modal-json-file-input').click()">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>استيراد وترحيل ملف JSON إلى حسابي</span>
             </button>
-            <button type="button" class="btn btn-sm btn-outline" id="btn-migrate-legacy-75-to-account" onclick="migrateLegacyOwnerDataToCurrentAccount()">
-              🔄 ترحيل البيانات التاريخية (75 مهمة) إلى هذا الحساب
+            <button type="button" class="auth-modal-action-btn" id="btn-migrate-legacy-75-to-account" style="display:none;" onclick="migrateLegacyOwnerDataToCurrentAccount()">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+              <span>استعادة البيانات التاريخية (75 مهمة) لحساب المالك</span>
             </button>
-            <button type="button" class="btn btn-sm btn-secondary" id="btn-rollback-user-migration" style="display:none;" onclick="rollbackUserMigrationSnapshot()">
-              ⏪ التراجع عن الترحيل
+            <button type="button" class="auth-modal-action-btn" id="btn-rollback-user-migration" style="display:none;" onclick="rollbackUserMigrationSnapshot()">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+              <span>التراجع عن الترحيل</span>
             </button>
           </div>
-          <div id="auth-migration-feedback-box" style="display:none; margin-top:0.6rem; padding:0.55rem 0.75rem; border-radius:var(--radius-sm); background:var(--bg-muted); font-size:0.76rem; font-weight:700;"></div>
+          <div id="auth-migration-feedback-box" style="display:none; margin-top:0.55rem; padding:0.5rem 0.7rem; border-radius:var(--radius-sm); background:var(--bg-muted); font-size:0.74rem; font-weight:700;"></div>
         </div>
 
         <!-- Firestore Security Rules Reference -->
-        <details style="background:var(--bg-muted); border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:0.65rem 0.85rem; font-size:0.75rem;">
-          <summary style="cursor:pointer; font-weight:800; color:var(--text-secondary);">🛡️ عرض قواعد أمان Firestore الخاصة بعزل المستخدمين (Firestore Security Rules)</summary>
-          <pre style="margin:0.55rem 0 0 0; padding:0.65rem; background:var(--bg-card); border:1px solid var(--border-color); border-radius:6px; direction:ltr; text-align:left; font-family:var(--font-mono); font-size:0.71rem; overflow-x:auto; color:var(--text-main);">rules_version = '2';
+        <details style="background:var(--bg-muted); border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:0.6rem 0.8rem; font-size:0.74rem;">
+          <summary style="cursor:pointer; font-weight:800; color:var(--text-secondary);">قواعد أمان Firestore الخاصة بعزل المستخدمين</summary>
+          <pre style="margin:0.5rem 0 0 0; padding:0.6rem; background:var(--bg-card); border:1px solid var(--border-color); border-radius:6px; direction:ltr; text-align:left; font-family:var(--font-mono); font-size:0.7rem; overflow-x:auto; color:var(--text-main);">rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 1. المساحة المعزولة لكل مستخدم حسب معرفه الفريد (UID)
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
       match /{document=**} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
-    }
-    // 2. حماية المجموعة التاريخية القديمة (للقراءة فقط أثناء الترحيل دون حذف)
-    match /tasks/{taskId} {
-      allow read: if request.auth != null;
-      allow write: if false;
     }
   }
 }</pre>
@@ -12391,48 +12499,90 @@ service cloud.firestore {
     </div>
   </div>
 
-  <!-- MODAL: AUTHENTICATION LOGIN GATE (SHOWN WHEN USER SIGNS OUT) -->
-  <div id="modal-auth-login-gate" class="modal-backdrop" style="z-index: 3500 !important;">
-    <div class="modal modal-card" style="max-width: 480px !important; text-align: center;">
+  <!-- MODAL: AUTHENTICATION LOGIN GATE (SHOWN ON INITIAL ENTRY & WHEN USER SIGNS OUT) -->
+  <div id="modal-auth-login-gate" class="modal-backdrop active" style="z-index: 3500 !important;">
+    <div class="modal modal-card" style="max-width: 480px !important;">
       <div class="modal-header" style="justify-content: center; border-bottom: 1px solid var(--border-subtle);">
-        <h3 class="modal-title" style="display:inline-flex; align-items:center; gap:0.5rem; font-size:1.05rem;">
-          <span>⚖️</span>
-          <span>بوابة تسجيل الدخول — نظام تدبير المهام</span>
-        </h3>
+        <div style="text-align:center;">
+          <h3 class="modal-title" style="justify-content:center;">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span id="gate-sys-title">نظام تدبير المهام اليومية</span>
+          </h3>
+          <div id="gate-workplace-subtitle" style="font-size:0.74rem; color:var(--text-muted); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">المديرية الإقليمية للعدل بسطات</div>
+        </div>
       </div>
-      <div class="modal-body" style="padding: 1.4rem 1.25rem !important;">
-        <p style="font-size:0.84rem; color:var(--text-secondary); margin:0 0 1.1rem 0; line-height:1.65;">
-          مرحباً بك في المنظومة الرقمية لتدبير المهام اليومية والتدخلات التقنية واللوجستية. يُرجى تسجيل الدخول لفتح مساحتك السحابية المعزولة والآمنة:
-        </p>
+      <div class="modal-body" style="padding: 1.15rem 1.05rem !important; max-height: 82vh; overflow-y: auto; overflow-x: hidden;">
+        <!-- Welcome Identity Header -->
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.5rem; margin-bottom:1rem;">
+          <svg viewBox="0 0 100 100" style="width:42px; height:42px; flex-shrink:0;"><defs><linearGradient id="gateLogoBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f4c81"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#gateLogoBg)"/><rect x="18" y="22" width="52" height="50" rx="9" fill="none" stroke="#ffffff" stroke-width="5"/><line x1="18" y1="36" x2="70" y2="36" stroke="#ffffff" stroke-width="4.5"/><line x1="32" y1="14" x2="32" y2="26" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/><line x1="56" y1="14" x2="56" y2="26" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/><rect x="28" y="44" width="8" height="8" rx="2" fill="#93c5fd"/><rect x="41" y="44" width="8" height="8" rx="2" fill="#93c5fd"/><rect x="28" y="56" width="8" height="8" rx="2" fill="#93c5fd"/><circle cx="68" cy="66" r="18" fill="#0f4c81" stroke="#38bdf8" stroke-width="4.5"/><polyline points="68,56 68,66 75,70" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.55;">
+            مرحباً بك في منظومة تدبير المهام والعمليات اليومية. يُرجى تسجيل الدخول بحساب <strong>Gmail / Google</strong> أو إنشاء حساب مستخدم جديد لفتح مساحتك الخاصة:
+          </div>
+        </div>
 
-        <div style="display:flex; flex-direction:column; gap:0.65rem; margin-bottom:1rem;">
-          <button type="button" class="google-auth-btn" style="width:100%; padding:0.7rem 1rem; font-size:0.88rem;" onclick="signInWithGoogleAccount()">
+        <!-- Step 1: Google Sign-In & Direct Gmail Entry -->
+        <div style="background:var(--bg-muted); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.85rem; margin-bottom:0.75rem;">
+          <button type="button" class="google-auth-btn" style="margin-bottom:0.65rem;" onclick="signInWithGoogleAccount()">
             <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 11.2 0 13.5s.6 4.5 1.6 6.5l3.7-2.9z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
             <span>تسجيل الدخول باستخدام حساب Google</span>
           </button>
 
-          <button type="button" class="btn btn-primary" style="width:100%; justify-content:center; padding:0.65rem 1rem;" onclick="activateUserSessionByProfile({ uid: 'owner_mohamed_ait_hammadi', displayName: 'محمد ايت حمادي', email: 'mohamed.aithammadi@justice.gov.ma', isOwnerAccount: true, authProvider: 'owner_session' })">
-            🏛️ الدخول إلى حساب المالك (محمد ايت حمادي)
-          </button>
+          <div style="display:flex; align-items:center; gap:0.5rem; margin:0.45rem 0;">
+            <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
+            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">أو أدخل بريدك الإلكتروني (Gmail)</span>
+            <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
+          </div>
 
-          <button type="button" class="btn btn-outline" style="width:100%; justify-content:center; padding:0.6rem 1rem;" onclick="const box=document.getElementById('gate-new-user-box'); if(box) box.style.display = box.style.display==='none' ? 'block' : 'none';">
-            👤 الدخول بحساب مستخدم جديد / آخر مستقل
+          <div style="display:flex; flex-direction:column; gap:0.45rem;">
+            <input type="email" id="gate-gmail-login-input" class="form-control" style="text-align:left; direction:ltr;" placeholder="your.email@gmail.com" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleGateEmailContinue();}">
+            <button type="button" class="auth-modal-action-btn btn-primary" id="btn-gate-email-continue" onclick="handleGateEmailContinue()">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+              <span>متابعة الدخول بالبريد الإلكتروني</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Button to Toggle New User Registration Form Directly -->
+        <button type="button" class="auth-modal-action-btn" id="btn-gate-toggle-new-user" onclick="toggleGateNewUserOnboarding()">
+          <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+          <span>تسجيل مستخدم جديد (إعداد البطاقة المهنية)</span>
+        </button>
+
+        <!-- Step 2: New User Onboarding & Profile Setup -->
+        <div id="gate-new-user-box" style="display:none; text-align:right; background:var(--bg-muted); padding:0.85rem; border-radius:var(--radius-md); border:1px solid var(--primary); margin-top:0.65rem;">
+          <div style="font-size:0.8rem; font-weight:800; color:var(--primary); margin-bottom:0.55rem; display:flex; align-items:center; gap:0.4rem;">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>إعداد البطاقة المهنية للمستخدم الجديد</span>
+          </div>
+          <div class="form-group" style="margin-bottom:0.45rem;">
+            <label class="form-label" style="font-size:0.73rem;">الاسم الكامل للمستخدم: *</label>
+            <input type="text" id="gate-custom-user-name" class="form-control" placeholder="أدخل اسمك الكامل...">
+          </div>
+          <div class="form-group" style="margin-bottom:0.45rem;">
+            <label class="form-label" style="font-size:0.73rem;">البريد الإلكتروني (Gmail):</label>
+            <input type="email" id="gate-custom-user-email" class="form-control" style="direction:ltr; text-align:left;" placeholder="user@gmail.com">
+          </div>
+          <div class="grid-2" style="gap:0.45rem; margin-bottom:0.45rem;">
+            <div>
+              <label class="form-label" style="font-size:0.73rem;">الصفة الوظيفية:</label>
+              <input type="text" id="gate-custom-user-role" class="form-control" placeholder="مثال: إطار إداري وتقني">
+            </div>
+            <div>
+              <label class="form-label" style="font-size:0.73rem;">الإطار الإداري / الدرجة:</label>
+              <input type="text" id="gate-custom-user-framework" class="form-control" placeholder="مثال: متصرف / مهندس / تقني">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0.65rem;">
+            <label class="form-label" style="font-size:0.73rem;">مقر العمل الرئيسي / الإدارة:</label>
+            <input type="text" id="gate-custom-user-workplace" class="form-control" placeholder="مثال: المديرية الإقليمية / المصلحة الإدارية...">
+          </div>
+          <button type="button" class="auth-modal-action-btn btn-primary" onclick="signInFromGateCustomUser()">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>إنشاء الحساب وفتح مساحة العمل (مع نماذج مهام تجريبية)</span>
           </button>
         </div>
 
-        <div id="gate-new-user-box" style="display:none; text-align:right; background:var(--bg-muted); padding:0.85rem; border-radius:var(--radius-sm); border:1px solid var(--border-color); margin-top:0.65rem;">
-          <div class="form-group" style="margin-bottom:0.5rem;">
-            <label class="form-label" style="font-size:0.75rem;">الاسم الكامل للمستخدم:</label>
-            <input type="text" id="gate-custom-user-name" class="form-control" placeholder="الاسم الكامل...">
-          </div>
-          <div class="form-group" style="margin-bottom:0.6rem;">
-            <label class="form-label" style="font-size:0.75rem;">البريد الإلكتروني:</label>
-            <input type="email" id="gate-custom-user-email" class="form-control" placeholder="user@gmail.com">
-          </div>
-          <button type="button" class="btn btn-sm btn-primary" style="width:100%; justify-content:center;" onclick="signInFromGateCustomUser()">✓ فتح مساحة المستخدم المستقلة</button>
-        </div>
-
-        <div id="gate-known-accounts-box" style="margin-top:0.85rem; text-align:right;"></div>
+        <div id="gate-known-accounts-box" style="margin-top:0.75rem; text-align:right;"></div>
       </div>
     </div>
   </div>
@@ -12443,38 +12593,44 @@ service cloud.firestore {
   <script>
 // Hybrid Persistent Storage Engine with Transparent Per-User UID Isolation (`u_${uid}_${key}`)
 // Guarantees 100% isolation between users while preserving legacy un-namespaced keys untouched as read-only backup.
-const MULTIUSER_ACTIVE_SESSION_KEY = 'ops_multiuser_active_session_v1';
-const MULTIUSER_KNOWN_ACCOUNTS_KEY = 'ops_multiuser_known_accounts_v1';
+const MULTIUSER_ACTIVE_SESSION_KEY = 'ops_multiuser_active_session_v2';
+const MULTIUSER_KNOWN_ACCOUNTS_KEY = 'ops_multiuser_known_accounts_v2';
 const DEFAULT_OWNER_UID = 'owner_mohamed_ait_hammadi';
+const OWNER_GMAIL_ADDRESSES = new Set([
+  'mohamed105@gmail.com',
+  'mohamed.aithammadi@justice.gov.ma'
+]);
 
-window.currentAuthUser = {
-  uid: DEFAULT_OWNER_UID,
-  displayName: 'محمد ايت حمادي',
-  email: 'mohamed.aithammadi@justice.gov.ma',
-  photoURL: '',
-  isOwnerAccount: true,
-  authProvider: 'owner_session'
-};
-window.currentAuthUid = DEFAULT_OWNER_UID;
+function isOwnerEmailAddress(emailStr) {
+  const norm = String(emailStr || '').trim().toLowerCase();
+  return Boolean(norm && OWNER_GMAIL_ADDRESSES.has(norm));
+}
 
-// Restore last active authenticated user session immediately before boot so initial load is 100% scoped
+// Start in strict signed-out guest state by default unless an explicit authenticated session exists in v2 storage
+window.currentAuthUser = null;
+window.currentAuthUid = 'signed_out_guest';
+
 try {
   if (typeof window !== 'undefined' && window.localStorage) {
     const rawSession = window.localStorage.getItem(MULTIUSER_ACTIVE_SESSION_KEY);
     if (rawSession) {
       const parsedSession = JSON.parse(rawSession);
-      if (parsedSession && parsedSession.signedOut === true) {
-        window.currentAuthUser = null;
-        window.currentAuthUid = 'signed_out_guest';
-      } else if (parsedSession && parsedSession.uid) {
+      if (parsedSession && !parsedSession.signedOut && parsedSession.uid && parsedSession.uid !== 'signed_out_guest') {
         window.currentAuthUser = parsedSession;
         window.currentAuthUid = String(parsedSession.uid);
       }
-    } else {
-      window.localStorage.setItem(MULTIUSER_ACTIVE_SESSION_KEY, JSON.stringify(window.currentAuthUser));
     }
   }
 } catch (e) {}
+
+// Immediately lock/hide #app-container if not signed in
+if (typeof document !== 'undefined' && document.body) {
+  if (!window.currentAuthUser || window.currentAuthUid === 'signed_out_guest') {
+    document.body.classList.add('auth-gate-locked');
+  } else {
+    document.body.classList.remove('auth-gate-locked');
+  }
+}
 
 const DEVICE_GLOBAL_STORAGE_KEYS = new Set([
   MULTIUSER_ACTIVE_SESSION_KEY,
@@ -20344,7 +20500,7 @@ const STD_LOGO_PATH = './' + 'logo.png';
 const STD_HEADER_PATH = './' + 'en_tete.png';
 const STD_FOOTER_PATH = './' + 'en_pied.png';
 
-const SVG_LOGO_FALLBACK = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='26' fill='%230f4c81'/><circle cx='60' cy='60' r='44' fill='none' stroke='%23D4AF37' stroke-width='3'/><text x='60' y='76' font-size='52' text-anchor='middle' fill='%23D4AF37'>⚖️</text></svg>";
+const SVG_LOGO_FALLBACK = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='26' fill='%230f4c81'/><rect x='22' y='26' width='62' height='60' rx='10' fill='none' stroke='%23ffffff' stroke-width='6'/><line x1='22' y1='43' x2='84' y2='43' stroke='%23ffffff' stroke-width='5'/><line x1='38' y1='16' x2='38' y2='31' stroke='%2338bdf8' stroke-width='6' stroke-linecap='round'/><line x1='68' y1='16' x2='68' y2='31' stroke='%2338bdf8' stroke-width='6' stroke-linecap='round'/><rect x='34' y='52' width='10' height='10' rx='2' fill='%2393c5fd'/><rect x='50' y='52' width='10' height='10' rx='2' fill='%2393c5fd'/><rect x='34' y='67' width='10' height='10' rx='2' fill='%2393c5fd'/><circle cx='82' cy='80' r='22' fill='%230f4c81' stroke='%2338bdf8' stroke-width='5.5'/><polyline points='82,68 82,80 91,85' fill='none' stroke='%23ffffff' stroke-width='5.5' stroke-linecap='round' stroke-linejoin='round'/></svg>";
 const SVG_HEADER_FALLBACK = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 130'><rect width='900' height='130' fill='%23ffffff'/><line x1='20' y1='122' x2='880' y2='122' stroke='%230f4c81' stroke-width='3'/><line x1='20' y1='127' x2='880' y2='127' stroke='%23D4AF37' stroke-width='1.5'/><text x='450' y='42' font-family='Cairo, Arial' font-size='22' font-weight='bold' text-anchor='middle' fill='%230f172a'>المملكة المغربية — وزارة العدل</text><text x='450' y='75' font-family='Cairo, Arial' font-size='19' font-weight='bold' text-anchor='middle' fill='%230f4c81'>المديرية الإقليمية للعدل بسطات</text><text x='450' y='105' font-family='Cairo, Arial' font-size='14' text-anchor='middle' fill='%23475569'>مصلحة تدبير الممتلكات والعتاد والمعلوميات</text></svg>";
 const SVG_FOOTER_FALLBACK = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 70'><rect width='900' height='70' fill='%23ffffff'/><line x1='30' y1='8' x2='870' y2='8' stroke='%23cbd5e1' stroke-width='1.5'/><text x='450' y='34' font-family='Cairo, Arial' font-size='14' font-weight='bold' text-anchor='middle' fill='%23334155'>المديرية الإقليمية للعدل بسطات — شارع الجيش الملكي، سطات</text><text x='450' y='55' font-family='Cairo, Arial' font-size='12' text-anchor='middle' fill='%2364748b'>نظام تدبير المهام اليومية والتدخلات الميدانية — وثيقة إدارية رسمية</text></svg>";
 
@@ -22797,7 +22953,7 @@ function updateFaviconFromLogo() {
   if (customLogoB64 && customLogoB64.startsWith('data:image')) {
     favLink.href = customLogoB64;
   } else {
-    favLink.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230f4c81'/><text x='50' y='68' font-size='54' text-anchor='middle' fill='%23D4AF37'>⚖️</text></svg>";
+    favLink.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%230f4c81'/><stop offset='100%' stop-color='%231d4ed8'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23bg)'/><rect x='18' y='22' width='52' height='50' rx='9' fill='none' stroke='%23ffffff' stroke-width='5'/><line x1='18' y1='36' x2='70' y2='36' stroke='%23ffffff' stroke-width='4.5'/><line x1='32' y1='14' x2='32' y2='26' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/><line x1='56' y1='14' x2='56' y2='26' stroke='%2338bdf8' stroke-width='5' stroke-linecap='round'/><rect x='28' y='44' width='8' height='8' rx='2' fill='%2393c5fd'/><rect x='41' y='44' width='8' height='8' rx='2' fill='%2393c5fd'/><rect x='28' y='56' width='8' height='8' rx='2' fill='%2393c5fd'/><circle cx='68' cy='66' r='18' fill='%230f4c81' stroke='%2338bdf8' stroke-width='4.5'/><polyline points='68,56 68,66 75,70' fill='none' stroke='%23ffffff' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/></svg>";
   }
 }
 
@@ -22810,23 +22966,29 @@ applyIdentityToUI = function() {
 
   const fullName = p.fullName || s.userName || 'محمد أيت حمادي';
   const jobTitle = p.jobTitle || s.userRole || 'إطار إداري وتقني';
-  const org = p.organization || s.department || 'المديرية الإقليمية للعدل بسطات';
+  const workplace = p.workplace || s.workplace || p.organization || s.department || 'المديرية الإقليمية للعدل بسطات';
   const sysName = s.systemName || 'نظام تدبير المهام اليومية';
 
-  // Ensure sidebar branding and user card always reflect the configured work environment (no hardcoded overrides)
+  // Ensure sidebar branding, welcome gate, and document title always reflect #cfg-system-name and #cfg-user-workplace
   const sbSys = document.getElementById('sidebar-sys-name');
   if (sbSys) sbSys.innerText = sysName;
 
   const sbDept = document.getElementById('sidebar-dept-name');
-  if (sbDept) sbDept.innerText = org;
+  if (sbDept) sbDept.innerText = workplace;
+
+  const gateSys = document.getElementById('gate-sys-title');
+  if (gateSys) gateSys.innerText = sysName;
+
+  const gateDept = document.getElementById('gate-workplace-subtitle');
+  if (gateDept) gateDept.innerText = workplace;
 
   const sbUser = document.getElementById('sidebar-user-name');
   if (sbUser) sbUser.innerText = fullName;
 
   const sbUserDept = document.getElementById('sidebar-user-dept');
-  if (sbUserDept) sbUserDept.innerText = p.service ? `${jobTitle} — ${p.service}` : org;
+  if (sbUserDept) sbUserDept.innerText = p.service ? `${jobTitle} — ${p.service}` : workplace;
 
-  document.title = `${sysName} - ${org}`;
+  document.title = `${sysName} - ${workplace}`;
   updateFaviconFromLogo();
 };
 
@@ -28442,7 +28604,9 @@ function initBackdropClickToCloseModalsV80() {
         closeAllSmartCombos();
       }
 
-      if (modalId === 'modal-settings-pin-verify') {
+      if (modalId === 'modal-auth-login-gate') {
+        return;
+      } else if (modalId === 'modal-settings-pin-verify') {
         if (typeof cancelSettingsPinVerify === 'function') cancelSettingsPinVerify();
         else closeModal(modalId);
       } else if (modalId === 'modal-custom-dialog') {
@@ -29928,28 +30092,22 @@ function getKnownDeviceAccounts() {
       if (Array.isArray(parsed)) return parsed;
     }
   } catch (e) {}
-  return [
-    {
-      uid: DEFAULT_OWNER_UID,
-      displayName: 'محمد ايت حمادي',
-      email: 'mohamed.aithammadi@justice.gov.ma',
-      photoURL: '',
-      isOwnerAccount: true,
-      authProvider: 'owner_session'
-    }
-  ];
+  return [];
 }
 
 function registerKnownDeviceAccount(userObj) {
   if (!userObj || !userObj.uid || userObj.uid === 'signed_out_guest') return;
   try {
     const list = getKnownDeviceAccounts();
-    const idx = list.findIndex(a => String(a.uid) === String(userObj.uid));
+    const idx = list.findIndex(a => String(a.uid) === String(userObj.uid) || (userObj.email && String(a.email || '').toLowerCase() === String(userObj.email).toLowerCase()));
     const entry = {
       uid: String(userObj.uid),
       displayName: String(userObj.displayName || 'مستخدم النظام'),
       email: String(userObj.email || ''),
       photoURL: String(userObj.photoURL || ''),
+      jobTitle: String(userObj.jobTitle || ''),
+      framework: String(userObj.framework || ''),
+      workplace: String(userObj.workplace || ''),
       isOwnerAccount: Boolean(userObj.isOwnerAccount || userObj.uid === DEFAULT_OWNER_UID),
       authProvider: String(userObj.authProvider || 'google'),
       lastLoginAt: new Date().toISOString()
@@ -29963,44 +30121,291 @@ function registerKnownDeviceAccount(userObj) {
   } catch (e) {}
 }
 
+// Build 12 diverse, realistic, non-personal sample tasks for any new user so they can explore, edit, or delete them freely
+function buildSampleTasksForNewUser(ownerUid, workplaceName) {
+  const now = new Date();
+  const fmtDate = (offsetDays) => {
+    const d = new Date(now.getTime() + offsetDays * 86400000);
+    return d.toISOString().split('T')[0];
+  };
+  const todayStr = fmtDate(0);
+  const yesterdayStr = fmtDate(-1);
+  const twoDaysAgoStr = fmtDate(-2);
+  const threeDaysAgoStr = fmtDate(-3);
+  const tomorrowStr = fmtDate(1);
+  const inThreeDaysStr = fmtDate(3);
+  const inSevenDaysStr = fmtDate(7);
+  const mainPlace = workplaceName || 'المقر الرئيسي للإدارة';
+
+  return [
+    {
+      id: `sample_${ownerUid}_1`,
+      ownerUid,
+      title: 'إعداد خطة العمل الأسبوعية وتحديد أولويات التدخل',
+      category: 'التنظيم والتنسيق الإداري',
+      subcategory: 'تسطير برنامج العمل الأسبوعي وتتبع الإنجاز',
+      court: mainPlace,
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'عالية',
+      status: 'قيد التنفيذ',
+      dueDate: todayStr,
+      programmedType: 'أساسية',
+      notes: 'مهمة تجريبية: يمكنك التعديل على هذه المهمة أو تغيير حالتها أو حذفها في أي وقت.',
+      subtasks: [
+        { id: 'st_101', title: 'حصر الملفات ذات الأولوية القصوى لهذا الأسبوع', done: true, date: todayStr },
+        { id: 'st_102', title: 'توزيع المهام اليومية وضبط آجال الإنجاز', done: false, date: todayStr }
+      ],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_2`,
+      ownerUid,
+      title: 'فحص وصيانة التجهيزات المعلوماتية والشبكة المحلية',
+      category: 'الدعم التقني والمعلوميات',
+      subcategory: 'صيانة الحواسيب والطابعات والتجهيزات المكتبية',
+      court: mainPlace,
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'عالية',
+      status: 'قيد التنفيذ',
+      dueDate: todayStr,
+      programmedType: 'أساسية',
+      notes: 'مهمة نموذجية لتجربة تتبع التدخلات التقنية اليومية داخل لوحة إدارة اليوم.',
+      subtasks: [
+        { id: 'st_201', title: 'مراقبة جودة الاتصال بالشبكة الداخلية والخوادم', done: true, date: todayStr },
+        { id: 'st_202', title: 'تحديث برامج الحماية والنسخ الاحتياطي للبيانات', done: false, date: todayStr }
+      ],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_3`,
+      ownerUid,
+      title: 'مراجعة وضبط سجل المراسلات والملفات الإدارية الواردة',
+      category: 'التنظيم والتنسيق الإداري',
+      subcategory: 'معالجة المراسلات الإدارية وتحيين السجلات',
+      court: 'المصلحة الإدارية والتقنية',
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'متوسطة',
+      status: 'منجزة',
+      dueDate: todayStr,
+      completedDate: todayStr,
+      programmedType: 'اعتيادية',
+      notes: 'مهمة منجزة اليوم لتوضيح كيفية احتساب نسبة الإنجاز اليومي في لوحة القيادة.',
+      subtasks: [
+        { id: 'st_301', title: 'فرز وترقيم المراسلات الواردة', done: true, date: todayStr },
+        { id: 'st_302', title: 'أرشفة النسخ الرقمية في السجل الموحد', done: true, date: todayStr }
+      ],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_4`,
+      ownerUid,
+      title: 'جرد مخزون اللوازم المكتبية والحاجيات اللوجستية الشهرية',
+      category: 'اللوجستيك وتدبير الممتلكات',
+      subcategory: 'جرد وتتبع مخزون المكاتب واللوازم',
+      court: 'مصلحة الموارد واللوجستيك',
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'متوسطة',
+      status: 'منجزة',
+      dueDate: yesterdayStr,
+      completedDate: yesterdayStr,
+      programmedType: 'اعتيادية',
+      notes: 'مهمة نموذجية لتوضيح سجل المهام المنجزة وإحصائيات التصنيفات.',
+      subtasks: [
+        { id: 'st_401', title: 'إحصاء المواد المتوفرة بالمستودع', done: true, date: yesterdayStr },
+        { id: 'st_402', title: 'إعداد لائحة الحاجيات التكميلية', done: true, date: yesterdayStr }
+      ],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_5`,
+      ownerUid,
+      title: 'إعداد التقرير الدوري حول حصيلة الأنشطة ومؤشرات الأداء',
+      category: 'التقارير والاجتماعات الرسمية',
+      subcategory: 'إعداد التقارير الدورية وعروض الحصيلة',
+      court: mainPlace,
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'عالية',
+      status: 'قيد التنفيذ',
+      dueDate: yesterdayStr,
+      programmedType: 'أساسية',
+      notes: 'مهمة لتجربة إصدار وطباعة تقرير رسمي بصيغة A4 من تبويب (تقرير خاص بالمهمة).',
+      subtasks: [
+        { id: 'st_501', title: 'تجميع المعطيات الإحصائية الخاصة بالعمليات المنجزة', done: true, date: yesterdayStr },
+        { id: 'st_502', title: 'صياغة التقرير النهائي ومراجعته للطباعة', done: false, date: todayStr }
+      ],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_6`,
+      ownerUid,
+      title: 'مهمة ميدانية لتفقد التجهيزات والمواكبة التقنية بالفرع الإقليمي',
+      category: 'المهام الميدانية والتنقلات',
+      subcategory: 'زيارة ميدانية للمواكبة التقنية واللوجستية',
+      court: 'الفرع الإقليمي الأول',
+      executionMode: 'تنقل بأمر بمهمة',
+      priority: 'عالية',
+      status: 'منجزة',
+      dueDate: twoDaysAgoStr,
+      completedDate: twoDaysAgoStr,
+      programmedType: 'أساسية',
+      notes: 'مهمة نموذجية بصيغة (تنقل بأمر بمهمة) لتوضيح إحصائيات التنقلات والتقارير الميدانية.',
+      subtasks: [
+        { id: 'st_601', title: 'تفقد حالة التجهيزات والمكاتب بعين المكان', done: true, date: twoDaysAgoStr },
+        { id: 'st_602', title: 'تحرير محضر المعاينة والتدخل التقني', done: true, date: twoDaysAgoStr }
+      ],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_7`,
+      ownerUid,
+      title: 'تتبع تنفيذ سندات الطلب ومحاضر استلام التوريدات',
+      category: 'الصفقات وسندات الطلب',
+      subcategory: 'تتبع تنفيذ سند الطلب (Bon de Commande)',
+      court: mainPlace,
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'متوسطة',
+      status: 'مفتوحة',
+      dueDate: tomorrowStr,
+      programmedType: 'مستقبلية',
+      notes: 'مهمة مبرمجة لتجربة تبويب (برمجة المهام) والتقويم الزمني.',
+      subtasks: [
+        { id: 'st_701', title: 'التحقق من مطابقة التوريدات للمواصفات التقنية', done: false, date: tomorrowStr }
+      ],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_8`,
+      ownerUid,
+      title: 'تنظيم وتحيين لوحات التشوير والإرشاد بالمرافق الإدارية',
+      category: 'التشوير والتنظيم الإداري',
+      subcategory: 'تثبيت لوحات التوجيه والإرشاد للمرتفقين',
+      court: mainPlace,
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'متوسطة',
+      status: 'مفتوحة',
+      dueDate: inThreeDaysStr,
+      programmedType: 'مستقبلية',
+      notes: 'مهمة مستقبلية قابلة للجدولة أو الإسناد إلى يوم محدد.',
+      subtasks: [],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_9`,
+      ownerUid,
+      title: 'تطوير ورقمنة نماذج العمل الداخلية وتحديث قاعدة البيانات',
+      category: 'تطوير التطبيقات والرقمنة',
+      subcategory: 'بناء خزان الإحصائيات وتحديث قواعد البيانات',
+      court: 'المصلحة الإدارية والتقنية',
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'عالية',
+      status: 'مبرمجة',
+      dueDate: '',
+      programmedType: 'أساسية',
+      notes: 'مهمة غير مسندة لتاريخ محدد، تظهر في قائمة (برمجة المهام - أساسية) لإسنادها لليوم عند الحاجة.',
+      subtasks: [],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_10`,
+      ownerUid,
+      title: 'المراقبة الدورية لسلامة المنشآت الكهربائية والتكييف',
+      category: 'اللوجستيك وتدبير الممتلكات',
+      subcategory: 'تتبع أعمال الصيانة الوقائية للمباني والتجهيزات',
+      court: mainPlace,
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'متوسطة',
+      status: 'مبرمجة',
+      dueDate: '',
+      programmedType: 'اعتيادية',
+      notes: 'مهمة دورية اعتيادية في بنك البرمجة.',
+      subtasks: [],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_11`,
+      ownerUid,
+      title: 'التحضير اللوجستي والتقني للاجتماع التنسيقي الدوري',
+      category: 'التقارير والاجتماعات الرسمية',
+      subcategory: 'تنظيم الاجتماعات واللقاءات المهنية',
+      court: 'المركز الجهوي للتنسيق',
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'عالية',
+      status: 'مبرمجة',
+      dueDate: inSevenDaysStr,
+      programmedType: 'مستقبلية',
+      notes: 'مهمة مستقبلية مجدولة للأسبوع القادم.',
+      subtasks: [],
+      createdAt: now.toISOString()
+    },
+    {
+      id: `sample_${ownerUid}_12`,
+      ownerUid,
+      title: 'أرشفة الوثائق الإدارية وتنظيم الخزانة الرقمية السنوية',
+      category: 'التنظيم والتنسيق الإداري',
+      subcategory: 'الأرشفة الرقمية والورقية للملفات',
+      court: mainPlace,
+      executionMode: 'محلي (بمقر العمل)',
+      priority: 'منخفضة',
+      status: 'مفتوحة',
+      dueDate: threeDaysAgoStr,
+      completedDate: threeDaysAgoStr,
+      programmedType: 'مفتوحة',
+      notes: 'مهمة عامة مفتوحة قابلة للتعديل أو الحذف.',
+      subtasks: [],
+      createdAt: now.toISOString()
+    }
+  ];
+}
+
 function buildCleanDefaultDataForUser(userObj) {
   const u = userObj || {};
-  const cleanName = (u.displayName || '').trim() || 'مستخدم جديد';
-  const cleanEmail = (u.email || '').trim() || '';
   const cleanUid = String(u.uid || ('user_' + Date.now()));
+  const isGuest = (cleanUid === 'signed_out_guest');
+  const cleanName = (u.displayName || '').trim() || (isGuest ? 'غير مسجل الدخول' : 'مستخدم جديد');
+  const cleanEmail = (u.email || '').trim() || '';
+  const cleanRole = (u.jobTitle || '').trim() || 'إطار إداري وتقني';
+  const cleanFramework = (u.framework || '').trim() || cleanRole;
+  const cleanWorkplace = (u.workplace || '').trim() || 'المقر الرئيسي للإدارة';
   const nowIso = new Date().toISOString();
 
-  const baseCategories = JSON.parse(JSON.stringify(LEGACY_OWNER_DEFAULT_DATA.categories || []));
-  const extraCats = [
+  const genericCategories = [
     {
-      id: 'cat_exams',
-      name: 'المباريات والامتحانات المهنية',
-      icon: '🏆',
-      color: '#8b5cf6',
+      id: 'cat_gen_admin',
+      name: 'التنظيم والتنسيق الإداري',
+      icon: '📁',
+      color: '#3b82f6',
       subs: [
-        'عملية ترقيم وتشوير القاعات والمدرجات',
-        'إعداد الحاسوب وأجهزة العتاد المعلوماتي الخاص بالمباراة',
-        'تجهيز القاعات والمدرجات واللوجستيك',
-        'طبع الاستدعاءات ولوائح المترشحين',
-        'المواكبة التقنية واللوجستية للمباراة',
-        'استقبال وتوجيه المترشحين وأعضاء اللجن'
+        'تسطير برنامج العمل الأسبوعي وتتبع الإنجاز',
+        'معالجة المراسلات الإدارية وتحيين السجلات',
+        'الأرشفة الرقمية والورقية للملفات',
+        'التنسيق بين المصالح والوحدات الإدارية'
       ]
     },
     {
-      id: 'cat_signage',
-      name: 'التشوير والتنظيم الإداري',
-      icon: '🪧',
-      color: '#14b8a6',
+      id: 'cat_gen_tech',
+      name: 'الدعم التقني والمعلوميات',
+      icon: '💻',
+      color: '#0ea5e9',
       subs: [
-        'عملية ترقيم وتشوير المكاتب والقاعات',
-        'تصميم وإعداد لافتات مكاتب القضاة والموظفين',
-        'تثبيت لوحات التوجيه والإرشاد للمرتفقين',
-        'تنظيم المكاتب الأمامية والفضاءات',
-        'طبع اللافتات والباندرولات'
+        'صيانة الحواسيب والطابعات والتجهيزات المكتبية',
+        'مراقبة الشبكة المحلية والخوادم',
+        'تثبيت وتحديث البرامج المهنية',
+        'الدعم التقني للمستخدمين'
       ]
     },
     {
-      id: 'cat_marches',
+      id: 'cat_gen_logistics',
+      name: 'اللوجستيك وتدبير الممتلكات',
+      icon: '🏢',
+      color: '#10b981',
+      subs: [
+        'جرد وتتبع مخزون المكاتب واللوازم',
+        'تتبع أعمال الصيانة الوقائية للمباني والتجهيزات',
+        'تجهيز المكاتب وقاعات الاجتماعات'
+      ]
+    },
+    {
+      id: 'cat_gen_marches',
       name: 'الصفقات وسندات الطلب',
       icon: '📜',
       color: '#f97316',
@@ -30008,77 +30413,96 @@ function buildCleanDefaultDataForUser(userObj) {
         'إعداد ملف الصفقة ودفتر التحملات (CPS)',
         'تتبع تنفيذ سند الطلب (Bon de Commande)',
         'استلام وفحص التوريدات والعتاد',
-        'حصر الحاجيات وتقدير الكلفة',
-        'محاضر الاستلام المؤقت والنهائي'
+        'حصر الحاجيات وتقدير الكلفة'
       ]
     },
     {
-      id: 'cat_dev',
+      id: 'cat_gen_field',
+      name: 'المهام الميدانية والتنقلات',
+      icon: '🚗',
+      color: '#8b5cf6',
+      subs: [
+        'زيارة ميدانية للمواكبة التقنية واللوجستية',
+        'معاينة التجهيزات والمرافق الخارجية',
+        'تنفيذ مهمة رسمية بأمر بمهمة'
+      ]
+    },
+    {
+      id: 'cat_gen_reports',
+      name: 'التقارير والاجتماعات الرسمية',
+      icon: '📊',
+      color: '#eab308',
+      subs: [
+        'إعداد التقارير الدورية وعروض الحصيلة',
+        'تنظيم الاجتماعات واللقاءات المهنية',
+        'توثيق المحاضر الرسمية'
+      ]
+    },
+    {
+      id: 'cat_gen_signage',
+      name: 'التشوير والتنظيم الإداري',
+      icon: '🪧',
+      color: '#14b8a6',
+      subs: [
+        'ترقيم وتشوير المكاتب والقاعات',
+        'تثبيت لوحات التوجيه والإرشاد للمرتفقين',
+        'تنظيم فضاءات الاستقبال'
+      ]
+    },
+    {
+      id: 'cat_gen_dev',
       name: 'تطوير التطبيقات والرقمنة',
-      icon: '💻',
-      color: '#3b82f6',
+      icon: '⚙️',
+      color: '#6366f1',
       subs: [
         'برمجة وتطوير الوحدات الرقمية',
         'بناء خزان الإحصائيات وتحديث قواعد البيانات',
-        'معالجة الأخطاء البرمجية وضبط الفئات',
-        'برمجة محرك التقارير والطباعة المباشرة',
-        'حضور دورات تكوينية عن بُعد'
-      ]
-    },
-    {
-      id: 'cat_events',
-      name: 'التقارير والمناسبات الرسمية',
-      icon: '🎖️',
-      color: '#eab308',
-      subs: [
-        'التنظيم اللوجستي والتقني لافتتاح السنة القضائية',
-        'إعداد وطباعة التقرير السنوي',
-        'توثيق الجلسات الرسمية والندوات',
-        'المواكبة التقنية واللوجستية'
+        'حضور دورات تكوينية وتأهيلية'
       ]
     }
   ];
-  extraCats.forEach(ec => {
-    if (!baseCategories.some(c => c.name === ec.name)) {
-      baseCategories.push(ec);
-    }
-  });
 
-  const baseCourts = JSON.parse(JSON.stringify(LEGACY_OWNER_DEFAULT_DATA.courts || []));
-  const baseTemplates = JSON.parse(JSON.stringify(LEGACY_OWNER_DEFAULT_DATA.templates || []));
-  const baseToners = JSON.parse(JSON.stringify(LEGACY_OWNER_DEFAULT_DATA.toners || []));
-  const baseLibrary = typeof DEFAULT_MISSION_LIBRARY_SEED !== 'undefined'
-    ? JSON.parse(JSON.stringify(DEFAULT_MISSION_LIBRARY_SEED))
-    : [];
+  const genericCourts = [
+    { id: 'dest_main', name: cleanWorkplace, city: 'المقر الرئيسي', type: 'مقر العمل الرئيسي', scope: 'محلي' },
+    { id: 'dest_admin', name: 'المصلحة الإدارية والتقنية', city: 'المقر الرئيسي', type: 'مصلحة داخلية', scope: 'محلي' },
+    { id: 'dest_logistics', name: 'مصلحة الموارد واللوجستيك', city: 'المقر الرئيسي', type: 'مصلحة داخلية', scope: 'محلي' },
+    { id: 'dest_branch1', name: 'الفرع الإقليمي الأول', city: 'خارجي', type: 'وحدة خارجية', scope: 'تنقل' },
+    { id: 'dest_regional', name: 'المركز الجهوي للتنسيق', city: 'جهوي', type: 'مرفق جهوي', scope: 'تنقل' }
+  ];
+
+  const sampleTasks = isGuest ? [] : buildSampleTasksForNewUser(cleanUid, cleanWorkplace);
 
   return {
     ownerUid: cleanUid,
-    tasks: [],
+    tasks: sampleTasks,
     trash: [],
     auditLog: [],
     savedTitles: [],
     savedTitleMetadata: [],
     missionsRegistry: [],
-    categories: baseCategories,
-    courts: baseCourts,
-    templates: baseTemplates,
-    toners: baseToners,
-    missionLibrary: baseLibrary,
+    categories: genericCategories,
+    courts: genericCourts,
+    templates: [],
+    toners: [],
+    missionLibrary: [],
     profile: {
       uid: cleanUid,
       fullName: cleanName,
       email: cleanEmail,
       photoURL: u.photoURL || '',
-      jobTitle: u.jobTitle || 'إطار إداري وتقني',
-      framework: u.framework || 'إطار إداري وتقني',
-      grade: u.framework || 'إطار إداري وتقني',
-      organization: 'المديرية الإقليمية للعدل بسطات',
-      service: 'مصلحة تدبير الممتلكات والعتاد والمعلوميات',
-      workplace: 'المديرية الإقليمية للعدل بسطات',
-      ministry: 'المملكة المغربية - وزارة العدل',
+      jobTitle: cleanRole,
+      framework: cleanFramework,
+      grade: cleanFramework,
+      organization: cleanWorkplace,
+      service: cleanWorkplace,
+      workplace: cleanWorkplace,
+      ministry: 'الإدارة / المؤسسة المهنية',
       mainDomain: 'التدبير الإداري والتقني واللوجستي',
-      officialStampText: 'تأشيرة السيد المدير الإقليمي',
-      basicRoutineTasks: [],
+      officialStampText: 'تأشيرة المسؤول المباشر',
+      basicRoutineTasks: [
+        'تسطير برنامج العمل اليومي وتتبع الأولويات',
+        'مراقبة البريد والمراسلات الإدارية والتقنية'
+      ],
       isCustomModified: true,
       createdAt: nowIso,
       updatedAt: nowIso
@@ -30089,19 +30513,22 @@ function buildCleanDefaultDataForUser(userObj) {
       metaRevision: 1,
       updatedAt: nowIso,
       systemName: 'نظام تدبير المهام اليومية',
-      ministry: 'المملكة المغربية - وزارة العدل',
-      department: 'المديرية الإقليمية للعدل بسطات',
-      workplace: 'المديرية الإقليمية للعدل بسطات',
+      ministry: 'الإدارة / المؤسسة المهنية',
+      department: cleanWorkplace,
+      workplace: cleanWorkplace,
       userName: cleanName,
-      userRole: u.jobTitle || 'إطار إداري وتقني',
-      userFramework: u.framework || 'إطار إداري وتقني',
+      userRole: cleanRole,
+      userFramework: cleanFramework,
       userEmail: cleanEmail,
-      officialStampText: 'تأشيرة السيد المدير الإقليمي',
-      reportApprovalText: 'تأشيرة السيد المدير الإقليمي',
-      basicRoutineTasks: [],
+      officialStampText: 'تأشيرة المسؤول المباشر',
+      reportApprovalText: 'تأشيرة المسؤول المباشر',
+      basicRoutineTasks: [
+        'تسطير برنامج العمل اليومي وتتبع الأولويات',
+        'مراقبة البريد والمراسلات الإدارية والتقنية'
+      ],
       theme: 'dark',
-      aboutTitle: 'نظام تدبير المهام اليومية — المديرية الإقليمية للعدل',
-      aboutDesc: 'منظومة رقمية مؤسساتية شاملة لتدبير المهام اليومية والتدخلات التقنية واللوجستية وتنقلات أوامر المهمة، وإصدار التقارير الرسمية بصيغة A4.',
+      aboutTitle: 'نظام تدبير المهام اليومية والعمليات المهنية',
+      aboutDesc: 'منظومة رقمية متكاملة لتدبير المهام اليومية والبرمجة الزمنية والتدخلات التقنية واللوجستية وإصدار التقارير الرسمية بصيغة A4.',
       sidebarLabels: {
         dashboard: 'لوحة القيادة والمؤشرات',
         today: 'لوحة إدارة اليوم',
@@ -30196,19 +30623,30 @@ ensureUserBasicTasksInitialized = function() {
   return _preMultiUserEnsureBasicTasks.apply(this, arguments);
 };
 
-// 3. Wrap initSystem() and resetSystemToFactoryDefaults() so new users start with a clean 0-task workspace while the owner retains all 75 tasks
+// 3. Wrap initSystem() and resetSystemToFactoryDefaults() so new users start with 12 generic sample tasks while the owner retains all 75+ tasks
 const _preMultiUserInitSystem = initSystem;
 initSystem = function() {
   currentInspectedDay = getTodayISO();
+  const isSignedOut = (!window.currentAuthUser || !window.currentAuthUid || window.currentAuthUid === 'signed_out_guest');
+  if (isSignedOut) {
+    APP = buildCleanDefaultDataForUser({
+      uid: 'signed_out_guest',
+      displayName: 'غير مسجل الدخول',
+      email: ''
+    });
+    updateMultiUserAuthUI();
+    return;
+  }
+
   const isOwner = (window.currentAuthUid === DEFAULT_OWNER_UID);
   const saved = CLOUD_MEMORY_STORE.getItem(STORAGE_KEY);
 
   if (!saved && !isOwner) {
-    // Brand-new non-owner user: initialize clean 0-task workspace with user's Google/custom profile
+    // Brand-new non-owner user: initialize isolated workspace with user's custom profile + 12 generic sample tasks
     APP = buildCleanDefaultDataForUser(window.currentAuthUser);
     syncV13MirrorsToCloudFirestore();
   } else if (!saved && isOwner) {
-    // Owner account first boot: seed from legacy raw localStorage if present, or LEGACY_OWNER_DEFAULT_DATA (75 tasks)
+    // Owner account (`mohamed105@gmail.com`): seed from legacy raw localStorage if present, or LEGACY_OWNER_DEFAULT_DATA (75+ tasks)
     const rawLegacy = CLOUD_MEMORY_STORE.getRawLegacyItem(STORAGE_KEY);
     if (rawLegacy) {
       try {
@@ -30235,7 +30673,7 @@ resetSystemToFactoryDefaults = function() {
   const isOwner = (window.currentAuthUid === DEFAULT_OWNER_UID);
   const confirmMsg = isOwner
     ? 'هل تريد إعادة ضبط حساب المالك إلى البيانات التأسيسية القياسية (75 مهمة)؟ سيقوم النظام تلقائياً بحفظ لقطة تراجع احتياطية لبياناتك الحالية أولاً.'
-    : 'هل تريد إعادة ضبط حسابك الحالي إلى الوضع التأسيسي النظيف (0 مهمة مع الحفاظ على التصنيفات والوجهات القياسية)؟ سيقوم النظام بحفظ لقطة تراجع احتياطية أولاً.';
+    : 'هل تريد إعادة ضبط حسابك الحالي إلى الوضع التأسيسي التجريبي (12 مهمة نموذجية مع الحفاظ على بياناتك الشخصية)؟ سيقوم النظام بحفظ لقطة تراجع احتياطية أولاً.';
   openCustomConfirmDialog(
     'إعادة الضبط المصنعي الآمن للحساب الحالي',
     confirmMsg,
@@ -30263,7 +30701,7 @@ resetSystemToFactoryDefaults = function() {
   );
 };
 
-// 4. Update Header Pill, Settings User Card, and Account Modal UI with Active User Identity
+// 4. Update Header Pill, Settings User Card, Body Auth Lock, and Account Modal UI with Active User Identity
 function getAvatarInitialOrImgHtml(nameStr, photoUrl) {
   if (photoUrl && typeof photoUrl === 'string' && photoUrl.startsWith('http')) {
     return `<img src="${escapeHtml(photoUrl)}" alt="Avatar" onerror="this.remove();">`;
@@ -30274,15 +30712,24 @@ function getAvatarInitialOrImgHtml(nameStr, photoUrl) {
 
 function updateMultiUserAuthUI() {
   const isSignedOut = (!window.currentAuthUser || !window.currentAuthUid || window.currentAuthUid === 'signed_out_guest');
+  if (typeof document !== 'undefined' && document.body) {
+    if (isSignedOut) {
+      document.body.classList.add('auth-gate-locked');
+    } else {
+      document.body.classList.remove('auth-gate-locked');
+    }
+  }
+
   const activeName = isSignedOut
     ? 'غير مسجل الدخول'
     : (APP?.profile?.fullName || APP?.settings?.userName || window.currentAuthUser?.displayName || 'مستخدم النظام');
   const activeEmail = isSignedOut
     ? 'يرجى تسجيل الدخول'
-    : (APP?.profile?.email || APP?.settings?.userEmail || window.currentAuthUser?.email || 'حساب محلي / سحابي معزول');
+    : (APP?.profile?.email || APP?.settings?.userEmail || window.currentAuthUser?.email || 'حساب سحابي معزول');
   const activeUid = isSignedOut ? '—' : String(window.currentAuthUid);
   const photoURL = isSignedOut ? '' : (window.currentAuthUser?.photoURL || '');
   const tasksCount = (APP && Array.isArray(APP.tasks)) ? APP.tasks.length : 0;
+  const isOwner = (!isSignedOut && (activeUid === DEFAULT_OWNER_UID || isOwnerEmailAddress(activeEmail)));
 
   // Header Pill
   const hdrName = document.getElementById('header-user-auth-name');
@@ -30341,6 +30788,12 @@ function updateMultiUserAuthUI() {
     mdStatus.innerText = isSignedOut ? 'تم تسجيل الخروج' : 'مساحة معزولة نشطة ✓';
   }
 
+  // Show legacy 75 tasks restore button ONLY when logged in as the Owner (`mohamed105@gmail.com`)
+  const legBtn = document.getElementById('btn-migrate-legacy-75-to-account');
+  if (legBtn) {
+    legBtn.style.display = isOwner ? 'inline-flex' : 'none';
+  }
+
   // Migration Rollback Button visibility
   const rollbackBtn = document.getElementById('btn-rollback-user-migration');
   if (rollbackBtn) {
@@ -30352,8 +30805,8 @@ function updateMultiUserAuthUI() {
     const receipt = APP?.settings?.lastMigrationReceipt;
     if (receipt && receipt.tasksCount !== undefined) {
       migBadge.className = 'badge-soft badge-success';
-      migBadge.innerText = `تم ترحيل ${receipt.tasksCount} مهمة إلى هذا الحساب ✓`;
-    } else if (activeUid === DEFAULT_OWNER_UID && tasksCount >= 75) {
+      migBadge.innerText = `تم ترحيل ${receipt.tasksCount} مهمة ✓`;
+    } else if (isOwner && tasksCount >= 75) {
       migBadge.className = 'badge-soft badge-success';
       migBadge.innerText = `بيانات المالك مفعلة (${tasksCount} مهمة) ✓`;
     } else {
@@ -30375,19 +30828,19 @@ function renderKnownAccountsListsUI() {
       modalListEl.innerHTML = '';
     } else {
       modalListEl.innerHTML = `
-        <div style="font-size:0.74rem; font-weight:800; color:var(--text-muted); margin-bottom:0.25rem;">الحسابات المسجلة على هذا المتصفح (انقر للتبديل الفوري مع عزل كامل للبيانات):</div>
+        <div style="font-size:0.73rem; font-weight:800; color:var(--text-muted); margin-bottom:0.25rem;">الحسابات المسجلة على هذا المتصفح:</div>
         ${accounts.map(acc => {
           const isCurrent = String(acc.uid) === activeUid;
           return `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:0.45rem 0.7rem; border-radius:var(--radius-sm); background:var(--bg-muted); border:1px solid ${isCurrent ? 'var(--primary)' : 'var(--border-subtle)'};">
-              <div style="display:flex; align-items:center; gap:0.5rem; min-width:0;">
-                <span class="header-user-auth-avatar" style="width:26px; height:26px; font-size:0.72rem;">${getAvatarInitialOrImgHtml(acc.displayName, acc.photoURL)}</span>
-                <div style="min-width:0;">
-                  <div style="font-size:0.8rem; font-weight:800; color:var(--text-main);">${escapeHtml(acc.displayName)} ${isCurrent ? '<span class="badge-soft badge-success" style="font-size:0.65rem; padding:0.1rem 0.4rem;">النشط حالياً</span>' : ''}</div>
-                  <div style="font-size:0.7rem; color:var(--text-muted); font-family:var(--font-mono);">${escapeHtml(acc.email || acc.uid)}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; padding:0.45rem 0.65rem; border-radius:var(--radius-sm); background:var(--bg-muted); border:1px solid ${isCurrent ? 'var(--primary)' : 'var(--border-subtle)'};">
+              <div style="display:flex; align-items:center; gap:0.45rem; min-width:0; flex:1;">
+                <span class="header-user-auth-avatar" style="width:26px; height:26px; font-size:0.72rem; flex-shrink:0;">${getAvatarInitialOrImgHtml(acc.displayName, acc.photoURL)}</span>
+                <div style="min-width:0; flex:1;">
+                  <div style="font-size:0.78rem; font-weight:800; color:var(--text-main); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(acc.displayName)} ${isCurrent ? '<span class="badge-soft badge-success" style="font-size:0.63rem; padding:0.08rem 0.35rem;">النشط</span>' : ''}</div>
+                  <div style="font-size:0.68rem; color:var(--text-muted); font-family:var(--font-mono); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(acc.email || acc.uid)}</div>
                 </div>
               </div>
-              ${isCurrent ? '' : `<button type="button" class="btn btn-sm btn-outline" style="padding:0.2rem 0.6rem; font-size:0.74rem;" onclick="switchUserAccountByUid('${escapeHtml(acc.uid)}')">تبديل للحساب ➜</button>`}
+              ${isCurrent ? '' : `<button type="button" class="btn btn-sm btn-outline" style="padding:0.2rem 0.55rem; font-size:0.72rem; flex-shrink:0;" onclick="switchUserAccountByUid('${escapeHtml(acc.uid)}')">تبديل</button>`}
             </div>
           `;
         }).join('')}
@@ -30401,15 +30854,15 @@ function renderKnownAccountsListsUI() {
       gateListEl.innerHTML = '';
     } else {
       gateListEl.innerHTML = `
-        <div style="font-size:0.75rem; font-weight:800; color:var(--text-muted); margin-bottom:0.4rem;">حسابات محفوظة على هذا الجهاز:</div>
+        <div style="font-size:0.74rem; font-weight:800; color:var(--text-muted); margin-bottom:0.4rem;">حسابات تم الدخول بها سابقاً على هذا الجهاز:</div>
         <div style="display:flex; flex-direction:column; gap:0.4rem;">
           ${accounts.map(acc => `
-            <button type="button" class="btn btn-outline" style="width:100%; justify-content:space-between; padding:0.5rem 0.75rem;" onclick="switchUserAccountByUid('${escapeHtml(acc.uid)}')">
-              <span style="display:inline-flex; align-items:center; gap:0.5rem;">
-                <span class="header-user-auth-avatar" style="width:24px; height:24px; font-size:0.7rem;">${getAvatarInitialOrImgHtml(acc.displayName, acc.photoURL)}</span>
-                <span style="font-weight:800; font-size:0.8rem;">${escapeHtml(acc.displayName)}</span>
+            <button type="button" class="auth-modal-action-btn" style="justify-content:space-between !important;" onclick="switchUserAccountByUid('${escapeHtml(acc.uid)}')">
+              <span style="display:inline-flex; align-items:center; gap:0.5rem; min-width:0; overflow:hidden;">
+                <span class="header-user-auth-avatar" style="width:24px; height:24px; font-size:0.7rem; flex-shrink:0;">${getAvatarInitialOrImgHtml(acc.displayName, acc.photoURL)}</span>
+                <span style="font-weight:800; font-size:0.79rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(acc.displayName)}</span>
               </span>
-              <span style="font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);">دخول ➜</span>
+              <span style="font-size:0.71rem; color:var(--text-muted); font-family:var(--font-mono); flex-shrink:0;">دخول</span>
             </button>
           `).join('')}
         </div>
@@ -30479,18 +30932,32 @@ function activateUserSessionByProfile(userProfile) {
   tasksCollection = null;
   lastBoundFirestoreUid = null;
 
+  // Check if the incoming email belongs to the Owner (`mohamed105@gmail.com`)
+  const incomingEmail = String(userProfile.email || '').trim();
+  const isOwner = Boolean(userProfile.isOwnerAccount || userProfile.uid === DEFAULT_OWNER_UID || isOwnerEmailAddress(incomingEmail));
+  const resolvedUid = isOwner ? DEFAULT_OWNER_UID : String(userProfile.uid).trim();
+  const resolvedName = isOwner ? 'محمد ايت حمادي' : String(userProfile.displayName || 'مستخدم النظام').trim();
+  const resolvedEmail = isOwner ? (incomingEmail || 'mohamed105@gmail.com') : incomingEmail;
+
   const cleanProfile = {
-    uid: String(userProfile.uid).trim(),
-    displayName: String(userProfile.displayName || 'مستخدم النظام').trim(),
-    email: String(userProfile.email || '').trim(),
+    uid: resolvedUid,
+    displayName: resolvedName,
+    email: resolvedEmail,
     photoURL: String(userProfile.photoURL || '').trim(),
-    isOwnerAccount: Boolean(userProfile.isOwnerAccount || userProfile.uid === DEFAULT_OWNER_UID),
+    jobTitle: String(userProfile.jobTitle || '').trim(),
+    framework: String(userProfile.framework || '').trim(),
+    workplace: String(userProfile.workplace || '').trim(),
+    isOwnerAccount: isOwner,
     authProvider: String(userProfile.authProvider || 'google'),
     lastLoginAt: new Date().toISOString()
   };
 
   window.currentAuthUser = cleanProfile;
   window.currentAuthUid = cleanProfile.uid;
+
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.classList.remove('auth-gate-locked');
+  }
 
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -30503,15 +30970,31 @@ function activateUserSessionByProfile(userProfile) {
   initSystem();
   loadV13MirrorsFromCloudFirestore(true);
 
-  // Ensure the user's profile name is synced if not custom-modified yet
-  if (APP && APP.profile && cleanProfile.uid !== DEFAULT_OWNER_UID) {
-    if (!APP.profile.fullName || APP.profile.fullName === 'محمد ايت حمادي') {
+  // Sync the user's custom onboarding fields if non-owner
+  if (APP && APP.profile && !isOwner) {
+    if (cleanProfile.displayName && (!APP.profile.fullName || APP.profile.fullName === 'محمد ايت حمادي' || APP.profile.fullName === 'مستخدم جديد')) {
       APP.profile.fullName = cleanProfile.displayName;
       APP.settings.userName = cleanProfile.displayName;
     }
-    if (cleanProfile.email && !APP.profile.email) {
+    if (cleanProfile.email) {
       APP.profile.email = cleanProfile.email;
       APP.settings.userEmail = cleanProfile.email;
+    }
+    if (cleanProfile.jobTitle) {
+      APP.profile.jobTitle = cleanProfile.jobTitle;
+      APP.settings.userRole = cleanProfile.jobTitle;
+    }
+    if (cleanProfile.framework) {
+      APP.profile.framework = cleanProfile.framework;
+      APP.profile.grade = cleanProfile.framework;
+      APP.settings.userFramework = cleanProfile.framework;
+    }
+    if (cleanProfile.workplace) {
+      APP.profile.workplace = cleanProfile.workplace;
+      APP.profile.organization = cleanProfile.workplace;
+      APP.profile.service = cleanProfile.workplace;
+      APP.settings.workplace = cleanProfile.workplace;
+      APP.settings.department = cleanProfile.workplace;
     }
     syncV13MirrorsToCloudFirestore();
   }
@@ -30540,7 +31023,126 @@ function activateUserSessionByProfile(userProfile) {
   return true;
 }
 
-// 7. Google Sign-In via Firebase Auth (`GoogleAuthProvider`) with Popup + Redirect + Sandbox Fallback
+function buildDeterministicUidFromEmailOrName(emailStr, nameStr) {
+  const normEmail = String(emailStr || '').trim().toLowerCase();
+  if (isOwnerEmailAddress(normEmail)) {
+    return DEFAULT_OWNER_UID;
+  }
+  const base = normEmail || String(nameStr || '').trim().toLowerCase();
+  if (!base) return 'user_' + Date.now();
+  let hash = 0;
+  for (let i = 0; i < base.length; i++) {
+    hash = ((hash << 5) - hash) + base.charCodeAt(i);
+    hash |= 0;
+  }
+  const safeSlug = base.replace(/[^a-z0-9]/g, '').slice(0, 14) || 'acct';
+  return `uid_${safeSlug}_${Math.abs(hash)}`;
+}
+
+// Helper to handle any Google or Gmail login attempt:
+// 1. If email === 'mohamed105@gmail.com' -> immediately log into Owner account (75+ tasks)
+// 2. If email matches an existing known account on device -> log right into that user's isolated account
+// 3. If it's a new user -> open the New User Onboarding form (#gate-new-user-box) pre-filled with their email/name
+function routeIncomingEmailOrGoogleAuth(emailStr, displayNameStr = '', photoURLStr = '', authProviderStr = 'google') {
+  const cleanEmail = String(emailStr || '').trim().toLowerCase();
+  const cleanName = String(displayNameStr || '').trim();
+
+  if (isOwnerEmailAddress(cleanEmail)) {
+    return activateUserSessionByProfile({
+      uid: DEFAULT_OWNER_UID,
+      displayName: 'محمد ايت حمادي',
+      email: cleanEmail || 'mohamed105@gmail.com',
+      photoURL: photoURLStr || '',
+      isOwnerAccount: true,
+      authProvider: authProviderStr
+    });
+  }
+
+  const candidateUid = buildDeterministicUidFromEmailOrName(cleanEmail, cleanName);
+  const knownList = getKnownDeviceAccounts();
+  const existingAcc = knownList.find(a =>
+    (cleanEmail && String(a.email || '').trim().toLowerCase() === cleanEmail) ||
+    String(a.uid) === candidateUid
+  );
+  const existingStorage = CLOUD_MEMORY_STORE.getRawLegacyItem(`u_${candidateUid}_${STORAGE_KEY}`);
+
+  if (existingAcc || existingStorage) {
+    return activateUserSessionByProfile(existingAcc || {
+      uid: candidateUid,
+      displayName: cleanName || (cleanEmail ? cleanEmail.split('@')[0] : 'مستخدم النظام'),
+      email: cleanEmail,
+      photoURL: photoURLStr || '',
+      isOwnerAccount: false,
+      authProvider: authProviderStr
+    });
+  }
+
+  // Brand-new user: open the New User Onboarding form with their email/name pre-filled so they can enter their Full Name, Role, and Workplace
+  const gateModal = document.getElementById('modal-auth-login-gate');
+  if (gateModal && gateModal.classList.contains('active')) {
+    const newBox = document.getElementById('gate-new-user-box');
+    if (newBox) newBox.style.display = 'block';
+    const emailInp = document.getElementById('gate-custom-user-email');
+    if (emailInp && cleanEmail) emailInp.value = cleanEmail;
+    const nameInp = document.getElementById('gate-custom-user-name');
+    if (nameInp) {
+      if (cleanName && !nameInp.value) nameInp.value = cleanName;
+      nameInp.focus();
+    }
+    showToast('حساب جديد: يُرجى إتمام اسمك الكامل وصفتك ومقر عملك لفتح مساحتك الخاصة', 'info');
+    return { onboardingRequired: true, email: cleanEmail };
+  }
+
+  // If triggered from inside #modal-user-account-auth
+  if (cleanName) {
+    return activateUserSessionByProfile({
+      uid: candidateUid,
+      displayName: cleanName,
+      email: cleanEmail,
+      photoURL: photoURLStr || '',
+      isOwnerAccount: false,
+      authProvider: authProviderStr
+    });
+  } else {
+    const customForm = document.getElementById('custom-isolated-user-form');
+    if (customForm) customForm.style.display = 'block';
+    const mEmail = document.getElementById('auth-custom-user-email');
+    if (mEmail && cleanEmail) mEmail.value = cleanEmail;
+    const mName = document.getElementById('auth-custom-user-name');
+    if (mName) mName.focus();
+    showToast('يُرجى إدخال الاسم الكامل للمستخدم الجديد لإتمام فتح الحساب', 'info');
+    return { onboardingRequired: true, email: cleanEmail };
+  }
+}
+
+function handleGateEmailContinue() {
+  const emailInp = document.getElementById('gate-gmail-login-input');
+  const emailVal = (emailInp ? emailInp.value : '').trim();
+  if (!emailVal) {
+    showToast('يرجى إدخال بريدك الإلكتروني (Gmail) أولاً', 'warning');
+    if (emailInp) emailInp.focus();
+    return false;
+  }
+  return routeIncomingEmailOrGoogleAuth(emailVal, '', '', 'google_email');
+}
+
+function toggleGateNewUserOnboarding() {
+  const box = document.getElementById('gate-new-user-box');
+  if (!box) return;
+  const isHidden = (box.style.display === 'none' || !box.style.display);
+  box.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    const gateEmail = document.getElementById('gate-gmail-login-input')?.value?.trim() || '';
+    const customEmail = document.getElementById('gate-custom-user-email');
+    if (customEmail && gateEmail && !customEmail.value) {
+      customEmail.value = gateEmail;
+    }
+    const nameInp = document.getElementById('gate-custom-user-name');
+    if (nameInp) nameInp.focus();
+  }
+}
+
+// 7. Google Sign-In via Firebase Auth (`GoogleAuthProvider`) with Popup + Redirect + Direct Gmail Fallback
 async function signInWithGoogleAccount() {
   if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
     try {
@@ -30550,14 +31152,12 @@ async function signInWithGoogleAccount() {
       const result = await auth.signInWithPopup(provider);
       if (result && result.user) {
         const u = result.user;
-        activateUserSessionByProfile({
-          uid: u.uid,
-          displayName: u.displayName || (u.email ? u.email.split('@')[0] : 'مستخدم Google'),
-          email: u.email || '',
-          photoURL: u.photoURL || '',
-          isOwnerAccount: false,
-          authProvider: 'google'
-        });
+        routeIncomingEmailOrGoogleAuth(
+          u.email || '',
+          u.displayName || '',
+          u.photoURL || '',
+          'google'
+        );
         return { success: true, uid: u.uid };
       }
     } catch (err) {
@@ -30572,54 +31172,71 @@ async function signInWithGoogleAccount() {
           console.warn('Redirect fallback notice:', redirErr);
         }
       }
-      // If running inside a sandboxed preview or domain not yet whitelisted in Firebase Console, open the custom user entry form gracefully
-      const customForm = document.getElementById('custom-isolated-user-form');
-      if (customForm) customForm.style.display = 'block';
-      const gateBox = document.getElementById('gate-new-user-box');
-      if (gateBox) gateBox.style.display = 'block';
-      showToast('لتسجيل الدخول في بيئة المعاينة أو بدون نافذة منبثقة، أدخل الاسم والبريد الإلكتروني أدناه لفتح مساحة Google المعزولة فورا', 'warning');
+      const gateEmailInp = document.getElementById('gate-gmail-login-input');
+      if (gateEmailInp && gateEmailInp.offsetParent !== null) {
+        gateEmailInp.focus();
+      } else {
+        const customForm = document.getElementById('custom-isolated-user-form');
+        if (customForm) customForm.style.display = 'block';
+      }
+      showToast('يمكنك إدخال بريدك الإلكتروني (Gmail) مباشرة في الحقل المخصص للمتابعة فوراً', 'info');
       return { success: false, error: errCode || String(err) };
     }
   } else {
-    const customForm = document.getElementById('custom-isolated-user-form');
-    if (customForm) customForm.style.display = 'block';
-    const gateBox = document.getElementById('gate-new-user-box');
-    if (gateBox) gateBox.style.display = 'block';
-    showToast('أدخل اسم المستخدم والبريد الإلكتروني لفتح مساحة المستخدم المعزولة', 'warning');
+    const gateEmailInp = document.getElementById('gate-gmail-login-input');
+    if (gateEmailInp) gateEmailInp.focus();
+    showToast('أدخل بريدك الإلكتروني (Gmail) للمتابعة فوراً', 'info');
     return { success: false, error: 'FIREBASE_AUTH_UNAVAILABLE' };
   }
-}
-
-function buildDeterministicUidFromEmailOrName(emailStr, nameStr) {
-  const base = (emailStr || nameStr || '').trim().toLowerCase();
-  if (!base) return 'user_' + Date.now();
-  let hash = 0;
-  for (let i = 0; i < base.length; i++) {
-    hash = ((hash << 5) - hash) + base.charCodeAt(i);
-    hash |= 0;
-  }
-  const safeSlug = base.replace(/[^a-z0-9]/g, '').slice(0, 14) || 'acct';
-  return `uid_${safeSlug}_${Math.abs(hash)}`;
 }
 
 function signInWithCustomIsolatedAccount() {
   const nameInp = document.getElementById('auth-custom-user-name');
   const emailInp = document.getElementById('auth-custom-user-email');
+  const roleInp = document.getElementById('auth-custom-user-role');
+  const workInp = document.getElementById('auth-custom-user-workplace');
+
   const nameVal = (nameInp ? nameInp.value : '').trim();
   const emailVal = (emailInp ? emailInp.value : '').trim();
-  if (!nameVal) {
-    showToast('يرجى إدخال الاسم الكامل للمستخدم أولاً', 'warning');
-    if (nameInp) nameInp.focus();
+  const roleVal = (roleInp ? roleInp.value : '').trim();
+  const workVal = (workInp ? workInp.value : '').trim();
+
+  if (isOwnerEmailAddress(emailVal)) {
+    if (nameInp) nameInp.value = '';
+    if (emailInp) emailInp.value = '';
+    return activateUserSessionByProfile({
+      uid: DEFAULT_OWNER_UID,
+      displayName: 'محمد ايت حمادي',
+      email: emailVal,
+      photoURL: '',
+      isOwnerAccount: true,
+      authProvider: 'google'
+    });
+  }
+
+  if (!nameVal && !emailVal) {
+    showToast('يرجى إدخال البريد الإلكتروني أو الاسم الكامل للمستخدم أولاً', 'warning');
+    if (emailInp) emailInp.focus();
     return false;
   }
+
   const uid = buildDeterministicUidFromEmailOrName(emailVal, nameVal);
+  const known = getKnownDeviceAccounts().find(a => String(a.uid) === uid);
+  const finalName = nameVal || (known ? known.displayName : (emailVal ? emailVal.split('@')[0] : 'مستخدم جديد'));
+
   if (nameInp) nameInp.value = '';
   if (emailInp) emailInp.value = '';
+  if (roleInp) roleInp.value = '';
+  if (workInp) workInp.value = '';
+
   return activateUserSessionByProfile({
     uid,
-    displayName: nameVal,
+    displayName: finalName,
     email: emailVal,
     photoURL: '',
+    jobTitle: roleVal || (known ? known.jobTitle : 'إطار إداري وتقني'),
+    framework: roleVal || (known ? known.framework : 'إطار إداري وتقني'),
+    workplace: workVal || (known ? known.workplace : 'المقر الرئيسي للإدارة'),
     isOwnerAccount: false,
     authProvider: 'google_isolated'
   });
@@ -30628,27 +31245,54 @@ function signInWithCustomIsolatedAccount() {
 function signInFromGateCustomUser() {
   const nameInp = document.getElementById('gate-custom-user-name');
   const emailInp = document.getElementById('gate-custom-user-email');
+  const roleInp = document.getElementById('gate-custom-user-role');
+  const frameInp = document.getElementById('gate-custom-user-framework');
+  const workInp = document.getElementById('gate-custom-user-workplace');
+
   const nameVal = (nameInp ? nameInp.value : '').trim();
-  const emailVal = (emailInp ? emailInp.value : '').trim();
+  const emailVal = (emailInp ? emailInp.value : (document.getElementById('gate-gmail-login-input')?.value || '')).trim();
+  const roleVal = (roleInp ? roleInp.value : '').trim() || 'إطار إداري وتقني';
+  const frameVal = (frameInp ? frameInp.value : '').trim() || roleVal;
+  const workVal = (workInp ? workInp.value : '').trim() || 'المقر الرئيسي للإدارة';
+
+  if (isOwnerEmailAddress(emailVal)) {
+    return activateUserSessionByProfile({
+      uid: DEFAULT_OWNER_UID,
+      displayName: 'محمد ايت حمادي',
+      email: emailVal,
+      photoURL: '',
+      isOwnerAccount: true,
+      authProvider: 'google'
+    });
+  }
+
   if (!nameVal) {
     showToast('يرجى إدخال الاسم الكامل للمستخدم أولاً', 'warning');
     if (nameInp) nameInp.focus();
     return false;
   }
+
   const uid = buildDeterministicUidFromEmailOrName(emailVal, nameVal);
   if (nameInp) nameInp.value = '';
   if (emailInp) emailInp.value = '';
+  if (roleInp) roleInp.value = '';
+  if (frameInp) frameInp.value = '';
+  if (workInp) workInp.value = '';
+
   return activateUserSessionByProfile({
     uid,
     displayName: nameVal,
     email: emailVal,
     photoURL: '',
+    jobTitle: roleVal,
+    framework: frameVal,
+    workplace: workVal,
     isOwnerAccount: false,
     authProvider: 'google_isolated'
   });
 }
 
-// 8. Safe Sign-Out with Complete Memory Cleanup & Listener Teardown
+// 8. Safe Sign-Out with Complete Memory Cleanup, Body Lock & Listener Teardown
 async function signOutUserSession() {
   try {
     if (window.currentAuthUser && window.currentAuthUid && window.currentAuthUid !== 'signed_out_guest') {
@@ -30682,6 +31326,10 @@ async function signOutUserSession() {
 
   window.currentAuthUser = null;
   window.currentAuthUid = 'signed_out_guest';
+
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.classList.add('auth-gate-locked');
+  }
 
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -30729,16 +31377,14 @@ function migrateBackupObjectToCurrentUserAccount(rawPayload, sourceLabel = 'json
     return { success: false, error: check.reason };
   }
 
-  // Save pre-migration snapshot before first migration (preserve original pre-migration state across idempotent re-runs)
   const preMigrationCandidateStr = JSON.stringify(APP);
-
   const activeUid = String(window.currentAuthUid);
   const nowIso = new Date().toISOString();
 
-  // Idempotent Merge/Upsert of Tasks by ID (prevents any duplication if run multiple times)
+  // Idempotent Merge/Upsert of Tasks by ID
   const taskMap = new Map();
   (Array.isArray(APP.tasks) ? APP.tasks : []).forEach(existingTask => {
-    if (existingTask && existingTask.id) {
+    if (existingTask && existingTask.id && !String(existingTask.id).startsWith('sample_')) {
       taskMap.set(String(existingTask.id), existingTask);
     }
   });
@@ -30808,7 +31454,6 @@ function migrateBackupObjectToCurrentUserAccount(rawPayload, sourceLabel = 'json
     }
   });
 
-  // Apply migrated payload to current user's APP state
   const mergedPayload = Object.assign({}, APP, parsed, {
     ownerUid: activeUid,
     tasks: mergedTasks,
@@ -30844,7 +31489,7 @@ function migrateBackupObjectToCurrentUserAccount(rawPayload, sourceLabel = 'json
   if (feedbackBox) {
     feedbackBox.style.display = 'block';
     feedbackBox.style.color = 'var(--success)';
-    feedbackBox.innerText = `✓ اكتمل الترحيل بنجاح إلى الحساب (${activeUid}): إجمالي المهام ${mergedTasks.length} (أضيفت ${addedTasksCount} مهمة جديدة، وتم تحديث ${updatedTasksCount} مهمة بدون أي تكرار)، مع حفظ ${mergedPayload.categories.length} تصنيفاً و${mergedPayload.courts.length} وجهة.`;
+    feedbackBox.innerText = `✓ اكتمل الترحيل بنجاح إلى الحساب (${activeUid}): إجمالي المهام ${mergedTasks.length} (أضيفت ${addedTasksCount} مهمة جديدة، وتم تحديث ${updatedTasksCount} مهمة بدون أي تكرار).`;
   }
 
   setHonestSyncStatus('cloud_saving');
@@ -30908,7 +31553,7 @@ function rollbackUserMigrationSnapshot() {
     if (feedbackBox) {
       feedbackBox.style.display = 'block';
       feedbackBox.style.color = 'var(--primary)';
-      feedbackBox.innerText = `⏪ تم التراجع عن الترحيل واستعادة حالة الحساب السابقة (${APP.tasks.length} مهمة).`;
+      feedbackBox.innerText = `تم التراجع عن الترحيل واستعادة حالة الحساب السابقة (${APP.tasks.length} مهمة).`;
     }
     syncEntireAppToFirestoreBatch(true).catch(() => {});
     showToast(`تم التراجع عن الترحيل واستعادة حالة الحساب (${APP.tasks.length} مهمة)`);
@@ -30919,33 +31564,93 @@ function rollbackUserMigrationSnapshot() {
   }
 }
 
+// Guard closeModal so #modal-auth-login-gate cannot be closed while signed out
+const _preAuthGateCloseModal = closeModal;
+closeModal = function(modalId) {
+  if (modalId === 'modal-auth-login-gate' && (!window.currentAuthUser || !window.currentAuthUid || window.currentAuthUid === 'signed_out_guest')) {
+    return;
+  }
+  return _preAuthGateCloseModal.apply(this, arguments);
+};
+
 // Listen to Firebase Auth state changes if a real Google session signs in
 if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
   try {
     firebase.auth().onAuthStateChanged((fbUser) => {
       if (fbUser && fbUser.uid) {
-        if (window.currentAuthUid !== fbUser.uid) {
-          activateUserSessionByProfile({
-            uid: fbUser.uid,
-            displayName: fbUser.displayName || (fbUser.email ? fbUser.email.split('@')[0] : 'مستخدم Google'),
-            email: fbUser.email || '',
-            photoURL: fbUser.photoURL || '',
-            isOwnerAccount: false,
-            authProvider: 'google'
-          });
+        const fbEmail = String(fbUser.email || '').trim().toLowerCase();
+        const targetUid = isOwnerEmailAddress(fbEmail) ? DEFAULT_OWNER_UID : fbUser.uid;
+        if (window.currentAuthUid !== targetUid) {
+          routeIncomingEmailOrGoogleAuth(
+            fbEmail,
+            fbUser.displayName || '',
+            fbUser.photoURL || '',
+            'google'
+          );
         }
       }
     });
   } catch (e) {}
 }
 
+// Live binding for #cfg-system-name and #cfg-user-workplace so typing in Settings -> المظهر immediately updates sidebar & document titles
+function bindLiveSystemAndWorkplaceInputs() {
+  const sysInp = document.getElementById('cfg-system-name');
+  const workInp = document.getElementById('cfg-user-workplace');
+  if (sysInp && !sysInp.dataset.liveBoundV81) {
+    sysInp.dataset.liveBoundV81 = 'true';
+    sysInp.addEventListener('input', () => {
+      if (!APP) return;
+      if (!APP.settings) APP.settings = {};
+      const val = sysInp.value.trim() || 'نظام تدبير المهام اليومية';
+      APP.settings.systemName = val;
+      const sbSys = document.getElementById('sidebar-sys-name');
+      if (sbSys) sbSys.innerText = val;
+      const gateSys = document.getElementById('gate-sys-title');
+      if (gateSys) gateSys.innerText = val;
+      const wp = APP.profile?.workplace || APP.settings?.workplace || 'المديرية الإقليمية للعدل بسطات';
+      document.title = `${val} - ${wp}`;
+    });
+  }
+  if (workInp && !workInp.dataset.liveBoundV81) {
+    workInp.dataset.liveBoundV81 = 'true';
+    workInp.addEventListener('input', () => {
+      if (!APP) return;
+      if (!APP.profile) APP.profile = {};
+      if (!APP.settings) APP.settings = {};
+      const val = workInp.value.trim() || 'المديرية الإقليمية للعدل بسطات';
+      APP.profile.workplace = val;
+      APP.settings.workplace = val;
+      const sbDept = document.getElementById('sidebar-dept-name');
+      if (sbDept) sbDept.innerText = val;
+      const gateDept = document.getElementById('gate-workplace-subtitle');
+      if (gateDept) gateDept.innerText = val;
+      const sn = APP.settings?.systemName || 'نظام تدبير المهام اليومية';
+      document.title = `${sn} - ${val}`;
+    });
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+  bindLiveSystemAndWorkplaceInputs();
+  updateMultiUserAuthUI();
+  if (!window.currentAuthUser || window.currentAuthUid === 'signed_out_guest') {
+    if (document.body) document.body.classList.add('auth-gate-locked');
+    openModal('modal-auth-login-gate');
+  } else {
+    if (document.body) document.body.classList.remove('auth-gate-locked');
+    closeModal('modal-auth-login-gate');
+  }
   setTimeout(() => {
+    bindLiveSystemAndWorkplaceInputs();
     updateMultiUserAuthUI();
     initBackdropClickToCloseModalsV80();
     if (!window.currentAuthUser || window.currentAuthUid === 'signed_out_guest') {
+      if (document.body) document.body.classList.add('auth-gate-locked');
       openModal('modal-auth-login-gate');
     } else {
+      if (document.body) document.body.classList.remove('auth-gate-locked');
+      closeModal('modal-auth-login-gate');
       syncUserRootProfileDocToFirestore();
     }
   }, 360);
@@ -30956,17 +31661,19 @@ window.addEventListener('DOMContentLoaded', () => {
   bindSettingsAutoSaveListeners();
   setTimeout(() => {
     bindSettingsAutoSaveListeners();
-    checkBackupReminder();
-    updateStorageQuotaUI();
-    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-      setHonestSyncStatus('offline_pending');
-    } else if (CLOUD_MEMORY_STORE.getItem(PENDING_OFFLINE_SYNC_KEY) === '1') {
-      syncEntireAppToFirestoreBatch(false).then(() => {
-        try { CLOUD_MEMORY_STORE.removeItem(PENDING_OFFLINE_SYNC_KEY); } catch (e) {}
-        setHonestSyncStatus('cloud_saved');
-      }).catch(() => {});
-    } else {
-      setHonestSyncStatus('local_saved');
+    if (window.currentAuthUser && window.currentAuthUid !== 'signed_out_guest') {
+      checkBackupReminder();
+      updateStorageQuotaUI();
+      if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+        setHonestSyncStatus('offline_pending');
+      } else if (CLOUD_MEMORY_STORE.getItem(PENDING_OFFLINE_SYNC_KEY) === '1') {
+        syncEntireAppToFirestoreBatch(false).then(() => {
+          try { CLOUD_MEMORY_STORE.removeItem(PENDING_OFFLINE_SYNC_KEY); } catch (e) {}
+          setHonestSyncStatus('cloud_saved');
+        }).catch(() => {});
+      } else {
+        setHonestSyncStatus('local_saved');
+      }
     }
   }, 420);
 });

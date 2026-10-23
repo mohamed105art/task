@@ -10227,12 +10227,12 @@ body.auth-gate-locked {
   white-space: nowrap !important;
 }
 
-.card-header > :last-child:not(:first-child),
-.compact-analytics-header > :last-child:not(:first-child),
-.header-row-pinned > :last-child:not(:first-child),
-.accordion-header > :last-child:not(:first-child),
-#library-profile-banner > :last-child:not(:first-child),
-#settings-top-unified-header > div > :last-child:not(:first-child),
+.card-header > :last-child:not(:first-child):not(button):not(.action-icon-btn),
+.compact-analytics-header > :last-child:not(:first-child):not(button):not(.action-icon-btn),
+.header-row-pinned > :last-child:not(:first-child):not(button):not(.action-icon-btn),
+.accordion-header > :last-child:not(:first-child):not(button):not(.action-icon-btn),
+#library-profile-banner > :last-child:not(:first-child):not(button):not(.action-icon-btn),
+#settings-top-unified-header > div > :last-child:not(:first-child):not(button):not(.action-icon-btn),
 .modal-header .modal-top-actions {
   flex: 0 0 auto !important;
   flex-shrink: 0 !important;
@@ -10242,6 +10242,24 @@ body.auth-gate-locked {
   gap: 0.35rem !important;
   flex-wrap: nowrap !important;
   margin: 0 !important;
+}
+
+#settings-tab-about .card-header button.action-icon-btn,
+.card-header > button.action-icon-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  text-indent: 0 !important;
+}
+
+#settings-tab-about .card-header button.action-icon-btn svg,
+.card-header > button.action-icon-btn svg {
+  margin: auto !important;
+  display: block !important;
+  flex-shrink: 0 !important;
 }
 
 #view-report .card-header #btn-print-mission-report,
@@ -34225,7 +34243,7 @@ renderDashboardRecentActivityPanel = function() {
         row.onclick = () => openTaskPreview(t.id);
         row.innerHTML = `
           <div style="display:flex; align-items:center; gap:0.35rem; min-width:0; flex:1;">
-            <span style="color:${isDone ? 'var(--success)' : 'var(--primary)'}; display:inline-flex; flex-shrink:0;">${isDone ? ICONS_V6.checkCircle : ICONS_V6.clock}</span>
+            <span style="color:${isDone ? 'var(--success)' : 'var(--primary)'}; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">${ICONS_V6.file}</span>
             <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700; color:var(--text-main);">${escapeHtml(t.title)}</span>
           </div>
           <span style="font-size:0.68rem; color:var(--text-muted); white-space:nowrap; flex-shrink:0;">${execDate ? formatDateShort(execDate) : 'مبرمجة'}</span>

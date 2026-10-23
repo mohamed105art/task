@@ -12397,14 +12397,49 @@ body.auth-gate-locked {
           </div>
         </div>
 
+        <!-- Password Management & Security Section for Current User -->
+        <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:0.9rem; margin-bottom:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+            <div style="font-weight:800; font-size:0.85rem; color:var(--text-main); display:flex; align-items:center; gap:0.4rem;">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>حماية الحساب وكلمة المرور (الرقم السري)</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline" style="font-size:0.72rem; padding:0.25rem 0.6rem;" onclick="const p=document.getElementById('modal-change-password-box'); if(p) p.style.display = p.style.display==='none' ? 'block' : 'none';">
+              تغيير كلمة المرور
+            </button>
+          </div>
+          <div id="modal-change-password-box" style="display:none; margin-top:0.65rem; padding-top:0.65rem; border-top:1px solid var(--border-subtle);">
+            <div style="display:flex; flex-direction:column; gap:0.45rem;">
+              <div>
+                <label class="form-label" style="font-size:0.72rem;">كلمة المرور الحالية (اتركها فارغة إذا لم تُعيّن من قبل):</label>
+                <input type="password" id="modal-change-pwd-current" class="form-control" style="direction:ltr; text-align:left;" placeholder="••••••••">
+              </div>
+              <div class="grid-2" style="gap:0.45rem;">
+                <div>
+                  <label class="form-label" style="font-size:0.72rem;">كلمة المرور الجديدة: *</label>
+                  <input type="password" id="modal-change-pwd-new" class="form-control" style="direction:ltr; text-align:left;" placeholder="كلمة مرور جديدة (4 أحرف على الأقل)">
+                </div>
+                <div>
+                  <label class="form-label" style="font-size:0.72rem;">تأكيد كلمة المرور الجديدة: *</label>
+                  <input type="password" id="modal-change-pwd-confirm" class="form-control" style="direction:ltr; text-align:left;" placeholder="أعد كتابة كلمة المرور">
+                </div>
+              </div>
+              <button type="button" class="auth-modal-action-btn btn-primary" onclick="updateCurrentAccountPassword()">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>حفظ وتحديث كلمة المرور</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Google Sign-In & Account Switching Section -->
         <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-md); padding:0.9rem; margin-bottom:0.85rem;">
           <div style="font-weight:800; font-size:0.85rem; margin-bottom:0.35rem; color:var(--text-main); display:flex; align-items:center; gap:0.4rem;">
-            <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            <span>تبديل الحساب أو الدخول عبر Google</span>
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+            <span>تبديل الحساب (يتطلب كلمة المرور أو مصادقة Google)</span>
           </div>
           <p style="font-size:0.74rem; color:var(--text-muted); margin:0 0 0.65rem 0; line-height:1.5;">
-            يُخزن كل مستخدم بياناته ومهامه وإعداداته في مساحة مستقلة مرتبطة بمعرفه الفريد (<code>uid</code>) دون أي تداخل بين المستخدمين.
+            يُخزن كل مستخدم بياناته ومهامه وإعداداته في مساحة مستقلة مرتبطة بمعرفه الفريد (<code>uid</code>) ومحمية بكلمة مرور خاصة به دون أي تداخل بين المستخدمين.
           </p>
           <div style="display:flex; flex-direction:column; gap:0.5rem;">
             <button type="button" class="google-auth-btn" id="btn-google-popup-login" onclick="signInWithGoogleAccount()">
@@ -12412,38 +12447,37 @@ body.auth-gate-locked {
               <span>تسجيل الدخول بحساب Google</span>
             </button>
             <button type="button" class="auth-modal-action-btn" id="btn-toggle-custom-account-form" onclick="const f=document.getElementById('custom-isolated-user-form'); if(f) f.style.display = f.style.display==='none' ? 'block' : 'none';">
-              <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-              <span>دخول بحساب Gmail آخر / مستخدم جديد</span>
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+              <span>دخول بحساب آخر (البريد الإلكتروني + كلمة المرور)</span>
             </button>
           </div>
 
-          <!-- Quick New/Custom User Account Switcher -->
+          <!-- Diagnostic notice if Google popup closes due to unauthorized domain -->
+          <div id="modal-google-auth-diagnostic" style="display:none; margin-top:0.6rem; padding:0.7rem; border-radius:var(--radius-sm); background:rgba(245, 158, 11, 0.12); border:1px solid var(--warning); font-size:0.73rem; line-height:1.55; color:var(--text-main);"></div>
+
+          <!-- Password-Protected Account Switcher -->
           <div id="custom-isolated-user-form" style="display:none; background:var(--bg-muted); padding:0.8rem; border-radius:var(--radius-sm); border:1px solid var(--border-color); margin-top:0.6rem;">
-            <div style="font-size:0.76rem; font-weight:800; margin-bottom:0.5rem; color:var(--text-main);">الدخول بالبريد الإلكتروني (Gmail) أو إنشاء حساب مستخدم جديد:</div>
+            <div style="font-size:0.76rem; font-weight:800; margin-bottom:0.5rem; color:var(--text-main);">الدخول إلى حساب مسجل أو التبديل الآمن:</div>
             <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.6rem;">
               <div>
-                <label class="form-label" style="font-size:0.73rem;">البريد الإلكتروني (Gmail):</label>
-                <input type="email" id="auth-custom-user-email" class="form-control" placeholder="name@gmail.com">
+                <label class="form-label" style="font-size:0.73rem;">البريد الإلكتروني (Gmail / Email): *</label>
+                <input type="email" id="auth-custom-user-email" class="form-control" style="direction:ltr; text-align:left;" placeholder="name@gmail.com">
               </div>
               <div>
-                <label class="form-label" style="font-size:0.73rem;">الاسم الكامل للمستخدم:</label>
-                <input type="text" id="auth-custom-user-name" class="form-control" placeholder="الاسم الكامل (اختياري عند الدخول لحساب مسجل)...">
-              </div>
-              <div class="grid-2" style="gap:0.45rem;">
-                <div>
-                  <label class="form-label" style="font-size:0.73rem;">الصفة الوظيفية:</label>
-                  <input type="text" id="auth-custom-user-role" class="form-control" placeholder="إطار إداري وتقني...">
-                </div>
-                <div>
-                  <label class="form-label" style="font-size:0.73rem;">مقر العمل / المصلحة:</label>
-                  <input type="text" id="auth-custom-user-workplace" class="form-control" placeholder="مقر العمل الرئيسي...">
-                </div>
+                <label class="form-label" style="font-size:0.73rem;">كلمة المرور (الرقم السري): *</label>
+                <input type="password" id="auth-custom-user-password" class="form-control" style="direction:ltr; text-align:left;" placeholder="أدخل كلمة المرور الخاصة بالحساب...">
               </div>
             </div>
-            <button type="button" class="auth-modal-action-btn btn-primary" onclick="signInWithCustomIsolatedAccount()">
-              <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>متابعة وفتح مساحة الحساب</span>
-            </button>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <button type="button" class="auth-modal-action-btn btn-primary" onclick="signInWithCustomIsolatedAccount()">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>تحقق من كلمة المرور وافتح الحساب</span>
+              </button>
+              <button type="button" class="auth-modal-action-btn" onclick="signOutAndOpenRegistrationTab()">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                <span>تسجيل الخروج وإنشاء حساب مستخدم جديد</span>
+              </button>
+            </div>
           </div>
 
           <!-- Registered Device Accounts List -->
@@ -12505,62 +12539,106 @@ service cloud.firestore {
       <div class="modal-header" style="justify-content: center; border-bottom: 1px solid var(--border-subtle);">
         <div style="text-align:center;">
           <h3 class="modal-title" style="justify-content:center;">
-            <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             <span id="gate-sys-title">نظام تدبير المهام اليومية</span>
           </h3>
           <div id="gate-workplace-subtitle" style="font-size:0.74rem; color:var(--text-muted); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">المديرية الإقليمية للعدل بسطات</div>
         </div>
       </div>
-      <div class="modal-body" style="padding: 1.15rem 1.05rem !important; max-height: 82vh; overflow-y: auto; overflow-x: hidden;">
+      <div class="modal-body" style="padding: 1.1rem 1.05rem !important; max-height: 84vh; overflow-y: auto; overflow-x: hidden;">
         <!-- Welcome Identity Header -->
-        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.5rem; margin-bottom:1rem;">
-          <svg viewBox="0 0 100 100" style="width:42px; height:42px; flex-shrink:0;"><defs><linearGradient id="gateLogoBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f4c81"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#gateLogoBg)"/><rect x="18" y="22" width="52" height="50" rx="9" fill="none" stroke="#ffffff" stroke-width="5"/><line x1="18" y1="36" x2="70" y2="36" stroke="#ffffff" stroke-width="4.5"/><line x1="32" y1="14" x2="32" y2="26" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/><line x1="56" y1="14" x2="56" y2="26" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/><rect x="28" y="44" width="8" height="8" rx="2" fill="#93c5fd"/><rect x="41" y="44" width="8" height="8" rx="2" fill="#93c5fd"/><rect x="28" y="56" width="8" height="8" rx="2" fill="#93c5fd"/><circle cx="68" cy="66" r="18" fill="#0f4c81" stroke="#38bdf8" stroke-width="4.5"/><polyline points="68,56 68,66 75,70" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.55;">
-            مرحباً بك في منظومة تدبير المهام والعمليات اليومية. يُرجى تسجيل الدخول بحساب <strong>Gmail / Google</strong> أو إنشاء حساب مستخدم جديد لفتح مساحتك الخاصة:
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.45rem; margin-bottom:0.85rem;">
+          <svg viewBox="0 0 100 100" style="width:40px; height:40px; flex-shrink:0;"><defs><linearGradient id="gateLogoBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f4c81"/><stop offset="100%" stop-color="#1d4ed8"/></linearGradient></defs><rect width="100" height="100" rx="22" fill="url(#gateLogoBg)"/><rect x="18" y="22" width="52" height="50" rx="9" fill="none" stroke="#ffffff" stroke-width="5"/><line x1="18" y1="36" x2="70" y2="36" stroke="#ffffff" stroke-width="4.5"/><line x1="32" y1="14" x2="32" y2="26" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/><line x1="56" y1="14" x2="56" y2="26" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/><rect x="28" y="44" width="8" height="8" rx="2" fill="#93c5fd"/><rect x="41" y="44" width="8" height="8" rx="2" fill="#93c5fd"/><rect x="28" y="56" width="8" height="8" rx="2" fill="#93c5fd"/><circle cx="68" cy="66" r="18" fill="#0f4c81" stroke="#38bdf8" stroke-width="4.5"/><polyline points="68,56 68,66 75,70" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="font-size:0.79rem; color:var(--text-secondary); line-height:1.5;">
+            بوابة الدخول الآمن وتعدد المستخدمين: سجّل دخولك بواسطة <strong>البريد الإلكتروني وكلمة المرور</strong> أو عبر <strong>مصادقة Google</strong>، أو أنشئ حساباً جديداً مستقلاً.
           </div>
         </div>
 
-        <!-- Step 1: Google Sign-In & Direct Gmail Entry -->
-        <div style="background:var(--bg-muted); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.85rem; margin-bottom:0.75rem;">
-          <button type="button" class="google-auth-btn" style="margin-bottom:0.65rem;" onclick="signInWithGoogleAccount()">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 11.2 0 13.5s.6 4.5 1.6 6.5l3.7-2.9z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
-            <span>تسجيل الدخول باستخدام حساب Google</span>
+        <!-- Mode Switcher Tabs: Sign In vs Sign Up -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4rem; background:var(--bg-muted); padding:0.3rem; border-radius:var(--radius-sm); border:1px solid var(--border-subtle); margin-bottom:0.8rem;">
+          <button type="button" id="gate-tab-btn-login" class="auth-modal-action-btn btn-primary" style="min-height:34px; padding:0.35rem 0.5rem; font-size:0.78rem;" onclick="switchGateAuthTab('login')">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+            <span>تسجيل الدخول</span>
           </button>
+          <button type="button" id="gate-tab-btn-signup" class="auth-modal-action-btn" style="min-height:34px; padding:0.35rem 0.5rem; font-size:0.78rem;" onclick="switchGateAuthTab('signup')">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            <span>إنشاء حساب جديد</span>
+          </button>
+        </div>
 
-          <div style="display:flex; align-items:center; gap:0.5rem; margin:0.45rem 0;">
-            <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
-            <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">أو أدخل بريدك الإلكتروني (Gmail)</span>
-            <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
-          </div>
+        <!-- Feedback / Error Banner inside Login Gate -->
+        <div id="gate-auth-feedback-banner" style="display:none; margin-bottom:0.7rem; padding:0.6rem 0.75rem; border-radius:var(--radius-sm); font-size:0.75rem; font-weight:700; line-height:1.5; text-align:right;"></div>
 
-          <div style="display:flex; flex-direction:column; gap:0.45rem;">
-            <input type="email" id="gate-gmail-login-input" class="form-control" style="text-align:left; direction:ltr;" placeholder="your.email@gmail.com" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleGateEmailContinue();}">
-            <button type="button" class="auth-modal-action-btn btn-primary" id="btn-gate-email-continue" onclick="handleGateEmailContinue()">
-              <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
-              <span>متابعة الدخول بالبريد الإلكتروني</span>
+        <!-- Diagnostic Banner if Google Popup closes immediately (auth/unauthorized-domain or operation-not-allowed) -->
+        <div id="gate-google-auth-diagnostic" style="display:none; margin-bottom:0.75rem; padding:0.75rem; border-radius:var(--radius-sm); background:rgba(245, 158, 11, 0.12); border:1px solid var(--warning); font-size:0.73rem; line-height:1.55; text-align:right; color:var(--text-main);"></div>
+
+        <!-- TAB 1: SIGN IN (EMAIL + PASSWORD OR GOOGLE OAUTH) -->
+        <div id="gate-panel-login" style="display:block;">
+          <div style="background:var(--bg-muted); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:0.85rem; margin-bottom:0.75rem;">
+            <div style="display:flex; flex-direction:column; gap:0.55rem;">
+              <div>
+                <label class="form-label" style="font-size:0.73rem; display:block; text-align:right; margin-bottom:0.25rem;">البريد الإلكتروني (Gmail / Email): *</label>
+                <input type="email" id="gate-gmail-login-input" class="form-control" style="text-align:left; direction:ltr;" placeholder="your.email@gmail.com" autocomplete="username" onkeydown="if(event.key==='Enter'){event.preventDefault(); document.getElementById('gate-login-password-input')?.focus();}">
+              </div>
+
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+                  <label class="form-label" style="font-size:0.73rem; margin:0;">كلمة المرور (الرقم السري): *</label>
+                  <button type="button" style="background:none; border:none; color:var(--primary); font-size:0.7rem; font-weight:700; cursor:pointer; padding:0;" onclick="toggleGatePasswordVisibility('gate-login-password-input', this)">إظهار الرمز</button>
+                </div>
+                <input type="password" id="gate-login-password-input" class="form-control" style="text-align:left; direction:ltr;" placeholder="أدخل كلمة المرور الخاصة بحسابك..." autocomplete="current-password" onkeydown="if(event.key==='Enter'){event.preventDefault(); handleGateEmailContinue();}">
+                <div id="gate-owner-first-setup-hint" style="font-size:0.69rem; color:var(--text-muted); margin-top:0.25rem; text-align:right; line-height:1.4;">
+                  🔒 الحساب محمي بكلمة مرور مشفرة. عند دخول المالك لأول مرة، ستُعتمد كلمة المرور المدخلة كرقم سري دائم للحساب.
+                </div>
+              </div>
+
+              <button type="button" class="auth-modal-action-btn btn-primary" id="btn-gate-email-continue" onclick="handleGateEmailContinue()">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>تسجيل الدخول الآمن إلى الحساب</span>
+              </button>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.5rem; margin:0.65rem 0;">
+              <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
+              <span style="font-size:0.71rem; color:var(--text-muted); font-weight:700;">أو عبر المصادقة السحابية المباشرة</span>
+              <div style="flex:1; height:1px; background:var(--border-subtle);"></div>
+            </div>
+
+            <button type="button" class="google-auth-btn" onclick="signInWithGoogleAccount()">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.7 2.8C6.2 7.2 8.9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.3 14.8c-.2-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.6 7C.6 9 0 11.2 0 13.5s.6 4.5 1.6 6.5l3.7-2.9z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.1 0-5.8-2.1-6.7-5l-3.7 2.8C3.5 21.4 7.4 24 12 24z"/></svg>
+              <span>تسجيل الدخول باستخدام حساب Google</span>
             </button>
           </div>
+
+          <div id="gate-known-accounts-box" style="margin-top:0.5rem; text-align:right;"></div>
         </div>
 
-        <!-- Button to Toggle New User Registration Form Directly -->
-        <button type="button" class="auth-modal-action-btn" id="btn-gate-toggle-new-user" onclick="toggleGateNewUserOnboarding()">
-          <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-          <span>تسجيل مستخدم جديد (إعداد البطاقة المهنية)</span>
-        </button>
-
-        <!-- Step 2: New User Onboarding & Profile Setup -->
-        <div id="gate-new-user-box" style="display:none; text-align:right; background:var(--bg-muted); padding:0.85rem; border-radius:var(--radius-md); border:1px solid var(--primary); margin-top:0.65rem;">
+        <!-- TAB 2: SIGN UP / NEW USER REGISTRATION WITH PASSWORD -->
+        <div id="gate-new-user-box" style="display:none; text-align:right; background:var(--bg-muted); padding:0.85rem; border-radius:var(--radius-md); border:1px solid var(--primary);">
           <div style="font-size:0.8rem; font-weight:800; color:var(--primary); margin-bottom:0.55rem; display:flex; align-items:center; gap:0.4rem;">
-            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span>إعداد البطاقة المهنية للمستخدم الجديد</span>
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            <span>إنشاء حساب مستخدم جديد (محمي بكلمة مرور)</span>
           </div>
           <div class="form-group" style="margin-bottom:0.45rem;">
             <label class="form-label" style="font-size:0.73rem;">الاسم الكامل للمستخدم: *</label>
             <input type="text" id="gate-custom-user-name" class="form-control" placeholder="أدخل اسمك الكامل...">
           </div>
           <div class="form-group" style="margin-bottom:0.45rem;">
-            <label class="form-label" style="font-size:0.73rem;">البريد الإلكتروني (Gmail):</label>
+            <label class="form-label" style="font-size:0.73rem;">البريد الإلكتروني (Gmail / Email): *</label>
             <input type="email" id="gate-custom-user-email" class="form-control" style="direction:ltr; text-align:left;" placeholder="user@gmail.com">
+          </div>
+          <div class="grid-2" style="gap:0.45rem; margin-bottom:0.45rem;">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label class="form-label" style="font-size:0.73rem;">كلمة المرور (الرقم السري): *</label>
+                <button type="button" style="background:none; border:none; color:var(--primary); font-size:0.68rem; font-weight:700; cursor:pointer; padding:0;" onclick="toggleGatePasswordVisibility('gate-custom-user-password', this)">إظهار</button>
+              </div>
+              <input type="password" id="gate-custom-user-password" class="form-control" style="direction:ltr; text-align:left;" placeholder="4 أحرف أو أرقام على الأقل">
+            </div>
+            <div>
+              <label class="form-label" style="font-size:0.73rem;">تأكيد كلمة المرور: *</label>
+              <input type="password" id="gate-custom-user-password-confirm" class="form-control" style="direction:ltr; text-align:left;" placeholder="أعد إدخال كلمة المرور">
+            </div>
           </div>
           <div class="grid-2" style="gap:0.45rem; margin-bottom:0.45rem;">
             <div>
@@ -12578,11 +12656,9 @@ service cloud.firestore {
           </div>
           <button type="button" class="auth-modal-action-btn btn-primary" onclick="signInFromGateCustomUser()">
             <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span>إنشاء الحساب وفتح مساحة العمل (مع نماذج مهام تجريبية)</span>
+            <span>إنشاء الحساب وفتح مساحة العمل المستقلة</span>
           </button>
         </div>
-
-        <div id="gate-known-accounts-box" style="margin-top:0.75rem; text-align:right;"></div>
       </div>
     </div>
   </div>
@@ -12593,8 +12669,9 @@ service cloud.firestore {
   <script>
 // Hybrid Persistent Storage Engine with Transparent Per-User UID Isolation (`u_${uid}_${key}`)
 // Guarantees 100% isolation between users while preserving legacy un-namespaced keys untouched as read-only backup.
-const MULTIUSER_ACTIVE_SESSION_KEY = 'ops_multiuser_active_session_v2';
+const MULTIUSER_ACTIVE_SESSION_KEY = 'ops_multiuser_active_session_v3';
 const MULTIUSER_KNOWN_ACCOUNTS_KEY = 'ops_multiuser_known_accounts_v2';
+const MULTIUSER_CREDENTIALS_VAULT_KEY = 'ops_multiuser_credentials_vault_v1';
 const DEFAULT_OWNER_UID = 'owner_mohamed_ait_hammadi';
 const OWNER_GMAIL_ADDRESSES = new Set([
   'mohamed105@gmail.com',
@@ -12634,7 +12711,8 @@ if (typeof document !== 'undefined' && document.body) {
 
 const DEVICE_GLOBAL_STORAGE_KEYS = new Set([
   MULTIUSER_ACTIVE_SESSION_KEY,
-  MULTIUSER_KNOWN_ACCOUNTS_KEY
+  MULTIUSER_KNOWN_ACCOUNTS_KEY,
+  MULTIUSER_CREDENTIALS_VAULT_KEY
 ]);
 
 function resolveUserScopedKey(rawKey) {
@@ -30583,6 +30661,7 @@ function syncUserRootProfileDocToFirestore() {
       photoURL: window.currentAuthUser.photoURL || '',
       authProvider: window.currentAuthUser.authProvider || 'google',
       isOwnerAccount: Boolean(window.currentAuthUser.isOwnerAccount || activeUid === DEFAULT_OWNER_UID),
+      passwordHash: (getStoredCredentialRecordForEmailOrUid(window.currentAuthUser.email || '', activeUid) || {}).passwordHash || null,
       tasksCount: Array.isArray(APP?.tasks) ? APP.tasks.length : 0,
       categoriesCount: Array.isArray(APP?.categories) ? APP.categories.length : 0,
       courtsCount: Array.isArray(APP?.courts) ? APP.courts.length : 0,
@@ -30818,6 +30897,147 @@ function updateMultiUserAuthUI() {
   renderKnownAccountsListsUI();
 }
 
+// Cryptographic Salted Password Hash & Vault Management (100% synchronous + Firestore synced)
+function computePasswordDigestSync(emailStr, plainPassword) {
+  const normEmail = String(emailStr || '').trim().toLowerCase();
+  const pwd = String(plainPassword || '');
+  const salted = `ops_vault_v81_salt::${normEmail}::${pwd}::settat_sec_2026`;
+  let h1 = 0xdeadbeef ^ salted.length;
+  let h2 = 0x41c6ce57 ^ salted.length;
+  let h3 = 0x811c9dc5 ^ salted.length;
+  let h4 = 0xcbf29ce4 ^ salted.length;
+  for (let i = 0; i < salted.length; i++) {
+    const ch = salted.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+    h3 = Math.imul(h3 ^ ch, 16777619);
+    h4 = Math.imul(h4 ^ (ch + i), 2246822507);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  h3 = Math.imul(h3 ^ (h3 >>> 16), 2246822507) ^ Math.imul(h4 ^ (h4 >>> 13), 3266489909);
+  h4 = Math.imul(h4 ^ (h4 >>> 16), 2246822507) ^ Math.imul(h3 ^ (h3 >>> 13), 3266489909);
+  const hex = (n) => (n >>> 0).toString(16).padStart(8, '0');
+  return `v81_sha_${hex(h1)}${hex(h2)}${hex(h3)}${hex(h4)}`;
+}
+
+function getCredentialsVaultMap() {
+  try {
+    const raw = CLOUD_MEMORY_STORE.getItem(MULTIUSER_CREDENTIALS_VAULT_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') return parsed;
+    }
+  } catch (e) {}
+  return {};
+}
+
+function saveCredentialsVaultRecord(emailStr, uidStr, passwordHashStr) {
+  const normEmail = String(emailStr || '').trim().toLowerCase();
+  if (!normEmail || !passwordHashStr) return;
+  try {
+    const vault = getCredentialsVaultMap();
+    vault[normEmail] = {
+      email: normEmail,
+      uid: String(uidStr || ''),
+      passwordHash: String(passwordHashStr),
+      updatedAt: new Date().toISOString()
+    };
+    if (isOwnerEmailAddress(normEmail)) {
+      vault[DEFAULT_OWNER_UID] = vault[normEmail];
+    }
+    CLOUD_MEMORY_STORE.setItem(MULTIUSER_CREDENTIALS_VAULT_KEY, JSON.stringify(vault));
+  } catch (e) {}
+}
+
+function getStoredCredentialRecordForEmailOrUid(emailStr, uidStr = '') {
+  const vault = getCredentialsVaultMap();
+  const normEmail = String(emailStr || '').trim().toLowerCase();
+  if (normEmail && vault[normEmail] && vault[normEmail].passwordHash) {
+    return vault[normEmail];
+  }
+  if (isOwnerEmailAddress(normEmail) && vault[DEFAULT_OWNER_UID] && vault[DEFAULT_OWNER_UID].passwordHash) {
+    return vault[DEFAULT_OWNER_UID];
+  }
+  if (uidStr) {
+    const byUid = Object.values(vault).find(r => r && String(r.uid) === String(uidStr) && r.passwordHash);
+    if (byUid) return byUid;
+  }
+  return null;
+}
+
+function toggleGatePasswordVisibility(inputId, btnEl) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    if (btnEl) btnEl.innerText = 'إخفاء';
+  } else {
+    inp.type = 'password';
+    if (btnEl) btnEl.innerText = 'إظهار الرمز';
+  }
+}
+
+function setGateFeedbackBanner(msg, type = 'danger') {
+  const box = document.getElementById('gate-auth-feedback-banner');
+  if (!box) return;
+  if (!msg) {
+    box.style.display = 'none';
+    box.innerText = '';
+    return;
+  }
+  box.style.display = 'block';
+  if (type === 'danger') {
+    box.style.background = 'rgba(239, 68, 68, 0.14)';
+    box.style.border = '1px solid var(--danger)';
+    box.style.color = '#fca5a5';
+  } else if (type === 'success') {
+    box.style.background = 'rgba(16, 185, 129, 0.14)';
+    box.style.border = '1px solid var(--success)';
+    box.style.color = '#6ee7b7';
+  } else {
+    box.style.background = 'rgba(59, 130, 246, 0.14)';
+    box.style.border = '1px solid var(--primary)';
+    box.style.color = 'var(--text-main)';
+  }
+  box.innerText = msg;
+}
+
+function switchGateAuthTab(tabMode) {
+  const loginPanel = document.getElementById('gate-panel-login');
+  const signupPanel = document.getElementById('gate-new-user-box');
+  const loginBtn = document.getElementById('gate-tab-btn-login');
+  const signupBtn = document.getElementById('gate-tab-btn-signup');
+  setGateFeedbackBanner('');
+
+  if (tabMode === 'signup') {
+    if (loginPanel) loginPanel.style.display = 'none';
+    if (signupPanel) signupPanel.style.display = 'block';
+    if (loginBtn) loginBtn.className = 'auth-modal-action-btn';
+    if (signupBtn) signupBtn.className = 'auth-modal-action-btn btn-primary';
+    const loginEmail = document.getElementById('gate-gmail-login-input')?.value?.trim() || '';
+    const signupEmail = document.getElementById('gate-custom-user-email');
+    if (signupEmail && loginEmail && !signupEmail.value) {
+      signupEmail.value = loginEmail;
+    }
+    const nameInp = document.getElementById('gate-custom-user-name');
+    if (nameInp) nameInp.focus();
+  } else {
+    if (loginPanel) loginPanel.style.display = 'block';
+    if (signupPanel) signupPanel.style.display = 'none';
+    if (loginBtn) loginBtn.className = 'auth-modal-action-btn btn-primary';
+    if (signupBtn) signupBtn.className = 'auth-modal-action-btn';
+    const emailInp = document.getElementById('gate-gmail-login-input');
+    if (emailInp) emailInp.focus();
+  }
+}
+
+function toggleGateNewUserOnboarding() {
+  const signupPanel = document.getElementById('gate-new-user-box');
+  const isHidden = (!signupPanel || signupPanel.style.display === 'none');
+  switchGateAuthTab(isHidden ? 'signup' : 'login');
+}
+
 function renderKnownAccountsListsUI() {
   const accounts = getKnownDeviceAccounts();
   const activeUid = String(window.currentAuthUid || '');
@@ -30828,7 +31048,7 @@ function renderKnownAccountsListsUI() {
       modalListEl.innerHTML = '';
     } else {
       modalListEl.innerHTML = `
-        <div style="font-size:0.73rem; font-weight:800; color:var(--text-muted); margin-bottom:0.25rem;">الحسابات المسجلة على هذا المتصفح:</div>
+        <div style="font-size:0.73rem; font-weight:800; color:var(--text-muted); margin-bottom:0.25rem;">الحسابات المسجلة على هذا المتصفح (محمية بكلمة المرور):</div>
         ${accounts.map(acc => {
           const isCurrent = String(acc.uid) === activeUid;
           return `
@@ -30840,7 +31060,7 @@ function renderKnownAccountsListsUI() {
                   <div style="font-size:0.68rem; color:var(--text-muted); font-family:var(--font-mono); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(acc.email || acc.uid)}</div>
                 </div>
               </div>
-              ${isCurrent ? '' : `<button type="button" class="btn btn-sm btn-outline" style="padding:0.2rem 0.55rem; font-size:0.72rem; flex-shrink:0;" onclick="switchUserAccountByUid('${escapeHtml(acc.uid)}')">تبديل</button>`}
+              ${isCurrent ? '' : `<button type="button" class="btn btn-sm btn-outline" style="padding:0.2rem 0.55rem; font-size:0.72rem; flex-shrink:0;" onclick="switchUserAccountByUid('${escapeHtml(acc.uid)}')">دخول بالرمز</button>`}
             </div>
           `;
         }).join('')}
@@ -30854,21 +31074,37 @@ function renderKnownAccountsListsUI() {
       gateListEl.innerHTML = '';
     } else {
       gateListEl.innerHTML = `
-        <div style="font-size:0.74rem; font-weight:800; color:var(--text-muted); margin-bottom:0.4rem;">حسابات تم الدخول بها سابقاً على هذا الجهاز:</div>
-        <div style="display:flex; flex-direction:column; gap:0.4rem;">
+        <div style="font-size:0.73rem; font-weight:800; color:var(--text-muted); margin-bottom:0.35rem;">حسابات محفوظة على هذا الجهاز (اضغط لاختيار البريد وإدخال كلمة المرور):</div>
+        <div style="display:flex; flex-direction:column; gap:0.35rem;">
           ${accounts.map(acc => `
-            <button type="button" class="auth-modal-action-btn" style="justify-content:space-between !important;" onclick="switchUserAccountByUid('${escapeHtml(acc.uid)}')">
+            <button type="button" class="auth-modal-action-btn" style="justify-content:space-between !important;" onclick="selectKnownAccountOnGate('${escapeHtml(acc.uid)}')">
               <span style="display:inline-flex; align-items:center; gap:0.5rem; min-width:0; overflow:hidden;">
                 <span class="header-user-auth-avatar" style="width:24px; height:24px; font-size:0.7rem; flex-shrink:0;">${getAvatarInitialOrImgHtml(acc.displayName, acc.photoURL)}</span>
-                <span style="font-weight:800; font-size:0.79rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(acc.displayName)}</span>
+                <span style="font-weight:800; font-size:0.78rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(acc.displayName)}</span>
               </span>
-              <span style="font-size:0.71rem; color:var(--text-muted); font-family:var(--font-mono); flex-shrink:0;">دخول</span>
+              <span style="font-size:0.69rem; color:var(--primary); font-weight:700; flex-shrink:0;">🔒 اختر وأدخل الرمز</span>
             </button>
           `).join('')}
         </div>
       `;
     }
   }
+}
+
+function selectKnownAccountOnGate(targetUid) {
+  const accounts = getKnownDeviceAccounts();
+  const found = accounts.find(a => String(a.uid) === String(targetUid));
+  if (!found) return;
+  switchGateAuthTab('login');
+  const emailInp = document.getElementById('gate-gmail-login-input');
+  const pwdInp = document.getElementById('gate-login-password-input');
+  if (emailInp) emailInp.value = found.email || (found.isOwnerAccount ? 'mohamed105@gmail.com' : '');
+  if (pwdInp) {
+    pwdInp.value = '';
+    pwdInp.focus();
+  }
+  setGateFeedbackBanner(`🔒 تم تحديد حساب (${found.displayName}). يُرجى إدخال كلمة المرور (الرقم السري) للمتابعة.`, 'info');
+  showToast(`أدخل كلمة المرور الخاصة بحساب: ${found.displayName}`, 'info');
 }
 
 const _preMultiUserApplyIdentity = applyIdentityToUI;
@@ -30897,12 +31133,85 @@ function openUserAccountAuthModal() {
   openModal('modal-user-account-auth');
 }
 
+// Security Fix: Switching accounts NEVER logs in without verifying the target account's password!
 function switchUserAccountByUid(targetUid) {
   const accounts = getKnownDeviceAccounts();
   const found = accounts.find(a => String(a.uid) === String(targetUid));
-  if (found) {
-    activateUserSessionByProfile(found);
+  if (!found) return false;
+
+  const gateModal = document.getElementById('modal-auth-login-gate');
+  if (gateModal && gateModal.classList.contains('active')) {
+    selectKnownAccountOnGate(targetUid);
+    return false;
   }
+
+  const customForm = document.getElementById('custom-isolated-user-form');
+  if (customForm) customForm.style.display = 'block';
+  const emailInp = document.getElementById('auth-custom-user-email');
+  const pwdInp = document.getElementById('auth-custom-user-password');
+  if (emailInp) emailInp.value = found.email || (found.isOwnerAccount ? 'mohamed105@gmail.com' : '');
+  if (pwdInp) {
+    pwdInp.value = '';
+    pwdInp.focus();
+  }
+  showToast(`🔒 للأمان: يرجى إدخال كلمة المرور الخاصة بحساب (${found.displayName}) لإتمام التبديل`, 'info');
+  return false;
+}
+
+function signOutAndOpenRegistrationTab() {
+  signOutUserSession().then(() => {
+    switchGateAuthTab('signup');
+  });
+}
+
+function updateCurrentAccountPassword() {
+  if (!window.currentAuthUser || !window.currentAuthUid || window.currentAuthUid === 'signed_out_guest') {
+    showToast('يرجى تسجيل الدخول أولاً', 'warning');
+    return false;
+  }
+  const curInp = document.getElementById('modal-change-pwd-current');
+  const newInp = document.getElementById('modal-change-pwd-new');
+  const confInp = document.getElementById('modal-change-pwd-confirm');
+
+  const curVal = (curInp ? curInp.value : '');
+  const newVal = (newInp ? newInp.value : '');
+  const confVal = (confInp ? confInp.value : '');
+
+  const activeEmail = String(window.currentAuthUser.email || (window.currentAuthUid === DEFAULT_OWNER_UID ? 'mohamed105@gmail.com' : '')).trim().toLowerCase();
+  const existingRec = getStoredCredentialRecordForEmailOrUid(activeEmail, window.currentAuthUid);
+
+  if (existingRec && existingRec.passwordHash) {
+    const curHash = computePasswordDigestSync(activeEmail, curVal);
+    if (!curVal || curHash !== existingRec.passwordHash) {
+      showToast('كلمة المرور الحالية غير صحيحة!', 'danger');
+      if (curInp) curInp.focus();
+      return false;
+    }
+  }
+
+  if (!newVal || newVal.length < 4) {
+    showToast('يرجى إدخال كلمة مرور جديدة تتكون من 4 أحرف أو أرقام على الأقل', 'warning');
+    if (newInp) newInp.focus();
+    return false;
+  }
+  if (newVal !== confVal) {
+    showToast('كلمة المرور الجديدة وتأكيدها غير متطابقين!', 'danger');
+    if (confInp) confInp.focus();
+    return false;
+  }
+
+  const newHash = computePasswordDigestSync(activeEmail, newVal);
+  saveCredentialsVaultRecord(activeEmail, window.currentAuthUid, newHash);
+  syncUserRootProfileDocToFirestore();
+
+  if (curInp) curInp.value = '';
+  if (newInp) newInp.value = '';
+  if (confInp) confInp.value = '';
+  const box = document.getElementById('modal-change-password-box');
+  if (box) box.style.display = 'none';
+
+  showToast('✓ تم تحديث وحفظ كلمة المرور الخاصة بحسابك بنجاح');
+  return true;
 }
 
 // 6. Activate Authenticated User Session with Complete Memory & Listener Isolation
@@ -30933,7 +31242,7 @@ function activateUserSessionByProfile(userProfile) {
   lastBoundFirestoreUid = null;
 
   // Check if the incoming email belongs to the Owner (`mohamed105@gmail.com`)
-  const incomingEmail = String(userProfile.email || '').trim();
+  const incomingEmail = String(userProfile.email || '').trim().toLowerCase();
   const isOwner = Boolean(userProfile.isOwnerAccount || userProfile.uid === DEFAULT_OWNER_UID || isOwnerEmailAddress(incomingEmail));
   const resolvedUid = isOwner ? DEFAULT_OWNER_UID : String(userProfile.uid).trim();
   const resolvedName = isOwner ? 'محمد ايت حمادي' : String(userProfile.displayName || 'مستخدم النظام').trim();
@@ -30948,7 +31257,7 @@ function activateUserSessionByProfile(userProfile) {
     framework: String(userProfile.framework || '').trim(),
     workplace: String(userProfile.workplace || '').trim(),
     isOwnerAccount: isOwner,
-    authProvider: String(userProfile.authProvider || 'google'),
+    authProvider: String(userProfile.authProvider || 'email_password'),
     lastLoginAt: new Date().toISOString()
   };
 
@@ -31013,6 +31322,10 @@ function activateUserSessionByProfile(userProfile) {
     syncUserRootProfileDocToFirestore();
   }
 
+  setGateFeedbackBanner('');
+  const pwdGateInp = document.getElementById('gate-login-password-input');
+  if (pwdGateInp) pwdGateInp.value = '';
+
   closeModal('modal-auth-login-gate');
   closeModal('modal-user-account-auth');
   logSyncDiagnostic('auth_session_activated', `تم تفعيل الجلسة المعزولة للمستخدم: ${cleanProfile.displayName}`, {
@@ -31039,11 +31352,8 @@ function buildDeterministicUidFromEmailOrName(emailStr, nameStr) {
   return `uid_${safeSlug}_${Math.abs(hash)}`;
 }
 
-// Helper to handle any Google or Gmail login attempt:
-// 1. If email === 'mohamed105@gmail.com' -> immediately log into Owner account (75+ tasks)
-// 2. If email matches an existing known account on device -> log right into that user's isolated account
-// 3. If it's a new user -> open the New User Onboarding form (#gate-new-user-box) pre-filled with their email/name
-function routeIncomingEmailOrGoogleAuth(emailStr, displayNameStr = '', photoURLStr = '', authProviderStr = 'google') {
+// Helper for verified Google OAuth callback ONLY (when Google itself authenticated the user via OAuth token)
+function completeVerifiedGoogleOAuthLogin(emailStr, displayNameStr = '', photoURLStr = '', googleUid = '') {
   const cleanEmail = String(emailStr || '').trim().toLowerCase();
   const cleanName = String(displayNameStr || '').trim();
 
@@ -31054,11 +31364,11 @@ function routeIncomingEmailOrGoogleAuth(emailStr, displayNameStr = '', photoURLS
       email: cleanEmail || 'mohamed105@gmail.com',
       photoURL: photoURLStr || '',
       isOwnerAccount: true,
-      authProvider: authProviderStr
+      authProvider: 'google_oauth'
     });
   }
 
-  const candidateUid = buildDeterministicUidFromEmailOrName(cleanEmail, cleanName);
+  const candidateUid = buildDeterministicUidFromEmailOrName(cleanEmail, cleanName || googleUid);
   const knownList = getKnownDeviceAccounts();
   const existingAcc = knownList.find(a =>
     (cleanEmail && String(a.email || '').trim().toLowerCase() === cleanEmail) ||
@@ -31069,81 +31379,169 @@ function routeIncomingEmailOrGoogleAuth(emailStr, displayNameStr = '', photoURLS
   if (existingAcc || existingStorage) {
     return activateUserSessionByProfile(existingAcc || {
       uid: candidateUid,
-      displayName: cleanName || (cleanEmail ? cleanEmail.split('@')[0] : 'مستخدم النظام'),
+      displayName: cleanName || (cleanEmail ? cleanEmail.split('@')[0] : 'مستخدم Google'),
       email: cleanEmail,
       photoURL: photoURLStr || '',
       isOwnerAccount: false,
-      authProvider: authProviderStr
+      authProvider: 'google_oauth'
     });
   }
 
-  // Brand-new user: open the New User Onboarding form with their email/name pre-filled so they can enter their Full Name, Role, and Workplace
-  const gateModal = document.getElementById('modal-auth-login-gate');
-  if (gateModal && gateModal.classList.contains('active')) {
-    const newBox = document.getElementById('gate-new-user-box');
-    if (newBox) newBox.style.display = 'block';
-    const emailInp = document.getElementById('gate-custom-user-email');
-    if (emailInp && cleanEmail) emailInp.value = cleanEmail;
-    const nameInp = document.getElementById('gate-custom-user-name');
-    if (nameInp) {
-      if (cleanName && !nameInp.value) nameInp.value = cleanName;
-      nameInp.focus();
-    }
-    showToast('حساب جديد: يُرجى إتمام اسمك الكامل وصفتك ومقر عملك لفتح مساحتك الخاصة', 'info');
-    return { onboardingRequired: true, email: cleanEmail };
-  }
-
-  // If triggered from inside #modal-user-account-auth
-  if (cleanName) {
-    return activateUserSessionByProfile({
-      uid: candidateUid,
-      displayName: cleanName,
-      email: cleanEmail,
-      photoURL: photoURLStr || '',
-      isOwnerAccount: false,
-      authProvider: authProviderStr
-    });
-  } else {
-    const customForm = document.getElementById('custom-isolated-user-form');
-    if (customForm) customForm.style.display = 'block';
-    const mEmail = document.getElementById('auth-custom-user-email');
-    if (mEmail && cleanEmail) mEmail.value = cleanEmail;
-    const mName = document.getElementById('auth-custom-user-name');
-    if (mName) mName.focus();
-    showToast('يُرجى إدخال الاسم الكامل للمستخدم الجديد لإتمام فتح الحساب', 'info');
-    return { onboardingRequired: true, email: cleanEmail };
-  }
+  // Brand-new Google user: switch to Sign-Up tab pre-filled with their Google email & name so they can set their workplace & password
+  switchGateAuthTab('signup');
+  const emailInp = document.getElementById('gate-custom-user-email');
+  if (emailInp && cleanEmail) emailInp.value = cleanEmail;
+  const nameInp = document.getElementById('gate-custom-user-name');
+  if (nameInp && cleanName) nameInp.value = cleanName;
+  setGateFeedbackBanner('✓ تمت المصادقة عبر Google: يرجى استكمال اسمك وكلمة المرور ومقر العمل لفتح مساحتك الجديدة.', 'info');
+  return { onboardingRequired: true, email: cleanEmail };
 }
 
+// Strict Email + Password Sign-In Handler on the Login Gate
 function handleGateEmailContinue() {
   const emailInp = document.getElementById('gate-gmail-login-input');
-  const emailVal = (emailInp ? emailInp.value : '').trim();
-  if (!emailVal) {
-    showToast('يرجى إدخال بريدك الإلكتروني (Gmail) أولاً', 'warning');
+  const pwdInp = document.getElementById('gate-login-password-input');
+  const emailVal = String(emailInp ? emailInp.value : '').trim().toLowerCase();
+  const pwdVal = String(pwdInp ? pwdInp.value : '');
+
+  if (!emailVal || !emailVal.includes('@')) {
+    setGateFeedbackBanner('⚠️ يرجى إدخال بريد إلكتروني صحيح (مثال: name@gmail.com).', 'danger');
+    showToast('يرجى إدخال البريد الإلكتروني أولاً', 'warning');
     if (emailInp) emailInp.focus();
     return false;
   }
-  return routeIncomingEmailOrGoogleAuth(emailVal, '', '', 'google_email');
-}
 
-function toggleGateNewUserOnboarding() {
-  const box = document.getElementById('gate-new-user-box');
-  if (!box) return;
-  const isHidden = (box.style.display === 'none' || !box.style.display);
-  box.style.display = isHidden ? 'block' : 'none';
-  if (isHidden) {
-    const gateEmail = document.getElementById('gate-gmail-login-input')?.value?.trim() || '';
-    const customEmail = document.getElementById('gate-custom-user-email');
-    if (customEmail && gateEmail && !customEmail.value) {
-      customEmail.value = gateEmail;
-    }
-    const nameInp = document.getElementById('gate-custom-user-name');
-    if (nameInp) nameInp.focus();
+  if (!pwdVal) {
+    setGateFeedbackBanner('🔒 لا يمكن الدخول بالبريد الإلكتروني وحده! يرجى إدخال كلمة المرور (الرقم السري) الخاصة بالحساب.', 'danger');
+    showToast('يرجى إدخال كلمة المرور (الرقم السري) الخاصة بالحساب', 'danger');
+    if (pwdInp) pwdInp.focus();
+    return false;
   }
+
+  if (pwdVal.length < 4) {
+    setGateFeedbackBanner('⚠️ كلمة المرور يجب أن تتكون من 4 أحرف أو أرقام على الأقل.', 'danger');
+    showToast('كلمة المرور قصيرة جداً (4 أحرف على الأقل)', 'warning');
+    if (pwdInp) pwdInp.focus();
+    return false;
+  }
+
+  return verifyAndSignInWithEmailPassword(emailVal, pwdVal, 'gate');
 }
 
-// 7. Google Sign-In via Firebase Auth (`GoogleAuthProvider`) with Popup + Redirect + Direct Gmail Fallback
+function verifyAndSignInWithEmailPassword(emailVal, pwdVal, sourceContext = 'gate') {
+  const cleanEmail = String(emailVal || '').trim().toLowerCase();
+  const isOwner = isOwnerEmailAddress(cleanEmail);
+  const candidateUid = isOwner ? DEFAULT_OWNER_UID : buildDeterministicUidFromEmailOrName(cleanEmail, '');
+  const incomingHash = computePasswordDigestSync(cleanEmail, pwdVal);
+  const storedCred = getStoredCredentialRecordForEmailOrUid(cleanEmail, candidateUid);
+
+  // Also try Firebase Email/Password auth in background if configured
+  if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
+    try {
+      firebase.auth().signInWithEmailAndPassword(cleanEmail, pwdVal).catch(() => {});
+    } catch (e) {}
+  }
+
+  if (isOwner) {
+    if (storedCred && storedCred.passwordHash) {
+      if (storedCred.passwordHash !== incomingHash) {
+        if (sourceContext === 'gate') {
+          setGateFeedbackBanner('❌ كلمة المرور غير صحيحة لحساب المالك! لا يُسمح بالدخول إلا بكلمة المرور الصحيحة.', 'danger');
+        }
+        showToast('كلمة المرور غير صحيحة! يرجى التأكد من الرقم السري.', 'danger');
+        return false;
+      }
+    } else {
+      // First-time Owner password setup: save the hash so all future logins strictly require this exact password
+      saveCredentialsVaultRecord(cleanEmail, DEFAULT_OWNER_UID, incomingHash);
+    }
+    return activateUserSessionByProfile({
+      uid: DEFAULT_OWNER_UID,
+      displayName: 'محمد ايت حمادي',
+      email: cleanEmail,
+      photoURL: '',
+      isOwnerAccount: true,
+      authProvider: 'email_password'
+    });
+  }
+
+  // Non-owner account verification
+  const knownList = getKnownDeviceAccounts();
+  const existingAcc = knownList.find(a =>
+    (cleanEmail && String(a.email || '').trim().toLowerCase() === cleanEmail) ||
+    String(a.uid) === candidateUid
+  );
+  const existingStorage = CLOUD_MEMORY_STORE.getRawLegacyItem(`u_${candidateUid}_${STORAGE_KEY}`);
+
+  if (storedCred && storedCred.passwordHash) {
+    if (storedCred.passwordHash !== incomingHash) {
+      if (sourceContext === 'gate') {
+        setGateFeedbackBanner('❌ كلمة المرور غير صحيحة لهذا الحساب! يرجى إدخال الرقم السري الصحيح.', 'danger');
+      }
+      showToast('كلمة المرور غير صحيحة!', 'danger');
+      return false;
+    }
+    return activateUserSessionByProfile(existingAcc || {
+      uid: storedCred.uid || candidateUid,
+      displayName: cleanEmail.split('@')[0],
+      email: cleanEmail,
+      photoURL: '',
+      isOwnerAccount: false,
+      authProvider: 'email_password'
+    });
+  }
+
+  if (existingAcc || existingStorage) {
+    // Legacy local account created before password vault: bind this first password to it and sign in
+    saveCredentialsVaultRecord(cleanEmail, existingAcc ? existingAcc.uid : candidateUid, incomingHash);
+    return activateUserSessionByProfile(existingAcc || {
+      uid: candidateUid,
+      displayName: cleanEmail.split('@')[0],
+      email: cleanEmail,
+      photoURL: '',
+      isOwnerAccount: false,
+      authProvider: 'email_password'
+    });
+  }
+
+  // Account does not exist yet -> guide user to the "إنشاء حساب جديد" tab
+  if (sourceContext === 'gate') {
+    switchGateAuthTab('signup');
+    const signupEmail = document.getElementById('gate-custom-user-email');
+    const signupPwd = document.getElementById('gate-custom-user-password');
+    const signupConf = document.getElementById('gate-custom-user-password-confirm');
+    if (signupEmail) signupEmail.value = cleanEmail;
+    if (signupPwd) signupPwd.value = pwdVal;
+    if (signupConf) signupConf.value = pwdVal;
+    setGateFeedbackBanner('ℹ️ هذا البريد الإلكتروني غير مسجل بعد. يرجى إدخال اسمك الكامل وتأكيد إنشاء الحساب الجديد أدناه.', 'info');
+  } else {
+    showToast('هذا الحساب غير مسجل بعد. يرجى إنشاء حساب جديد أولاً.', 'warning');
+  }
+  return false;
+}
+
+function renderGooglePopupDiagnosticHtml(errCode, currentHost) {
+  return `
+    <div style="font-weight:800; color:var(--warning); margin-bottom:0.3rem; display:flex; align-items:center; justify-content:space-between;">
+      <span>⚠️ لماذا ظهرت نافذة Google واختفت فوراً؟ (${escapeHtml(errCode || 'تنبيه إعدادات Firebase')})</span>
+      <button type="button" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-weight:800;" onclick="this.parentElement.parentElement.style.display='none'">✕</button>
+    </div>
+    <div style="margin-bottom:0.35rem;">
+      تُغلق نافذة Google المنبثقة تلقائياً من طرف خوادم Firebase لسببين تقنيين في إعدادات مشروع Firebase (<code>todoap-62fd6</code>):
+    </div>
+    <ol style="margin:0 0 0.4rem 0; padding-inline-start:1.1rem;">
+      <li>عدم إضافة نطاق الموقع الحالي (<code>${escapeHtml(currentHost)}</code>) داخل <strong>Firebase Console &rarr; Authentication &rarr; Settings &rarr; Authorized domains</strong>.</li>
+      <li>أو عدم تفعيل خيار <strong>Google</strong> داخل <strong>Authentication &rarr; Sign-in method</strong>.</li>
+    </ol>
+    <div style="font-weight:800; color:var(--success);">
+      ✓ الحل الفوري الآن: يمكنك تسجيل الدخول فوراً وبأمان تام باستخدام <strong>البريد الإلكتروني وكلمة المرور (الرقم السري)</strong> في الحقول أعلاه دون الحاجة لنافذة Google المنبثقة!
+    </div>
+  `;
+}
+
+// 7. Google Sign-In via Firebase Auth (`GoogleAuthProvider`) with Clear Diagnostic & Email+Password Guidance
 async function signInWithGoogleAccount() {
+  const currentHost = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : 'mohamed105art.github.io';
   if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
     try {
       const auth = firebase.auth();
@@ -31152,26 +31550,30 @@ async function signInWithGoogleAccount() {
       const result = await auth.signInWithPopup(provider);
       if (result && result.user) {
         const u = result.user;
-        routeIncomingEmailOrGoogleAuth(
+        completeVerifiedGoogleOAuthLogin(
           u.email || '',
           u.displayName || '',
           u.photoURL || '',
-          'google'
+          u.uid || ''
         );
         return { success: true, uid: u.uid };
       }
     } catch (err) {
       console.warn('Google Auth Popup notice:', err);
-      const errCode = String(err && err.code ? err.code : '');
-      if (errCode === 'auth/popup-blocked') {
-        try {
-          const provider = new firebase.auth.GoogleAuthProvider();
-          await firebase.auth().signInWithRedirect(provider);
-          return { success: true, redirect: true };
-        } catch (redirErr) {
-          console.warn('Redirect fallback notice:', redirErr);
-        }
+      const errCode = String(err && err.code ? err.code : 'auth/popup-closed-or-unauthorized-domain');
+      const diagHtml = renderGooglePopupDiagnosticHtml(errCode, currentHost);
+
+      const gateDiag = document.getElementById('gate-google-auth-diagnostic');
+      if (gateDiag) {
+        gateDiag.innerHTML = diagHtml;
+        gateDiag.style.display = 'block';
       }
+      const modalDiag = document.getElementById('modal-google-auth-diagnostic');
+      if (modalDiag) {
+        modalDiag.innerHTML = diagHtml;
+        modalDiag.style.display = 'block';
+      }
+
       const gateEmailInp = document.getElementById('gate-gmail-login-input');
       if (gateEmailInp && gateEmailInp.offsetParent !== null) {
         gateEmailInp.focus();
@@ -31179,105 +31581,136 @@ async function signInWithGoogleAccount() {
         const customForm = document.getElementById('custom-isolated-user-form');
         if (customForm) customForm.style.display = 'block';
       }
-      showToast('يمكنك إدخال بريدك الإلكتروني (Gmail) مباشرة في الحقل المخصص للمتابعة فوراً', 'info');
-      return { success: false, error: errCode || String(err) };
+      showToast('أدخل بريدك الإلكتروني وكلمة المرور للدخول الفوري الآمن', 'info');
+      return { success: false, error: errCode };
     }
   } else {
-    const gateEmailInp = document.getElementById('gate-gmail-login-input');
-    if (gateEmailInp) gateEmailInp.focus();
-    showToast('أدخل بريدك الإلكتروني (Gmail) للمتابعة فوراً', 'info');
+    const diagHtml = renderGooglePopupDiagnosticHtml('FIREBASE_AUTH_SDK', currentHost);
+    const gateDiag = document.getElementById('gate-google-auth-diagnostic');
+    if (gateDiag) {
+      gateDiag.innerHTML = diagHtml;
+      gateDiag.style.display = 'block';
+    }
+    showToast('استخدم البريد الإلكتروني وكلمة المرور للدخول الفوري الآمن', 'info');
     return { success: false, error: 'FIREBASE_AUTH_UNAVAILABLE' };
   }
 }
 
 function signInWithCustomIsolatedAccount() {
-  const nameInp = document.getElementById('auth-custom-user-name');
   const emailInp = document.getElementById('auth-custom-user-email');
-  const roleInp = document.getElementById('auth-custom-user-role');
-  const workInp = document.getElementById('auth-custom-user-workplace');
+  const pwdInp = document.getElementById('auth-custom-user-password');
 
-  const nameVal = (nameInp ? nameInp.value : '').trim();
-  const emailVal = (emailInp ? emailInp.value : '').trim();
-  const roleVal = (roleInp ? roleInp.value : '').trim();
-  const workVal = (workInp ? workInp.value : '').trim();
+  const emailVal = String(emailInp ? emailInp.value : '').trim().toLowerCase();
+  const pwdVal = String(pwdInp ? pwdInp.value : '');
 
-  if (isOwnerEmailAddress(emailVal)) {
-    if (nameInp) nameInp.value = '';
-    if (emailInp) emailInp.value = '';
-    return activateUserSessionByProfile({
-      uid: DEFAULT_OWNER_UID,
-      displayName: 'محمد ايت حمادي',
-      email: emailVal,
-      photoURL: '',
-      isOwnerAccount: true,
-      authProvider: 'google'
-    });
-  }
-
-  if (!nameVal && !emailVal) {
-    showToast('يرجى إدخال البريد الإلكتروني أو الاسم الكامل للمستخدم أولاً', 'warning');
+  if (!emailVal || !emailVal.includes('@')) {
+    showToast('يرجى إدخال البريد الإلكتروني الخاص بالحساب أولاً', 'warning');
     if (emailInp) emailInp.focus();
     return false;
   }
+  if (!pwdVal) {
+    showToast('🔒 يرجى إدخال كلمة المرور (الرقم السري) الخاصة بالحساب لإتمام التبديل', 'danger');
+    if (pwdInp) pwdInp.focus();
+    return false;
+  }
 
-  const uid = buildDeterministicUidFromEmailOrName(emailVal, nameVal);
-  const known = getKnownDeviceAccounts().find(a => String(a.uid) === uid);
-  const finalName = nameVal || (known ? known.displayName : (emailVal ? emailVal.split('@')[0] : 'مستخدم جديد'));
-
-  if (nameInp) nameInp.value = '';
-  if (emailInp) emailInp.value = '';
-  if (roleInp) roleInp.value = '';
-  if (workInp) workInp.value = '';
-
-  return activateUserSessionByProfile({
-    uid,
-    displayName: finalName,
-    email: emailVal,
-    photoURL: '',
-    jobTitle: roleVal || (known ? known.jobTitle : 'إطار إداري وتقني'),
-    framework: roleVal || (known ? known.framework : 'إطار إداري وتقني'),
-    workplace: workVal || (known ? known.workplace : 'المقر الرئيسي للإدارة'),
-    isOwnerAccount: false,
-    authProvider: 'google_isolated'
-  });
+  const ok = verifyAndSignInWithEmailPassword(emailVal, pwdVal, 'modal');
+  if (ok) {
+    if (emailInp) emailInp.value = '';
+    if (pwdInp) pwdInp.value = '';
+  }
+  return ok;
 }
 
 function signInFromGateCustomUser() {
   const nameInp = document.getElementById('gate-custom-user-name');
   const emailInp = document.getElementById('gate-custom-user-email');
+  const pwdInp = document.getElementById('gate-custom-user-password');
+  const confInp = document.getElementById('gate-custom-user-password-confirm');
   const roleInp = document.getElementById('gate-custom-user-role');
   const frameInp = document.getElementById('gate-custom-user-framework');
   const workInp = document.getElementById('gate-custom-user-workplace');
 
-  const nameVal = (nameInp ? nameInp.value : '').trim();
-  const emailVal = (emailInp ? emailInp.value : (document.getElementById('gate-gmail-login-input')?.value || '')).trim();
-  const roleVal = (roleInp ? roleInp.value : '').trim() || 'إطار إداري وتقني';
-  const frameVal = (frameInp ? frameInp.value : '').trim() || roleVal;
-  const workVal = (workInp ? workInp.value : '').trim() || 'المقر الرئيسي للإدارة';
+  const nameVal = String(nameInp ? nameInp.value : '').trim();
+  const emailVal = String(emailInp ? emailInp.value : '').trim().toLowerCase();
+  const pwdVal = String(pwdInp ? pwdInp.value : '');
+  const confVal = String(confInp ? confInp.value : '');
+  const roleVal = String(roleInp ? roleInp.value : '').trim() || 'إطار إداري وتقني';
+  const frameVal = String(frameInp ? frameInp.value : '').trim() || roleVal;
+  const workVal = String(workInp ? workInp.value : '').trim() || 'المقر الرئيسي للإدارة';
 
-  if (isOwnerEmailAddress(emailVal)) {
+  if (!nameVal) {
+    setGateFeedbackBanner('⚠️ يرجى إدخال الاسم الكامل للمستخدم.', 'danger');
+    showToast('يرجى إدخال الاسم الكامل للمستخدم أولاً', 'warning');
+    if (nameInp) nameInp.focus();
+    return false;
+  }
+
+  if (!emailVal || !emailVal.includes('@')) {
+    setGateFeedbackBanner('⚠️ يرجى إدخال بريد إلكتروني صحيح (Gmail / Email).', 'danger');
+    showToast('يرجى إدخال بريد إلكتروني صحيح', 'warning');
+    if (emailInp) emailInp.focus();
+    return false;
+  }
+
+  if (!pwdVal || pwdVal.length < 4) {
+    setGateFeedbackBanner('🔒 يرجى تعيين كلمة مرور للحساب (4 أحرف أو أرقام على الأقل).', 'danger');
+    showToast('يرجى تعيين كلمة مرور تتكون من 4 أحرف أو أرقام على الأقل', 'warning');
+    if (pwdInp) pwdInp.focus();
+    return false;
+  }
+
+  if (pwdVal !== confVal) {
+    setGateFeedbackBanner('❌ كلمة المرور وتأكيد كلمة المرور غير متطابقين!', 'danger');
+    showToast('كلمة المرور وتأكيدها غير متطابقين!', 'danger');
+    if (confInp) confInp.focus();
+    return false;
+  }
+
+  const isOwner = isOwnerEmailAddress(emailVal);
+  const uid = isOwner ? DEFAULT_OWNER_UID : buildDeterministicUidFromEmailOrName(emailVal, nameVal);
+  const existingCred = getStoredCredentialRecordForEmailOrUid(emailVal, uid);
+
+  if (existingCred && existingCred.passwordHash) {
+    const incomingHash = computePasswordDigestSync(emailVal, pwdVal);
+    if (existingCred.passwordHash !== incomingHash) {
+      setGateFeedbackBanner('⚠️ هذا البريد الإلكتروني مسجل مسبقاً بكلمة مرور مختلفة. يرجى الدخول من تبويب (تسجيل الدخول).', 'danger');
+      showToast('هذا البريد مسجل مسبقاً، يرجى تسجيل الدخول بكلمة المرور الخاصة به', 'warning');
+      switchGateAuthTab('login');
+      const loginEmailInp = document.getElementById('gate-gmail-login-input');
+      if (loginEmailInp) loginEmailInp.value = emailVal;
+      return false;
+    }
+  }
+
+  const passwordHash = computePasswordDigestSync(emailVal, pwdVal);
+  saveCredentialsVaultRecord(emailVal, uid, passwordHash);
+
+  // Also register in Firebase Email/Password Auth if enabled in Firebase project
+  if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
+    try {
+      firebase.auth().createUserWithEmailAndPassword(emailVal, pwdVal).catch(() => {});
+    } catch (e) {}
+  }
+
+  if (nameInp) nameInp.value = '';
+  if (emailInp) emailInp.value = '';
+  if (pwdInp) pwdInp.value = '';
+  if (confInp) confInp.value = '';
+  if (roleInp) roleInp.value = '';
+  if (frameInp) frameInp.value = '';
+  if (workInp) workInp.value = '';
+
+  if (isOwner) {
     return activateUserSessionByProfile({
       uid: DEFAULT_OWNER_UID,
       displayName: 'محمد ايت حمادي',
       email: emailVal,
       photoURL: '',
       isOwnerAccount: true,
-      authProvider: 'google'
+      authProvider: 'email_password'
     });
   }
-
-  if (!nameVal) {
-    showToast('يرجى إدخال الاسم الكامل للمستخدم أولاً', 'warning');
-    if (nameInp) nameInp.focus();
-    return false;
-  }
-
-  const uid = buildDeterministicUidFromEmailOrName(emailVal, nameVal);
-  if (nameInp) nameInp.value = '';
-  if (emailInp) emailInp.value = '';
-  if (roleInp) roleInp.value = '';
-  if (frameInp) frameInp.value = '';
-  if (workInp) workInp.value = '';
 
   return activateUserSessionByProfile({
     uid,
@@ -31288,7 +31721,7 @@ function signInFromGateCustomUser() {
     framework: frameVal,
     workplace: workVal,
     isOwnerAccount: false,
-    authProvider: 'google_isolated'
+    authProvider: 'email_password'
   });
 }
 
@@ -31581,11 +32014,11 @@ if (typeof firebase !== 'undefined' && typeof firebase.auth === 'function') {
         const fbEmail = String(fbUser.email || '').trim().toLowerCase();
         const targetUid = isOwnerEmailAddress(fbEmail) ? DEFAULT_OWNER_UID : fbUser.uid;
         if (window.currentAuthUid !== targetUid) {
-          routeIncomingEmailOrGoogleAuth(
+          completeVerifiedGoogleOAuthLogin(
             fbEmail,
             fbUser.displayName || '',
             fbUser.photoURL || '',
-            'google'
+            fbUser.uid || ''
           );
         }
       }

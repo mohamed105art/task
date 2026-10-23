@@ -32371,11 +32371,267 @@ if (_preV82OpenDayInspector) {
   };
 }
 
-// 6. Axis 3: Database & Data Migration (Jan 1 - Sep 30 Replacement + Oct Merge)
+// 6. Axis 3 & V83.0: Referential Integrity, Cascade Nullification, Hard Delete & Anti-Ghosting Engine
+const V83_DELETED_REGISTRY_KEY = "ops_v83_deleted_entities_registry";
+const V82_COURTS_SEEDED_KEY = "ops_v82_courts_seeded_v1";
+
+function createEmptyDeletedRegistry() {
+  return {
+    courts: [],
+    categories: [],
+    subcategories: [],
+    missions: [],
+    templates: [],
+    savedTitles: [],
+    basicTasks: [],
+    tasks: []
+  };
+}
+
+function normalizeEntityKey(val) {
+  return String(val || "").trim().toLowerCase();
+}
+
+function getDeletedEntitiesRegistry() {
+  const base = createEmptyDeletedRegistry();
+  try {
+    const rawStored = CLOUD_MEMORY_STORE.getItem(V83_DELETED_REGISTRY_KEY);
+    if (rawStored) {
+      const parsed = JSON.parse(rawStored);
+      if (parsed && typeof parsed === "object") {
+        Object.keys(base).forEach(k => {
+          if (Array.isArray(parsed[k])) {
+            parsed[k].forEach(item => {
+              const norm = normalizeEntityKey(item);
+              if (norm && !base[k].includes(norm)) base[k].push(norm);
+            });
+          }
+        });
+      }
+    }
+  } catch (e) {}
+
+  if (typeof APP !== "undefined" && APP && APP.settings && APP.settings.deletedEntitiesRegistry) {
+    const inMem = APP.settings.deletedEntitiesRegistry;
+    Object.keys(base).forEach(k => {
+      if (Array.isArray(inMem[k])) {
+        inMem[k].forEach(item => {
+          const norm = normalizeEntityKey(item);
+          if (norm && !base[k].includes(norm)) base[k].push(norm);
+        });
+      }
+    });
+  }
+
+  if (typeof APP !== "undefined" && APP) {
+    if (!APP.settings) APP.settings = {};
+    APP.settings.deletedEntitiesRegistry = base;
+  }
+  return base;
+}
+
+function saveDeletedEntitiesRegistry(reg) {
+  const target = reg || getDeletedEntitiesRegistry();
+  if (typeof APP !== "undefined" && APP) {
+    if (!APP.settings) APP.settings = {};
+    APP.settings.deletedEntitiesRegistry = target;
+  }
+  try {
+    CLOUD_MEMORY_STORE.setItem(V83_DELETED_REGISTRY_KEY, JSON.stringify(target));
+  } catch (e) {}
+  return target;
+}
+
+function recordDeletedEntity(type, ...identifiers) {
+  const reg = getDeletedEntitiesRegistry();
+  if (!Array.isArray(reg[type])) reg[type] = [];
+  identifiers.forEach(idVal => {
+    const norm = normalizeEntityKey(idVal);
+    if (norm && !reg[type].includes(norm)) {
+      reg[type].push(norm);
+    }
+  });
+  saveDeletedEntitiesRegistry(reg);
+}
+
+function unrecordDeletedEntity(type, ...identifiers) {
+  const reg = getDeletedEntitiesRegistry();
+  if (!Array.isArray(reg[type])) return;
+  const removeSet = new Set(identifiers.map(normalizeEntityKey).filter(Boolean));
+  reg[type] = reg[type].filter(item => !removeSet.has(normalizeEntityKey(item)));
+  saveDeletedEntitiesRegistry(reg);
+}
+
+function isEntityDeleted(type, ...identifiers) {
+  const reg = getDeletedEntitiesRegistry();
+  const list = Array.isArray(reg[type]) ? reg[type] : [];
+  if (list.length === 0) return false;
+  return identifiers.some(idVal => {
+    const norm = normalizeEntityKey(idVal);
+    return Boolean(norm && list.includes(norm));
+  });
+}
+
+function mergeRemoteDeletedRegistry(remoteReg) {
+  if (!remoteReg || typeof remoteReg !== "object") return getDeletedEntitiesRegistry();
+  const reg = getDeletedEntitiesRegistry();
+  Object.keys(reg).forEach(k => {
+    if (Array.isArray(remoteReg[k])) {
+      remoteReg[k].forEach(item => {
+        const norm = normalizeEntityKey(item);
+        if (norm && !reg[k].includes(norm)) {
+          reg[k].push(norm);
+        }
+      });
+    }
+  });
+  return saveDeletedEntitiesRegistry(reg);
+}
+
+// Enforce deleted-entity exclusions, deduplicate courts/categories, and cascade-nullify orphaned references in tasks
+function enforceDeletedEntitiesFilterOnAppState() {
+  if (!APP) return;
+  const reg = getDeletedEntitiesRegistry();
+
+  // 1. Filter & Deduplicate APP.courts
+  if (Array.isArray(APP.courts)) {
+    const seenCourtNames = new Set();
+    APP.courts = APP.courts.filter(c => {
+      if (!c || !c.name) return false;
+      const cName = String(c.name).trim();
+      const cId = String(c.id || "").trim();
+      if (!cName) return false;
+      if (isEntityDeleted("courts", cName, cId)) return false;
+      const normName = normalizeEntityKey(cName);
+      if (seenCourtNames.has(normName)) return false;
+      seenCourtNames.add(normName);
+      return true;
+    });
+  }
+
+  // 2. Filter & Deduplicate APP.categories and their subcategories
+  if (Array.isArray(APP.categories)) {
+    const seenCatNames = new Set();
+    APP.categories = APP.categories.filter(cat => {
+      if (!cat || !cat.name) return false;
+      const cName = String(cat.name).trim();
+      const cId = String(cat.id || "").trim();
+      if (!cName) return false;
+      if (isEntityDeleted("categories", cName, cId)) return false;
+      const normName = normalizeEntityKey(cName);
+      if (seenCatNames.has(normName)) return false;
+      seenCatNames.add(normName);
+      if (Array.isArray(cat.subs)) {
+        const seenSubs = new Set();
+        cat.subs = cat.subs.filter(s => {
+          const sName = String(s || "").trim();
+          if (!sName) return false;
+          if (isEntityDeleted("subcategories", `${cName}::${sName}`, sName)) return false;
+          const normSub = normalizeEntityKey(sName);
+          if (seenSubs.has(normSub)) return false;
+          seenSubs.add(normSub);
+          return true;
+        });
+      }
+      return true;
+    });
+  }
+
+  // 3. Filter APP.missionLibrary
+  if (Array.isArray(APP.missionLibrary)) {
+    APP.missionLibrary = APP.missionLibrary.filter(m => {
+      if (!m) return false;
+      return !isEntityDeleted("missions", m.id, m.title);
+    });
+  }
+
+  // 4. Filter APP.templates
+  if (Array.isArray(APP.templates)) {
+    APP.templates = APP.templates.filter(tpl => {
+      if (!tpl) return false;
+      return !isEntityDeleted("templates", tpl.id, tpl.title);
+    });
+  }
+
+  // 5. Filter APP.savedTitles & APP.savedTitleMetadata
+  if (Array.isArray(APP.savedTitles)) {
+    const seenTitles = new Set();
+    APP.savedTitles = APP.savedTitles.filter(ttl => {
+      const clean = String(ttl || "").trim();
+      if (!clean) return false;
+      if (isEntityDeleted("savedTitles", clean)) return false;
+      const norm = normalizeEntityKey(clean);
+      if (seenTitles.has(norm)) return false;
+      seenTitles.add(norm);
+      return true;
+    });
+  }
+  if (Array.isArray(APP.savedTitleMetadata)) {
+    APP.savedTitleMetadata = APP.savedTitleMetadata.filter(meta => {
+      if (!meta || !meta.title) return false;
+      return !isEntityDeleted("savedTitles", meta.title);
+    });
+  }
+
+  // 6. Filter APP.profile.basicRoutineTasks
+  if (APP.profile && Array.isArray(APP.profile.basicRoutineTasks)) {
+    APP.profile.basicRoutineTasks = APP.profile.basicRoutineTasks.filter(bt => {
+      const clean = String(bt || "").trim();
+      return Boolean(clean && !isEntityDeleted("basicTasks", clean));
+    });
+    if (APP.settings) {
+      APP.settings.basicRoutineTasks = APP.profile.basicRoutineTasks;
+    }
+  }
+
+  // 7. Filter permanently deleted tasks & nullify deleted foreign keys on all remaining tasks
+  const nullifyTaskDeletedReferences = (t) => {
+    if (!t || typeof t !== "object") return;
+    const dest = String(t.destination || "").trim();
+    const court = String(t.court || "").trim();
+    const loc = String(t.location || "").trim();
+    if (dest && isEntityDeleted("courts", dest)) t.destination = "";
+    if (court && isEntityDeleted("courts", court)) t.court = "";
+    if (loc && isEntityDeleted("courts", loc)) t.location = "";
+    if (Array.isArray(t.destinations)) {
+      t.destinations = t.destinations.filter(d => !isEntityDeleted("courts", d));
+    }
+    const cat = String(t.category || "").trim();
+    const sub = String(t.subcategory || "").trim();
+    if (cat && isEntityDeleted("categories", cat)) {
+      t.category = "";
+      t.subcategory = "";
+    } else if (sub && isEntityDeleted("subcategories", `${cat}::${sub}`, sub)) {
+      t.subcategory = "";
+    }
+    if (t.missionId && isEntityDeleted("missions", t.missionId)) {
+      t.missionId = "";
+      t.missionUnlinked = true;
+    }
+  };
+
+  if (Array.isArray(APP.tasks)) {
+    APP.tasks = APP.tasks.filter(t => t && !isEntityDeleted("tasks", t.id));
+    APP.tasks.forEach(nullifyTaskDeletedReferences);
+  }
+  if (Array.isArray(APP.trash)) {
+    APP.trash = APP.trash.filter(t => t && !isEntityDeleted("tasks", t.id));
+    APP.trash.forEach(nullifyTaskDeletedReferences);
+  }
+}
+
 function applyV82OwnerDataMigration(forceSyncToCloud = false) {
   if (!APP || !Array.isArray(APP.tasks)) return false;
-  const isOwner = (!window.currentAuthUid || window.currentAuthUid === DEFAULT_OWNER_UID || isOwnerEmailAddress(window.currentAuthUser?.email || ''));
+  const isOwner = (!window.currentAuthUid || window.currentAuthUid === DEFAULT_OWNER_UID || isOwnerEmailAddress(window.currentAuthUser?.email || ""));
   if (!isOwner) return false;
+
+  enforceDeletedEntitiesFilterOnAppState();
+
+  // Do not re-run migration repeatedly on every refresh once completed unless forced
+  const alreadyMigrated = (CLOUD_MEMORY_STORE.getItem(V82_MIGRATION_FLAG_KEY) === "1" || (APP.settings && APP.settings.v82MigrationCompleted === true));
+  if (alreadyMigrated && !forceSyncToCloud) {
+    return false;
+  }
 
   const v82Ids = new Set(V82_MIGRATED_TASKS_LIST.map(t => String(t.id)));
   const removedOldJanSepIds = [];
@@ -32385,78 +32641,96 @@ function applyV82OwnerDataMigration(forceSyncToCloud = false) {
   const keptTasks = [];
   APP.tasks.forEach(t => {
     if (!t) return;
-    const tId = String(t.id || '');
-    const tDate = String(t.taskDate || t.dueDate || t.original_date || '').trim();
-    const isJanToSep2026 = (tDate >= '2026-01-01' && tDate <= '2026-09-30');
+    const tId = String(t.id || "");
+    if (isEntityDeleted("tasks", tId)) return;
+    const tDate = String(t.taskDate || t.dueDate || t.original_date || "").trim();
+    const isJanToSep2026 = (tDate >= "2026-01-01" && tDate <= "2026-09-30");
     if (isJanToSep2026 && !v82Ids.has(tId) && !t.isV82MigratedTask) {
       removedOldJanSepIds.push(tId);
-      return; // deleted per Axis 3.1
+      return;
     }
     keptTasks.push(t);
   });
 
-  // Also purge any old Jan-Sep 2026 tasks from APP.trash so they don't linger
   if (Array.isArray(APP.trash)) {
     APP.trash = APP.trash.filter(t => {
       if (!t) return false;
-      const tId = String(t.id || '');
-      const tDate = String(t.taskDate || t.dueDate || t.original_date || '').trim();
-      const isJanToSep2026 = (tDate >= '2026-01-01' && tDate <= '2026-09-30');
+      const tId = String(t.id || "");
+      if (isEntityDeleted("tasks", tId)) return false;
+      const tDate = String(t.taskDate || t.dueDate || t.original_date || "").trim();
+      const isJanToSep2026 = (tDate >= "2026-01-01" && tDate <= "2026-09-30");
       return !(isJanToSep2026 && !v82Ids.has(tId));
     });
   }
 
-  // Step 2: Insert the 39 Jan-Sep 2026 tasks + Merge the 3 new October 2026 tasks without deleting any existing Oct 2026 tasks
+  // Step 2: Insert the 39 Jan-Sep 2026 tasks + Merge the 3 new October 2026 tasks (respecting deleted tasks & deleted destinations)
   const existingById = new Map(keptTasks.map(t => [String(t.id), t]));
+  const trashedIds = new Set((APP.trash || []).map(t => String(t.id)));
   let addedCount = 0;
   V82_MIGRATED_TASKS_LIST.forEach(v82Task => {
     const tid = String(v82Task.id);
+    if (isEntityDeleted("tasks", tid) || trashedIds.has(tid)) return;
     if (!existingById.has(tid)) {
       const cloned = JSON.parse(JSON.stringify(v82Task));
+      if (cloned.destination && isEntityDeleted("courts", cloned.destination)) {
+        cloned.destination = "";
+        cloned.court = "";
+        cloned.location = "";
+      }
+      if (cloned.category && isEntityDeleted("categories", cloned.category)) {
+        cloned.category = "";
+        cloned.subcategory = "";
+      }
       keptTasks.push(cloned);
       existingById.set(tid, cloned);
       addedCount++;
     }
   });
 
-  // Ensure all V82 destinations exist in APP.courts
+  // Step 3: Seed V82 destinations ONLY ONCE (and never re-add any destination deleted by the user)
   if (!Array.isArray(APP.courts)) APP.courts = [];
-  const courtNames = new Set(APP.courts.map(c => (c && c.name ? c.name.trim() : '')));
-  V82_MIGRATED_TASKS_LIST.forEach(v82Task => {
-    const d = (v82Task.destination || '').trim();
-    if (d && !courtNames.has(d)) {
-      courtNames.add(d);
-      APP.courts.push({
-        id: 'court_v82_' + Math.abs(d.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)),
-        name: d,
-        type: 'وجهة',
-        city: d,
-        scope: 'الدائرة القضائية / خارج الدائرة',
-        contact: '',
-        notes: 'وجهة مضافة ضمن تحديث بيانات 2026'
-      });
-    }
-  });
+  const courtsAlreadySeeded = (CLOUD_MEMORY_STORE.getItem(V82_COURTS_SEEDED_KEY) === "1" || (APP.settings && APP.settings.v82CourtsSeeded === true));
+  if (!courtsAlreadySeeded || forceSyncToCloud) {
+    const courtNames = new Set(APP.courts.map(c => normalizeEntityKey(c && c.name ? c.name : "")));
+    V82_MIGRATED_TASKS_LIST.forEach(v82Task => {
+      const d = (v82Task.destination || "").trim();
+      const normD = normalizeEntityKey(d);
+      if (d && !courtNames.has(normD) && !isEntityDeleted("courts", d)) {
+        courtNames.add(normD);
+        APP.courts.push({
+          id: "court_v82_" + Math.abs(d.split("").reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)),
+          name: d,
+          type: "وجهة",
+          city: d,
+          scope: "الدائرة القضائية / خارج الدائرة",
+          contact: "",
+          notes: "وجهة مضافة ضمن تحديث بيانات 2026"
+        });
+      }
+    });
+    try { CLOUD_MEMORY_STORE.setItem(V82_COURTS_SEEDED_KEY, "1"); } catch (e) {}
+    if (APP.settings) APP.settings.v82CourtsSeeded = true;
+  }
 
   keptTasks.sort(compareTasksNewestFirst);
   APP.tasks = keptTasks;
+  enforceDeletedEntitiesFilterOnAppState();
+
+  try { CLOUD_MEMORY_STORE.setItem(V82_MIGRATION_FLAG_KEY, "1"); } catch (e) {}
+  if (APP.settings) APP.settings.v82MigrationCompleted = true;
 
   const didMutate = (removedOldJanSepIds.length > 0 || addedCount > 0);
   if (didMutate || forceSyncToCloud) {
-    try {
-      CLOUD_MEMORY_STORE.setItem(V82_MIGRATION_FLAG_KEY, '1');
-    } catch (e) {}
     saveData();
     syncV13MirrorsToCloudFirestore();
 
-    // Sync deletions of old Jan-Sep tasks and insertions of V82 tasks to Firestore if available
-    const col = typeof ensureTasksCollectionRef === 'function' ? ensureTasksCollectionRef() : null;
+    const col = typeof ensureTasksCollectionRef === "function" ? ensureTasksCollectionRef() : null;
     if (col) {
       removedOldJanSepIds.forEach(oldId => {
         pendingTaskWrites.set(oldId, Date.now());
         col.doc(oldId).delete().catch(() => {});
       });
-      V82_MIGRATED_TASKS_LIST.forEach(v82Task => {
+      APP.tasks.filter(t => t && v82Ids.has(String(t.id))).forEach(v82Task => {
         const tid = String(v82Task.id);
         pendingTaskWrites.set(tid, Date.now());
         col.doc(tid).set(sanitizeTaskForFirestore(v82Task), { merge: true }).catch(() => {});
@@ -32466,25 +32740,832 @@ function applyV82OwnerDataMigration(forceSyncToCloud = false) {
   return didMutate;
 }
 
-// Hook applyV82OwnerDataMigration into initSystem and refreshAllViewsFromFirestoreSnapshot
+// ----------------------------------------------------------------------------
+// V83.0 HARD DELETE + AUTOMATIC CASCADE NULLIFICATION ACROSS ALL APP SECTIONS
+// ----------------------------------------------------------------------------
+
+// 1. Exact Task Count Calculation in renderSettingsDestinations (prevents substring false-positives like "الكاره" matching "الكاره - برشيد")
+renderSettingsDestinations = function() {
+  const tbody = document.getElementById("cfg-destinations-table-body");
+  if (!tbody || !APP) return;
+  enforceDeletedEntitiesFilterOnAppState();
+  tbody.innerHTML = "";
+
+  (APP.courts || []).forEach((c, idx) => {
+    const cName = String(c.name || "").trim();
+    const normCName = normalizeEntityKey(cName);
+    const scope = c.customScope || getCityScope(c.city || "سطات");
+    const taskCount = (APP.tasks || []).filter(t => {
+      if (!t) return false;
+      const td = normalizeEntityKey(t.destination);
+      const tc = normalizeEntityKey(t.court);
+      const multi = Array.isArray(t.destinations) && t.destinations.some(x => normalizeEntityKey(x) === normCName);
+      return td === normCName || tc === normCName || multi;
+    }).length;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td style="font-weight:700; color:var(--text-main);">📍 ${escapeHtml(cName)}</td>
+      <td>${escapeHtml(c.type || "مرفق / وجهة")}</td>
+      <td style="font-weight:700;">${escapeHtml(c.city || "سطات")}</td>
+      <td><span class="badge-soft" style="color:${scope === "محلي" ? "var(--success)" : "var(--purple)"}; font-weight:800;">${scope}</span></td>
+      <td><strong>${formatArabicTasksCount(taskCount)}</strong></td>
+      <td style="font-size:0.78rem; color:var(--text-muted);">${escapeHtml(c.contact || c.notes || "-")}</td>
+      <td style="text-align:center;">
+        <div style="display:flex; gap:0.35rem; justify-content:center;">
+          <button type="button" class="btn btn-sm btn-outline action-icon-btn" onclick="openDestinationModal(${idx})" title="تعديل" aria-label="تعديل">${UNIVERSAL_OUTLINE_SVGS.edit}</button>
+          <button type="button" class="btn btn-sm btn-danger-outline action-icon-btn" onclick="deleteDestination(${idx})" title="حذف نهائي" aria-label="حذف نهائي">${UNIVERSAL_OUTLINE_SVGS.trash}</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+};
+
+// 2. Hard Delete Destination + Automatic Cascade Nullification on Linked Tasks, Templates, and Library
+deleteDestination = function(idx) {
+  if (!APP || !Array.isArray(APP.courts) || !APP.courts[idx]) return;
+  const targetObj = APP.courts[idx];
+  const dName = String(targetObj.name || "").trim();
+  const dId = String(targetObj.id || "").trim();
+  const normDName = normalizeEntityKey(dName);
+
+  // Record in persistent deleted registry BEFORE mutating so no listener/hook can resurrect it
+  recordDeletedEntity("courts", dName, dId);
+
+  // Remove target destination and any duplicate sharing the same normalized name
+  APP.courts = APP.courts.filter((c, i) => {
+    if (i === idx) return false;
+    if (!c) return false;
+    return normalizeEntityKey(c.name) !== normDName && String(c.id || "").trim() !== dId;
+  });
+
+  // Cascade Nullification across APP.tasks and APP.trash
+  const nowIso = new Date().toISOString();
+  const nowMs = Date.now();
+  const affectedTasks = [];
+
+  const nullifyCourtOnTask = (t, isTrash = false) => {
+    if (!t || typeof t !== "object") return;
+    let touched = false;
+    if (normalizeEntityKey(t.destination) === normDName) {
+      t.destination = "";
+      touched = true;
+    }
+    if (normalizeEntityKey(t.court) === normDName) {
+      t.court = "";
+      touched = true;
+    }
+    if (normalizeEntityKey(t.location) === normDName) {
+      t.location = "";
+      touched = true;
+    }
+    if (Array.isArray(t.destinations)) {
+      const prevLen = t.destinations.length;
+      t.destinations = t.destinations.filter(x => normalizeEntityKey(x) !== normDName);
+      if (t.destinations.length !== prevLen) {
+        touched = true;
+        if (!t.destination && t.destinations.length > 0) {
+          t.destination = t.destinations.join(" / ");
+          t.court = t.destination;
+        }
+      }
+    }
+    if (touched) {
+      t.updatedAt = nowIso;
+      t.lastActivityTs = nowMs;
+      if (!isTrash) affectedTasks.push(t);
+    }
+  };
+
+  (APP.tasks || []).forEach(t => nullifyCourtOnTask(t, false));
+  (APP.trash || []).forEach(t => nullifyCourtOnTask(t, true));
+
+  // Cascade Nullification across Templates, Mission Library, and Settings Default Destination
+  (APP.templates || []).forEach(tpl => {
+    if (!tpl) return;
+    if (normalizeEntityKey(tpl.court) === normDName) tpl.court = "";
+    if (normalizeEntityKey(tpl.destination) === normDName) tpl.destination = "";
+  });
+  (APP.missionLibrary || []).forEach(m => {
+    if (!m) return;
+    if (normalizeEntityKey(m.defaultDestination) === normDName) m.defaultDestination = "";
+  });
+  if (APP.settings && normalizeEntityKey(APP.settings.defaultDestination) === normDName) {
+    APP.settings.defaultDestination = "";
+  }
+
+  // Bump metadata revision, clear dirty flag, persist to all local mirrors & Cloud Firestore immediately
+  bumpLocalMetaRevision("delete_destination");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  affectedTasks.forEach(t => syncTaskToFirestore(t));
+
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsDestinations();
+  renderDashboard();
+  renderTodayBoard();
+  renderTasksTable();
+  renderBacklogTable();
+  recordUserModification();
+
+  const msg = affectedTasks.length > 0
+    ? `تم حذف الوجهة "${dName}" نهائياً وإفراغ حقل الوجهة في ${formatArabicTasksCount(affectedTasks.length)} مرتبطة بها`
+    : `تم حذف الوجهة "${dName}" من دليل الوجهات بشكل نهائي ودائم`;
+  showToast(msg);
+};
+window.deleteDestination = deleteDestination;
+
+// Unrecord deleted destination if user explicitly re-creates or renames a destination to that name
+const _preV83HandleDestinationFormSubmit = handleDestinationFormSubmit;
+handleDestinationFormSubmit = function(e) {
+  const nameVal = (document.getElementById("df-name")?.value || "").trim();
+  if (nameVal) unrecordDeletedEntity("courts", nameVal);
+  const res = _preV83HandleDestinationFormSubmit.apply(this, arguments);
+  bumpLocalMetaRevision("save_destination");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  return res;
+};
+window.handleDestinationFormSubmit = handleDestinationFormSubmit;
+
+if (typeof saveNewDestinationInline === "function") {
+  const _preV83SaveNewDestInline = saveNewDestinationInline;
+  saveNewDestinationInline = function(destName) {
+    if (destName) unrecordDeletedEntity("courts", destName);
+    const res = _preV83SaveNewDestInline.apply(this, arguments);
+    bumpLocalMetaRevision("save_destination_inline");
+    saveData();
+    syncV13MirrorsToCloudFirestore();
+    syncAppMetadataToFirestoreImmediate();
+    return res;
+  };
+  window.saveNewDestinationInline = saveNewDestinationInline;
+}
+
+// 3. Hard Delete Category + Cascade Nullification
+deleteCategory = function(idx) {
+  if (!APP || !Array.isArray(APP.categories) || !APP.categories[idx]) return;
+  const targetCat = APP.categories[idx];
+  const cName = String(targetCat.name || "").trim();
+  const cId = String(targetCat.id || "").trim();
+  const normCName = normalizeEntityKey(cName);
+
+  recordDeletedEntity("categories", cName, cId);
+
+  APP.categories = APP.categories.filter((c, i) => {
+    if (i === idx) return false;
+    if (!c) return false;
+    return normalizeEntityKey(c.name) !== normCName && String(c.id || "").trim() !== cId;
+  });
+
+  const nowIso = new Date().toISOString();
+  const nowMs = Date.now();
+  const affectedTasks = [];
+
+  const nullifyCatOnTask = (t, isTrash = false) => {
+    if (!t || typeof t !== "object") return;
+    let touched = false;
+    if (normalizeEntityKey(t.category) === normCName) {
+      t.category = "";
+      t.subcategory = "";
+      touched = true;
+    }
+    if (Array.isArray(t.subtasks)) {
+      t.subtasks.forEach(st => {
+        if (st && normalizeEntityKey(st.category) === normCName) {
+          st.category = "";
+          touched = true;
+        }
+      });
+    }
+    if (touched) {
+      t.updatedAt = nowIso;
+      t.lastActivityTs = nowMs;
+      if (!isTrash) affectedTasks.push(t);
+    }
+  };
+
+  (APP.tasks || []).forEach(t => nullifyCatOnTask(t, false));
+  (APP.trash || []).forEach(t => nullifyCatOnTask(t, true));
+
+  (APP.templates || []).forEach(tpl => {
+    if (tpl && normalizeEntityKey(tpl.category) === normCName) {
+      tpl.category = "";
+      tpl.subcategory = "";
+    }
+  });
+  (APP.missionLibrary || []).forEach(m => {
+    if (m && normalizeEntityKey(m.category) === normCName) {
+      m.category = "";
+    }
+  });
+  if (Array.isArray(APP.savedTitleMetadata)) {
+    APP.savedTitleMetadata.forEach(meta => {
+      if (meta && (meta.categoryId === cId || normalizeEntityKey(meta.categoryName) === normCName)) {
+        meta.categoryId = "";
+        meta.categoryName = "";
+      }
+    });
+  }
+
+  bumpLocalMetaRevision("delete_category");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  affectedTasks.forEach(t => syncTaskToFirestore(t));
+
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  renderDashboard();
+  renderTodayBoard();
+  renderTasksTable();
+  recordUserModification();
+  showToast(`تم حذف التصنيف "${cName}" نهائياً وإفراغ ارتباطه في المهام ذات الصلة`);
+};
+window.deleteCategory = deleteCategory;
+
+// 4. Hard Delete Subcategory + Cascade Nullification
+removeSubcategoryFromCategory = function(catIdx, subIdx) {
+  if (!APP || !APP.categories[catIdx] || !Array.isArray(APP.categories[catIdx].subs)) return;
+  const catObj = APP.categories[catIdx];
+  const cName = String(catObj.name || "").trim();
+  const subName = String(catObj.subs[subIdx] || "").trim();
+  if (!subName) return;
+  const normCName = normalizeEntityKey(cName);
+  const normSubName = normalizeEntityKey(subName);
+
+  recordDeletedEntity("subcategories", `${cName}::${subName}`, subName);
+  catObj.subs.splice(subIdx, 1);
+
+  const nowIso = new Date().toISOString();
+  const nowMs = Date.now();
+  const affectedTasks = [];
+
+  (APP.tasks || []).forEach(t => {
+    if (!t) return;
+    if (normalizeEntityKey(t.subcategory) === normSubName && (!normCName || normalizeEntityKey(t.category) === normCName)) {
+      t.subcategory = "";
+      t.updatedAt = nowIso;
+      t.lastActivityTs = nowMs;
+      affectedTasks.push(t);
+    }
+  });
+  (APP.trash || []).forEach(t => {
+    if (!t) return;
+    if (normalizeEntityKey(t.subcategory) === normSubName && (!normCName || normalizeEntityKey(t.category) === normCName)) {
+      t.subcategory = "";
+      t.updatedAt = nowIso;
+    }
+  });
+  (APP.templates || []).forEach(tpl => {
+    if (tpl && normalizeEntityKey(tpl.subcategory) === normSubName) {
+      tpl.subcategory = "";
+    }
+  });
+
+  bumpLocalMetaRevision("delete_subcategory");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  affectedTasks.forEach(t => syncTaskToFirestore(t));
+
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsCategories();
+  showCategoriesSavedBadge();
+  recordUserModification();
+  showToast(`تم حذف التفريع الفرعي "${subName}" نهائياً من قاعدة البيانات`);
+};
+window.removeSubcategoryFromCategory = removeSubcategoryFromCategory;
+
+// Unrecord deleted category/subcategory when user explicitly adds one
+const _preV83AddPrimaryCat = addPrimaryCategoryFromSettingsBar;
+addPrimaryCategoryFromSettingsBar = function() {
+  const nameInp = document.getElementById("cfg-inline-new-cat-name");
+  const subInp = document.getElementById("cfg-inline-new-cat-sub");
+  const cName = (nameInp ? nameInp.value : "").trim();
+  const sName = (subInp ? subInp.value : "").trim();
+  if (cName) unrecordDeletedEntity("categories", cName);
+  if (sName) unrecordDeletedEntity("subcategories", `${cName}::${sName}`, sName);
+  const res = _preV83AddPrimaryCat.apply(this, arguments);
+  bumpLocalMetaRevision("add_category");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  return res;
+};
+window.addPrimaryCategoryFromSettingsBar = addPrimaryCategoryFromSettingsBar;
+
+const _preV83AddSubInline = addSubcategoryInline;
+addSubcategoryInline = function(catIdx) {
+  const inp = document.getElementById(`new-sub-inline-input-${catIdx}`);
+  const val = (inp ? inp.value : "").trim();
+  const cName = APP?.categories?.[catIdx]?.name || "";
+  if (val) unrecordDeletedEntity("subcategories", `${cName}::${val}`, val);
+  const res = _preV83AddSubInline.apply(this, arguments);
+  bumpLocalMetaRevision("add_subcategory");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  return res;
+};
+window.addSubcategoryInline = addSubcategoryInline;
+
+const _preV83SaveCatModal = saveCategoryModalSubmit;
+saveCategoryModalSubmit = function() {
+  const cName = (document.getElementById("cf-name")?.value || "").trim();
+  if (cName) unrecordDeletedEntity("categories", cName);
+  (categoryModalTempSubs || []).forEach(s => {
+    if (s) unrecordDeletedEntity("subcategories", `${cName}::${s}`, s);
+  });
+  const res = _preV83SaveCatModal.apply(this, arguments);
+  bumpLocalMetaRevision("save_category_modal");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  return res;
+};
+window.saveCategoryModalSubmit = saveCategoryModalSubmit;
+
+// 5. Hard Delete Mission from Library + Cascade Nullification (Unlinks tasks instead of blocking deletion!)
+deleteMissionFromLibrary = function(missionId) {
+  if (!APP || !Array.isArray(APP.missionLibrary)) return;
+  const idx = APP.missionLibrary.findIndex(x => x && x.id === missionId);
+  if (idx === -1) return;
+  const m = APP.missionLibrary[idx];
+  const mTitle = String(m.title || "").trim();
+
+  recordDeletedEntity("missions", missionId, mTitle);
+  APP.missionLibrary.splice(idx, 1);
+
+  const nowIso = new Date().toISOString();
+  const nowMs = Date.now();
+  const affectedTasks = [];
+
+  (APP.tasks || []).forEach(t => {
+    if (t && t.missionId === missionId) {
+      t.missionId = "";
+      t.missionUnlinked = true;
+      t.updatedAt = nowIso;
+      t.lastActivityTs = nowMs;
+      affectedTasks.push(t);
+    }
+  });
+  (APP.trash || []).forEach(t => {
+    if (t && t.missionId === missionId) {
+      t.missionId = "";
+      t.missionUnlinked = true;
+      t.updatedAt = nowIso;
+    }
+  });
+
+  bumpLocalMetaRevision("delete_library_mission");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  affectedTasks.forEach(t => syncTaskToFirestore(t));
+
+  renderMissionLibraryView();
+  renderDashboard();
+  recordUserModification();
+  showToast(`تم حذف المهمة "${mTitle}" نهائياً من المكتبة وفك ارتباطها التلقائي بالسجل`);
+};
+window.deleteMissionFromLibrary = deleteMissionFromLibrary;
+
+const _preV83SaveMissionLib = saveMissionLibraryFormSubmit;
+saveMissionLibraryFormSubmit = function(e) {
+  const titleVal = (document.getElementById("mlf-title")?.value || "").trim();
+  const idVal = (document.getElementById("mlf-id")?.value || "").trim();
+  if (titleVal || idVal) unrecordDeletedEntity("missions", idVal, titleVal);
+  const res = _preV83SaveMissionLib.apply(this, arguments);
+  bumpLocalMetaRevision("save_library_mission");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  return res;
+};
+window.saveMissionLibraryFormSubmit = saveMissionLibraryFormSubmit;
+
+// 6. Hard Delete Quick Template
+deleteTemplate = function(idx) {
+  if (!APP || !Array.isArray(APP.templates) || !APP.templates[idx]) return;
+  const tpl = APP.templates[idx];
+  const tplTitle = String(tpl.title || "").trim();
+  const tplId = String(tpl.id || "").trim();
+
+  recordDeletedEntity("templates", tplId, tplTitle);
+  APP.templates.splice(idx, 1);
+
+  bumpLocalMetaRevision("delete_template");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+
+  renderSettingsTemplates();
+  renderDashboard();
+  recordUserModification();
+  showToast(`تم حذف القالب السريع "${tplTitle}" بشكل نهائي ودائم`);
+};
+window.deleteTemplate = deleteTemplate;
+
+if (typeof saveTemplateModalSubmit === "function") {
+  const _preV83SaveTplModal = saveTemplateModalSubmit;
+  saveTemplateModalSubmit = function(e) {
+    const titleVal = (document.getElementById("tpl-title")?.value || "").trim();
+    if (titleVal) unrecordDeletedEntity("templates", titleVal);
+    const res = _preV83SaveTplModal.apply(this, arguments);
+    bumpLocalMetaRevision("save_template");
+    if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+    saveData();
+    syncV13MirrorsToCloudFirestore();
+    syncAppMetadataToFirestoreImmediate();
+    return res;
+  };
+  window.saveTemplateModalSubmit = saveTemplateModalSubmit;
+}
+
+// 7. Hard Delete Saved Title / Intervention
+deleteSavedTitleInSettings = function(idx) {
+  if (!APP || !Array.isArray(APP.savedTitles) || idx < 0 || idx >= APP.savedTitles.length) return;
+  const targetTitle = String(APP.savedTitles[idx] || "").trim();
+  const normTitle = normalizeEntityKey(targetTitle);
+
+  recordDeletedEntity("savedTitles", targetTitle);
+  APP.savedTitles = APP.savedTitles.filter((t, i) => i !== idx && normalizeEntityKey(t) !== normTitle);
+  if (Array.isArray(APP.savedTitleMetadata)) {
+    APP.savedTitleMetadata = APP.savedTitleMetadata.filter(m => m && normalizeEntityKey(m.title) !== normTitle);
+  }
+
+  bumpLocalMetaRevision("delete_saved_title");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+
+  refreshAllCategoryAndDestinationDropdowns();
+  renderSettingsSavedTitles();
+  recordUserModification();
+  showToast(`تم حذف العنوان المحفوظ "${targetTitle}" بشكل نهائي ودائم`);
+};
+window.deleteSavedTitleInSettings = deleteSavedTitleInSettings;
+
+if (typeof addSavedTitleFromSettings === "function") {
+  const _preV83AddSavedTitle = addSavedTitleFromSettings;
+  addSavedTitleFromSettings = function() {
+    const inp = document.getElementById("cfg-new-saved-title-input");
+    const val = (inp ? inp.value : "").trim();
+    if (val) unrecordDeletedEntity("savedTitles", val);
+    const res = _preV83AddSavedTitle.apply(this, arguments);
+    bumpLocalMetaRevision("add_saved_title");
+    if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+    saveData();
+    syncV13MirrorsToCloudFirestore();
+    syncAppMetadataToFirestoreImmediate();
+    return res;
+  };
+  window.addSavedTitleFromSettings = addSavedTitleFromSettings;
+}
+
+// 8. Hard Delete Basic Routine Task
+removeBasicUserTask = function(idx) {
+  if (!APP || !APP.profile || !Array.isArray(APP.profile.basicRoutineTasks)) return;
+  if (idx < 0 || idx >= APP.profile.basicRoutineTasks.length) return;
+  const removed = String(APP.profile.basicRoutineTasks[idx] || "").trim();
+
+  recordDeletedEntity("basicTasks", removed);
+  APP.profile.basicRoutineTasks.splice(idx, 1);
+  if (APP.settings) {
+    APP.settings.basicRoutineTasks = APP.profile.basicRoutineTasks;
+  }
+
+  bumpLocalMetaRevision("delete_basic_task");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+
+  renderUserBasicTasksList();
+  recordUserModification();
+  showToast(`تم حذف المهمة الأساسية "${removed}" بشكل نهائي ودائم`);
+};
+window.removeBasicUserTask = removeBasicUserTask;
+
+const _preV83AddBasicUserTask = addBasicUserTask;
+addBasicUserTask = function() {
+  const inp = document.getElementById("usr-new-basic-task-input");
+  const val = (inp ? inp.value : "").trim();
+  if (val) unrecordDeletedEntity("basicTasks", val);
+  const res = _preV83AddBasicUserTask.apply(this, arguments);
+  bumpLocalMetaRevision("add_basic_task");
+  if (typeof clearSettingsDirty === "function") clearSettingsDirty();
+  saveData();
+  syncV13MirrorsToCloudFirestore();
+  syncAppMetadataToFirestoreImmediate();
+  return res;
+};
+window.addBasicUserTask = addBasicUserTask;
+
+// 9. Fix Permanent Task Deletion & Empty Trash so they persist to LocalStorage, Deleted Registry, and Firestore
+permanentDeleteTask = function(id) {
+  openCustomConfirmDialog(
+    "حذف نهائي للمهمة",
+    "هل أنت متأكد تماماً من رغبتك في حذف هذه المهمة نهائياً من قاعدة البيانات؟",
+    function() {
+      recordDeletedEntity("tasks", id);
+      APP.trash = (APP.trash || []).filter(t => String(t.id) !== String(id));
+      APP.tasks = (APP.tasks || []).filter(t => String(t.id) !== String(id));
+      bumpLocalMetaRevision("permanent_delete_task");
+      saveData();
+      syncV13MirrorsToCloudFirestore();
+      deleteTaskFromFirestore(id);
+      syncAppMetadataToFirestoreImmediate();
+      renderTrashTable();
+      renderTasksTable();
+      renderDashboard();
+      renderTodayBoard();
+      updateNavBadges();
+      showToast("تم الحذف النهائي للمهمة من الذاكرة المحلية والسحابة بنجاح", "danger");
+    }
+  );
+};
+window.permanentDeleteTask = permanentDeleteTask;
+
+confirmEmptyTrash = function() {
+  if (!APP.trash || APP.trash.length === 0) {
+    showToast("سلة المهملات فارغة بالفعل", "warning");
+    return;
+  }
+  openCustomConfirmDialog(
+    "تفريغ سلة المهملات بالكامل",
+    "هل تريد تفريغ سلة المهملات بالكامل وحذف كافة العناصر الموجودة فيها نهائياً؟",
+    function() {
+      const idsToDelete = (APP.trash || []).map(t => String(t.id));
+      recordDeletedEntity("tasks", ...idsToDelete);
+      APP.trash = [];
+      bumpLocalMetaRevision("empty_trash");
+      saveData();
+      syncV13MirrorsToCloudFirestore();
+      idsToDelete.forEach(docId => deleteTaskFromFirestore(docId));
+      syncAppMetadataToFirestoreImmediate();
+      renderTrashTable();
+      updateNavBadges();
+      showToast("تم تفريغ سلة المهملات وحذف عناصرها نهائياً", "danger");
+    }
+  );
+};
+window.confirmEmptyTrash = confirmEmptyTrash;
+
+// 10. Guard ensureDataIntegrity, migrateAndEnsureProfileAndLibrary, loadV13MirrorsFromCloudFirestore & initFirestoreRealtimeListener against Ghost Resurrection
+const _preV83EnsureDataIntegrity = ensureDataIntegrity;
+ensureDataIntegrity = function() {
+  const res = _preV83EnsureDataIntegrity.apply(this, arguments);
+  enforceDeletedEntitiesFilterOnAppState();
+  return res;
+};
+window.ensureDataIntegrity = ensureDataIntegrity;
+
+const _preV83MigrateAndEnsureProfileAndLibrary = migrateAndEnsureProfileAndLibrary;
+migrateAndEnsureProfileAndLibrary = function() {
+  const wasEmptyLib = (APP && Array.isArray(APP.missionLibrary) && APP.missionLibrary.length === 0 && APP.settings && APP.settings.v13Initialized);
+  const res = _preV83MigrateAndEnsureProfileAndLibrary.apply(this, arguments);
+  if (wasEmptyLib && APP) {
+    APP.missionLibrary = [];
+  }
+  // Never re-link tasks that were explicitly unlinked when a mission was deleted
+  if (APP && Array.isArray(APP.tasks)) {
+    APP.tasks.forEach(t => {
+      if (t && (t.missionUnlinked || isEntityDeleted("missions", t.missionId))) {
+        t.missionId = "";
+      }
+    });
+  }
+  enforceDeletedEntitiesFilterOnAppState();
+  return res;
+};
+window.migrateAndEnsureProfileAndLibrary = migrateAndEnsureProfileAndLibrary;
+
+const _preV83LoadV13Mirrors = loadV13MirrorsFromCloudFirestore;
+loadV13MirrorsFromCloudFirestore = function(forceReloadFromStorage = false) {
+  const res = _preV83LoadV13Mirrors.apply(this, arguments);
+  try {
+    const savedLib = CLOUD_MEMORY_STORE.getItem(V20_LIB_STORAGE_KEY);
+    if (savedLib && APP) {
+      const parsedLib = JSON.parse(savedLib);
+      if (Array.isArray(parsedLib)) APP.missionLibrary = parsedLib;
+    }
+  } catch (e) {}
+  enforceDeletedEntitiesFilterOnAppState();
+  return res;
+};
+window.loadV13MirrorsFromCloudFirestore = loadV13MirrorsFromCloudFirestore;
+
+// Upgrade initFirestoreRealtimeListener so older remote snapshots NEVER overwrite newer local deletions even on initial reload!
+initFirestoreRealtimeListener = function() {
+  const col = ensureTasksCollectionRef();
+  if (!col) return;
+
+  if (unsubscribeTasksSnapshot) {
+    try { unsubscribeTasksSnapshot(); } catch (e) {}
+  }
+
+  unsubscribeTasksSnapshot = col.onSnapshot((snapshot) => {
+    if (!APP) return;
+    if (snapshot.empty && !hasReceivedInitialFirestoreSnapshot) {
+      hasReceivedInitialFirestoreSnapshot = true;
+      syncEntireAppToFirestoreBatch(false);
+      return;
+    }
+
+    isApplyingRemoteSnapshot = true;
+    try {
+      const remoteActiveMap = new Map();
+      const remoteTrashMap = new Map();
+      let metaDocData = null;
+
+      snapshot.forEach((doc) => {
+        const data = doc.data() || {};
+        if (doc.id === FIRESTORE_META_DOC_ID || data.isSystemMetadataDoc) {
+          metaDocData = data;
+          return;
+        }
+        if (isEntityDeleted("tasks", doc.id)) return;
+        const taskItem = Object.assign({}, data, { id: doc.id });
+        if (taskItem.isDeleted) {
+          remoteTrashMap.set(doc.id, taskItem);
+        } else {
+          if (typeof normalizeTaskStatusAndProgress === "function") {
+            normalizeTaskStatusAndProgress(taskItem);
+          }
+          remoteActiveMap.set(doc.id, taskItem);
+        }
+      });
+
+      // A. Conflict-Safe Metadata Merge (Protects newer local state even on initial page reload!)
+      let shouldPushNewerLocalMetaToCloud = false;
+      if (metaDocData) {
+        if (metaDocData.settings && metaDocData.settings.deletedEntitiesRegistry) {
+          mergeRemoteDeletedRegistry(metaDocData.settings.deletedEntitiesRegistry);
+        }
+
+        const remoteRev = Number(metaDocData.metaRevision || metaDocData.settings?.metaRevision || 0);
+        const localRev = Number(APP.settings?.metaRevision || CLOUD_MEMORY_STORE.getItem(META_REV_STORAGE_KEY) || 0);
+        const remoteTs = Date.parse(metaDocData.updatedAt || metaDocData.settings?.updatedAt || "") || 0;
+        const localTs = Date.parse(APP.settings?.updatedAt || APP.profile?.updatedAt || "") || 0;
+
+        const isLocalStrictlyNewer = (localRev > remoteRev) || (localRev === remoteRev && localTs > remoteTs);
+        const isLocalPendingOrNewer =
+          hasPendingLocalMetadataWrite ||
+          metadataSyncTimer !== null ||
+          isSettingsDirty ||
+          isLocalStrictlyNewer;
+
+        if (isLocalPendingOrNewer) {
+          logSyncDiagnostic("remote_snapshot_ignored", "تجاهل نسخة سحابية أقدم من التعديلات والحذوفات المحلية", {
+            localRev,
+            remoteRev,
+            localTs: APP.settings?.updatedAt || null,
+            remoteTs: metaDocData.updatedAt || null
+          });
+          if (isLocalStrictlyNewer && !hasPendingLocalMetadataWrite) {
+            shouldPushNewerLocalMetaToCloud = true;
+          }
+        } else {
+          const activePin = getActiveSecurityPin();
+          if (Array.isArray(metaDocData.categories)) {
+            APP.categories = metaDocData.categories;
+          }
+          if (Array.isArray(metaDocData.courts)) {
+            APP.courts = metaDocData.courts;
+          }
+          if (Array.isArray(metaDocData.savedTitles)) {
+            APP.savedTitles = metaDocData.savedTitles;
+          }
+          if (Array.isArray(metaDocData.savedTitleMetadata)) {
+            APP.savedTitleMetadata = metaDocData.savedTitleMetadata;
+          }
+          if (Array.isArray(metaDocData.templates)) {
+            APP.templates = metaDocData.templates;
+          }
+          if (Array.isArray(metaDocData.missionLibrary)) {
+            APP.missionLibrary = metaDocData.missionLibrary;
+          }
+          if (metaDocData.profile && typeof metaDocData.profile === "object") {
+            APP.profile = Object.assign({}, APP.profile || {}, metaDocData.profile);
+          }
+          if (metaDocData.settings && typeof metaDocData.settings === "object") {
+            const mergedReg = getDeletedEntitiesRegistry();
+            APP.settings = Object.assign({}, APP.settings || {}, metaDocData.settings);
+            APP.settings.deletedEntitiesRegistry = mergedReg;
+            APP.settings.v13Initialized = true;
+            if (activePin) APP.settings.securityPin = activePin;
+            if (remoteRev > localRev) {
+              APP.settings.metaRevision = remoteRev;
+            }
+          }
+          if (Array.isArray(metaDocData.auditLog) && metaDocData.auditLog.length > 0) {
+            APP.auditLog = metaDocData.auditLog;
+          }
+        }
+      }
+
+      // B. Conflict-Safe Task List Merge
+      const localActiveById = new Map((APP.tasks || []).map(t => [String(t.id), t]));
+      const localTrashById = new Map((APP.trash || []).map(t => [String(t.id), t]));
+
+      pendingTaskWrites.forEach((writeTs, taskId) => {
+        if (localActiveById.has(taskId)) {
+          remoteActiveMap.set(taskId, localActiveById.get(taskId));
+          remoteTrashMap.delete(taskId);
+        } else if (localTrashById.has(taskId)) {
+          remoteTrashMap.set(taskId, localTrashById.get(taskId));
+          remoteActiveMap.delete(taskId);
+        } else {
+          remoteActiveMap.delete(taskId);
+          remoteTrashMap.delete(taskId);
+        }
+      });
+
+      // Also preserve local task versions if their updatedAt is strictly newer than the remote doc
+      localActiveById.forEach((localTask, taskId) => {
+        const remoteTask = remoteActiveMap.get(taskId);
+        if (remoteTask) {
+          const lTs = Date.parse(localTask.updatedAt || "") || 0;
+          const rTs = Date.parse(remoteTask.updatedAt || "") || 0;
+          if (lTs > rTs) {
+            remoteActiveMap.set(taskId, localTask);
+          }
+        }
+      });
+
+      const activeTasks = Array.from(remoteActiveMap.values());
+      const trashedTasks = Array.from(remoteTrashMap.values());
+
+      activeTasks.sort(compareTasksNewestFirst);
+      trashedTasks.sort((a, b) => String(b.deletedAt || "").localeCompare(String(a.deletedAt || "")));
+
+      APP.tasks = activeTasks;
+      APP.trash = trashedTasks;
+
+      // Enforce deleted entities filter & cascade nullification after snapshot merge
+      enforceDeletedEntitiesFilterOnAppState();
+
+      hasReceivedInitialFirestoreSnapshot = true;
+      refreshAllViewsFromFirestoreSnapshot();
+      loadAboutAppSettings();
+
+      if (shouldPushNewerLocalMetaToCloud) {
+        setTimeout(() => { syncAppMetadataToFirestoreImmediate(); }, 50);
+      }
+    } finally {
+      isApplyingRemoteSnapshot = false;
+    }
+  }, (error) => {
+    setHonestSyncStatus("sync_failed");
+    logSyncDiagnostic("firestore_listener_error", "خطأ في قناة المزامنة السحابية", {
+      error: String(error && error.message ? error.message : error)
+    });
+    handleFirestoreError(error, "المزامنة اللحظية onSnapshot");
+  });
+};
+window.initFirestoreRealtimeListener = initFirestoreRealtimeListener;
+
+// Hook applyV82OwnerDataMigration & enforceDeletedEntitiesFilterOnAppState into initSystem and refreshAllViewsFromFirestoreSnapshot
 const _preV82InitSystem = initSystem;
 initSystem = function() {
   const res = _preV82InitSystem.apply(this, arguments);
   applyV82OwnerDataMigration(false);
+  enforceDeletedEntitiesFilterOnAppState();
   return res;
 };
+window.initSystem = initSystem;
 
 const _preV82RefreshAllViews = refreshAllViewsFromFirestoreSnapshot;
 refreshAllViewsFromFirestoreSnapshot = function() {
   applyV82OwnerDataMigration(false);
+  enforceDeletedEntitiesFilterOnAppState();
   const res = _preV82RefreshAllViews.apply(this, arguments);
   applyV82ArabicCountsInDOM();
   updateMultiUserAuthUI();
   return res;
 };
+window.refreshAllViewsFromFirestoreSnapshot = refreshAllViewsFromFirestoreSnapshot;
 
 // Run immediately on boot
 applyV82OwnerDataMigration(false);
+enforceDeletedEntitiesFilterOnAppState();
 refreshAllViewsFromFirestoreSnapshot();
 renderDedicatedUserSettings();
 

@@ -11,7 +11,9 @@
   <script>
     (function() {
       try {
-        var t = document.documentElement.getAttribute('data-theme') || 'dark';
+        var savedT = null;
+        try { savedT = window.localStorage.getItem('theme') || window.localStorage.getItem('ops_v3_theme'); } catch(err) {}
+        var t = savedT || document.documentElement.getAttribute('data-theme') || 'dark';
         document.documentElement.setAttribute('data-theme', t);
         if (t === 'dark') {
           document.documentElement.classList.add('dark-mode');
@@ -8660,6 +8662,1155 @@ button.btn-danger-outline,
   }
 }
 
+  
+/* ========================================================
+   MASTER ARCHITECTURE RECONCILIATION (v21 / v24 REFERENCE)
+   Restores high-contrast KPI typography, solid capsule sidebar
+   action buttons, primary/danger modal action buttons, and
+   non-destructive responsive behavior across Desktop & Mobile.
+   ======================================================== */
+
+/* 1. Restore Prominent KPI Metric Scale & High-Contrast Dark Mode Numbers */
+.kpi-stat-card #dash-stat-total,
+.kpi-stat-card #dash-stat-today,
+.kpi-stat-card #dash-stat-future,
+.kpi-stat-card #dash-stat-pending,
+.kpi-stat-card #dash-stat-done {
+  font-size: 1.65rem !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  margin: 0 !important;
+}
+
+#dash-lib-stat-configured,
+#dash-lib-stat-used,
+#dash-lib-stat-unused,
+#dash-lib-stat-occurrences,
+#lib-kpi-total,
+#lib-kpi-executed,
+#lib-kpi-never {
+  font-size: 1.4rem !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+}
+
+#lib-kpi-types {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+}
+
+[data-theme="dark"] #dash-stat-total,
+.dark-mode #dash-stat-total,
+[data-theme="dark"] #dash-stat-today,
+.dark-mode #dash-stat-today,
+[data-theme="dark"] #dash-stat-future,
+.dark-mode #dash-stat-future,
+[data-theme="dark"] #dash-stat-pending,
+.dark-mode #dash-stat-pending,
+[data-theme="dark"] #dash-stat-done,
+.dark-mode #dash-stat-done,
+[data-theme="dark"] #lib-kpi-total,
+.dark-mode #lib-kpi-total,
+[data-theme="dark"] #lib-kpi-executed,
+.dark-mode #lib-kpi-executed,
+[data-theme="dark"] #lib-kpi-never,
+.dark-mode #lib-kpi-never {
+  color: #ffffff !important;
+}
+
+#view-dashboard .grid-5 > .card.kpi-stat-card,
+.grid-5 > .card.kpi-stat-card,
+#lib-kpi-summary-grid > .card.kpi-stat-card {
+  min-height: 108px !important;
+  max-height: none !important;
+  height: auto !important;
+  padding: 0.85rem 1.05rem !important;
+  box-shadow: none !important;
+}
+
+/* 2. Restore Prominent Solid Capsule Action Buttons in Sidebar (Blue Add Task & Orange Quick Entry) */
+.sidebar-action-btn.primary-action,
+#app-sidebar .sidebar-action-btn.primary-action {
+  background: #2563eb !important;
+  background-color: #2563eb !important;
+  border: 1px solid #3b82f6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+}
+
+.sidebar-action-btn.primary-action:hover,
+#app-sidebar .sidebar-action-btn.primary-action:hover {
+  background: #1d4ed8 !important;
+  background-color: #1d4ed8 !important;
+  border-color: #60a5fa !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5) !important;
+  opacity: 1 !important;
+}
+
+.sidebar-action-btn.quick-action,
+#app-sidebar .sidebar-action-btn.quick-action {
+  background: #ea580c !important;
+  background-color: #ea580c !important;
+  border: 1px solid #f97316 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35) !important;
+}
+
+.sidebar-action-btn.quick-action:hover,
+#app-sidebar .sidebar-action-btn.quick-action:hover {
+  background: #c2410c !important;
+  background-color: #c2410c !important;
+  border-color: #fb923c !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.5) !important;
+  opacity: 1 !important;
+}
+
+.sidebar-action-btn.primary-action .action-icon,
+.sidebar-action-btn.primary-action .action-label,
+.sidebar-action-btn.primary-action svg,
+.sidebar-action-btn.quick-action .action-icon,
+.sidebar-action-btn.quick-action .action-label,
+.sidebar-action-btn.quick-action svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* 3. Restore Modal Primary Save Buttons (Solid Blue) & Cancel Button (Solid Red) */
+#tf-submit-btn,
+#fc-save-btn,
+#cdlg-ok-btn,
+#pin-verify-submit-btn {
+  background: var(--primary) !important;
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--primary) !important;
+  font-weight: 700 !important;
+}
+
+#tf-submit-btn:hover,
+#fc-save-btn:hover,
+#cdlg-ok-btn:hover,
+#pin-verify-submit-btn:hover {
+  background: var(--primary-hover) !important;
+  background-color: var(--primary-hover) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+#tf-cancel-btn,
+#modal-fast-capture .btn-danger,
+#modal-settings-pin-verify .btn-danger {
+  background: var(--danger) !important;
+  background-color: var(--danger) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--danger) !important;
+  font-weight: 700 !important;
+}
+
+#tf-cancel-btn:hover,
+#modal-fast-capture .btn-danger:hover,
+#modal-settings-pin-verify .btn-danger:hover {
+  background: var(--danger-hover) !important;
+  background-color: var(--danger-hover) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* 4. Backup Reminder Pill in Top Header (Visible on Desktop when .show is active, compact on Mobile) */
+#backup-reminder-pill {
+  display: none !important;
+}
+
+@media (min-width: 769px) {
+  #backup-reminder-pill.show {
+    display: inline-flex !important;
+    visibility: visible !important;
+    width: auto !important;
+    height: 32px !important;
+    padding: 0 0.7rem !important;
+    pointer-events: auto !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    border-radius: 9999px !important;
+    background: rgba(245, 158, 11, 0.14) !important;
+    border: 1px solid rgba(245, 158, 11, 0.45) !important;
+    color: #f59e0b !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+  }
+}
+
+  
+/* ========================================================
+   MASTER ENGINEERING DIRECTIVE V56.0 / V58.0 / V60.0 —
+   SUPREME TECH COUNCIL: TARGETED ICON-ONLY MOBILE TRANSFORMATION,
+   CALENDAR CLUTTER CLEANUP, DATE-INPUT CONTAINMENT & PRINT
+   ======================================================== */
+
+/* REPAIR 4: BULLETPROOF DATE-INPUT CONTAINMENT (input[type="date"]) */
+.date-field-wrapper,
+div:has(> input[type="date"]),
+.date-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+input[type="date"],
+input.date-input {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  flex: 1 1 100% !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+@media (max-width: 768px) {
+  /* REPAIR 1: SMART "ICON-ONLY" MOBILE TRANSFORMATION (TARGETED BUTTONS ONLY)
+     Wrap & hide ONLY .btn-text-mobile-hide inside authorized containers, never all spans! */
+  .filters-container .btn-text-mobile-hide,
+  .settings-nav .btn-text-mobile-hide,
+  .card-actions .btn-text-mobile-hide,
+  .filter-pill .btn-text-mobile-hide,
+  .filter-btn .btn-text-mobile-hide {
+    display: none !important;
+  }
+
+  /* Transform targeted filter, settings-nav, and card-action buttons into centered 40x40 squares on mobile without horizontal scroll */
+  .filters-container,
+  #lib-filter-pills,
+  .settings-nav,
+  .settings-nav-bar {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    white-space: normal !important;
+    gap: 6px !important;
+  }
+
+  .filters-container button,
+  .filter-pill,
+  .filter-btn,
+  .settings-nav button,
+  .settings-nav-btn,
+  .card-actions button {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    gap: 0 !important;
+  }
+
+  /* REPAIR 2: MOBILE CALENDAR CLUTTER CLEANUP (التقويم الزمني)
+     Hide text descriptions inside calendar cells on mobile; display ONLY day number and colored task indicator badge/dot */
+  .calendar-cell .task-title,
+  .calendar-cell .task-details,
+  .calendar-cell > div:not(.cell-top),
+  .calendar-day span:not(.day-number):not(.task-badge):not(.indicator) {
+    display: none !important;
+  }
+
+  .calendar-cell {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: 45px !important;
+    gap: 3px !important;
+  }
+
+  .calendar-cell .cell-top {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 2px !important;
+  }
+}
+
+
+/* ========================================================
+   MASTER ENGINEERING DIRECTIVE V61.0 — SUPREME TECH COUNCIL:
+   1. UNIVERSAL OUTLINE ICONS & UNIFIED 14PX ARABIC TYPOGRAPHY
+   2. MODAL 'X' REMOVAL & ICON-ONLY OUTLINE FOOTERS
+   3. VERTICAL STACKING FOR QUICK TEMPLATES & MOBILE TASK CARDS
+   4. ICON-ONLY ACCORDION/HEADER BUTTONS ON MOBILE
+   5. TASK LOGS STANDALONE TOP ROW (NO DARK WRAPPER + PRINT ALIGNED)
+   6. SINGLE-PAGE A4 PRINT PROTOCOL (@media print)
+   ======================================================== */
+
+/* PART II.1 & II.2 — Consistent Slightly Reduced Outline Icons & 14px Arabic Typography */
+:root {
+  --font-family: 'Tajawal', 'Cairo', sans-serif !important;
+  --font-sans: 'Tajawal', 'Cairo', sans-serif !important;
+  --font-main: 'Tajawal', 'Cairo', sans-serif !important;
+}
+
+svg.outline-svg-icon,
+.outline-svg-icon,
+.nav-icon svg,
+.action-icon svg,
+.kpi-icon-box svg,
+.action-icon-btn svg,
+.btn svg,
+.header-icon-btn svg,
+.theme-toggle-btn svg {
+  width: 16.5px !important;
+  height: 16.5px !important;
+  stroke: currentColor !important;
+  fill: none !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+}
+
+/* PART III.1 — Modals: Completely Remove Top "X" Close Icon & Enforce Icon-Only Outline Footers */
+.modal-close,
+.modal-header .modal-close,
+button.modal-close {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  pointer-events: none !important;
+}
+
+.modal-footer button,
+.modal-footer .btn,
+.modal-footer .action-icon-btn,
+#tf-fixed-modal-footer button,
+#tf-submit-btn,
+#tf-cancel-btn,
+#fc-save-btn,
+#cdlg-ok-btn,
+#cdlg-cancel-btn,
+#pin-verify-submit-btn {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0 !important;
+  gap: 0 !important;
+}
+
+#tf-submit-btn,
+#fc-save-btn,
+#cdlg-ok-btn,
+#pin-verify-submit-btn,
+.modal-footer .btn-primary {
+  border: 1.5px solid var(--primary) !important;
+  color: var(--primary) !important;
+}
+
+#tf-cancel-btn,
+#cdlg-cancel-btn,
+.modal-footer .btn-danger,
+.modal-footer .btn-danger-outline {
+  border: 1.5px solid var(--danger) !important;
+  color: var(--danger) !important;
+}
+
+/* PART III.4 — Library Mini Count Badge on Icon-Only Execution History Button */
+.lib-mini-count-badge {
+  position: absolute !important;
+  top: -5px !important;
+  inset-inline-start: -5px !important;
+  min-width: 16px !important;
+  height: 16px !important;
+  padding: 0 4px !important;
+  border-radius: 999px !important;
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  line-height: 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  pointer-events: none !important;
+}
+
+/* PART III.5 — Task Logs & Operations: Remove Broken Dark Background Box & Align Print Button in Top Row */
+.workflow-subview-bar,
+.tasks-top-actions-row {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+#tasks-subtab-registry-btn,
+#tasks-subtab-audit-btn {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 1.5px solid var(--border-strong) !important;
+  color: var(--text-secondary) !important;
+  border-radius: 8px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 0.65rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  box-shadow: none !important;
+}
+
+#tasks-subtab-registry-btn.active,
+#tasks-subtab-audit-btn.active {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  background: transparent !important;
+}
+
+#btn-print-tasks-summary {
+  border: 1.5px solid var(--primary) !important;
+  color: var(--primary) !important;
+  background: transparent !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* PART III.2, III.3 — Mobile Vertical Stacking for Quick Templates, Task Card Metadata & Icon-Only Header Buttons */
+@media (max-width: 768px) {
+  /* 2A. Vertical Stacking for "القوالب السريعة ومهام المكتبة الفورية" with text-overflow ellipsis */
+  #dash-quick-templates-chips {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    overflow-x: hidden !important;
+    white-space: normal !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #dash-quick-templates-chips button,
+  #dash-quick-templates-chips .btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-content: flex-start !important;
+    padding: 0.45rem 0.75rem !important;
+    min-height: 38px !important;
+    height: auto !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  #dash-quick-templates-chips button span,
+  #dash-quick-templates-chips .btn span {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* 2B. Dashboard & Accordion Header Buttons -> Centered Icon-Only Buttons on Mobile */
+  .card-header .btn:has(.btn-text-label),
+  .compact-analytics-header .btn:has(.btn-text-label),
+  .accordion-header .btn,
+  #view-dashboard .card-header button.btn-outline {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    padding: 0 !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0 !important;
+  }
+
+  .card-header .btn .btn-text-label,
+  .compact-analytics-header .btn .btn-text-label {
+    display: none !important;
+  }
+
+  /* 3. Task Cards Metadata -> Vertical Stack on Mobile (Date on top, then Location, then Category, then Priority, then Title) */
+  #dash-today-tasks-container > div > div:first-child > div:first-child,
+  #dash-future-tasks-container > div > div:first-child > div:first-child,
+  #dash-pending-tasks-container > div > div:first-child > div:nth-child(2),
+  #today-scheduled-list > div > div:first-child > div:first-child,
+  #today-pending-list > div > div:first-child > div:first-child,
+  #today-future-list > div > div:first-child > div:first-child,
+  #today-done-list > div > div:first-child > div:first-child,
+  #inspector-tasks-container > div > div:first-child > div:first-child,
+  .task-card-meta-stack {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+    margin-bottom: 6px !important;
+    width: 100% !important;
+  }
+}
+
+/* PART III.6 — Report Printing Protocol (@media print) — Zero 3-Page Bleed */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html, body {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  #app-header,
+  #app-sidebar,
+  #mobile-menu-btn,
+  #top-banner,
+  #sidebar,
+  #top-storage-alert-banner,
+  #app-footer-about-bar,
+  .no-print,
+  .modal-backdrop,
+  .btn,
+  .action-icon-btn,
+  .pagination-bar,
+  #toast-container,
+  .actions-menu,
+  .action-dropdown-menu,
+  #view-report .card-header,
+  #view-report > .card > div[style*="background:var(--bg-muted)"] {
+    display: none !important;
+  }
+
+  #app-container,
+  #app-main,
+  #content-wrapper,
+  #main-content,
+  #view-report,
+  #view-report > .card {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  #mission-report-sheet,
+  .report-print-content {
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 210mm !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 15mm 15mm 15mm 15mm !important;
+    border: none !important;
+    box-shadow: none !important;
+    page-break-after: avoid !important;
+    box-sizing: border-box !important;
+  }
+
+  .report-signatures-block,
+  .report-print-footer,
+  .summary-signatures {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
+  
+/* ============================================================================
+   MASTER ENGINEERING DIRECTIVE V64.0 — TOP-LEFT MODAL ACTIONS, HOVER STATES,
+   DROPDOWN UNCLIPPING (MAX-HEIGHT 150PX / Z-INDEX 99999), GLOBAL VERTICAL
+   FORM STACKING, & FOOTER ABOUT BAR
+   ============================================================================ */
+
+/* 1. Modal Header & Top-Left Action Cluster (الجهة اليسرى في الأعلى) */
+.modal-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.75rem !important;
+  padding: 0.85rem 1.15rem !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.modal-top-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.45rem !important;
+  flex-shrink: 0 !important;
+  margin-inline-start: auto !important;
+}
+
+.modal-close,
+.modal-footer {
+  display: none !important;
+}
+
+/* Close/Cancel Button (X Standard & Red Hover Behavior) */
+.modal-action-close-btn,
+#tf-cancel-btn,
+#cdlg-cancel-btn {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: transparent !important;
+  border: 1.5px solid #ef4444 !important;
+  color: #ef4444 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
+}
+
+.modal-action-close-btn svg,
+#tf-cancel-btn svg,
+#cdlg-cancel-btn svg {
+  width: 16.5px !important;
+  height: 16.5px !important;
+  stroke: currentColor !important;
+  fill: none !important;
+  stroke-width: 2.2 !important;
+  transition: stroke 0.2s ease, color 0.2s ease !important;
+}
+
+.modal-action-close-btn:hover,
+#tf-cancel-btn:hover,
+#cdlg-cancel-btn:hover {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+.modal-action-close-btn:hover svg,
+#tf-cancel-btn:hover svg,
+#cdlg-cancel-btn:hover svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Save/Confirm Button (Checkmark Standard & Blue Hover Behavior) */
+.modal-action-save-btn,
+#tf-submit-btn,
+#fc-save-btn,
+#cdlg-ok-btn,
+#pin-verify-submit-btn {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: transparent !important;
+  border: 1.5px solid #2563eb !important;
+  color: #2563eb !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
+}
+
+.modal-action-save-btn svg,
+#tf-submit-btn svg,
+#fc-save-btn svg,
+#cdlg-ok-btn svg,
+#pin-verify-submit-btn svg {
+  width: 16.5px !important;
+  height: 16.5px !important;
+  stroke: currentColor !important;
+  fill: none !important;
+  stroke-width: 2.2 !important;
+  transition: stroke 0.2s ease, color 0.2s ease !important;
+}
+
+.modal-action-save-btn:hover,
+#tf-submit-btn:hover,
+#fc-save-btn:hover,
+#cdlg-ok-btn:hover,
+#pin-verify-submit-btn:hover {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.modal-action-save-btn:hover svg,
+#tf-submit-btn:hover svg,
+#fc-save-btn:hover svg,
+#cdlg-ok-btn:hover svg,
+#pin-verify-submit-btn:hover svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* 2. Dropdown Clipping & Overflow Resolution */
+.smart-combo-menu,
+.fc-breakout-dropdown {
+  z-index: 99999 !important;
+  max-height: 150px !important;
+  overflow-y: auto !important;
+}
+
+.modal,
+.modal-card,
+.modal-body,
+.progressive-section,
+.form-group,
+.smart-combo-wrap {
+  overflow: visible !important;
+}
+
+.modal-backdrop {
+  overflow-y: auto !important;
+  padding: 1.25rem 0.75rem !important;
+}
+
+/* 3. Global Vertical Stacking for Forms & Inputs (Settings, Modals, Reports) */
+#view-settings .grid-2,
+#view-settings .grid-3,
+#view-settings .grid-4,
+#view-report .grid-2,
+#view-report .grid-3,
+#view-report .grid-4,
+.modal-body .grid-2,
+.modal-body .grid-3,
+.modal-body .grid-4 {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0.75rem !important;
+}
+
+#view-settings .form-group,
+.modal-body .form-group,
+#view-report .form-group {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  width: 100% !important;
+}
+
+#settings-tab-interventions div[style*="display:flex"],
+#settings-tab-categories .card > div[style*="display:flex"],
+#settings-tab-destinations .card > div[style*="display:flex"],
+#modal-category-form .form-group > div[style*="display:flex"],
+#modal-mission-library-form .progressive-section > div[style*="display:flex"]:not(:first-child) {
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+/* 4. Footer About Link (Bottom-Left Pinned) */
+#main-content {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: calc(100vh - 64px) !important;
+}
+
+#app-footer-about-bar {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  margin-top: auto !important;
+  padding: 0.85rem 0 0.35rem 0 !important;
+}
+
+.footer-about-pill-link:hover {
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  background: var(--primary-soft) !important;
+}
+
+/* 5. Mobile Task Cards Metadata Vertical Stacking & Icon-Only Header Buttons */
+@media (max-width: 768px) {
+  .card-header button.adaptive-icon-btn .btn-text-label,
+  .compact-analytics-header button.adaptive-icon-btn .btn-text-label,
+  #dash-today-card-header button .btn-text-label,
+  #view-dashboard .card-header button .btn-text-label {
+    display: none !important;
+  }
+
+  .card-header button.adaptive-icon-btn,
+  .compact-analytics-header button.adaptive-icon-btn,
+  #dash-today-card-header button.adaptive-icon-btn,
+  #view-dashboard .card-header button.adaptive-icon-btn {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+  }
+
+  .task-meta-inline,
+  .unified-task-row-meta,
+  .task-card-meta,
+  .mission-card-meta-row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.3rem !important;
+  }
+}
+
+
+/* ============================================================================
+   MASTER ENGINEERING DIRECTIVE V80.0 & V90.0 — RECURSIVE ROOT-CAUSE REPAIRS
+   (Requirements 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
+   ============================================================================ */
+
+/* REQ 5: Vertical Stacking of Multi-Field Input Rows in Narrow Containers & Full Width Inputs */
+#settings-tab-titles .v80-vertical-input-stack,
+#settings-tab-categories .v80-vertical-input-stack {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 0.55rem !important;
+  width: 100% !important;
+}
+
+/* Fix single-input + '+' button rows so they stay cleanly aligned with input taking 100% remaining width */
+#modal-category-form .form-group > div[style*="display:flex"],
+#modal-mission-library-form .progressive-section > div[style*="display:flex"]:not(:first-child) {
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+#usr-new-basic-task-input,
+#cfg-new-saved-title-input,
+#cfg-new-saved-title-cat,
+#cfg-inline-new-cat-name,
+#cfg-inline-new-cat-sub,
+#cf-modal-new-sub,
+#mlf-new-subtask-input,
+input[id^="new-sub-inline-input-"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  box-sizing: border-box !important;
+}
+
+/* Stack multi-field rows on narrow screens (<= 640px) */
+@media (max-width: 640px) {
+  #modal-task-form .progressive-section:first-of-type {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  #modal-task-form .progressive-section:first-of-type > div {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  #tf-date {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* REQ 6: Strict Geometric Horizontal & Vertical Centering for '+' Add Buttons in Calendar, Day Inspector & Inputs */
+.universal-add-outline-btn,
+button.universal-add-outline-btn,
+#inspector-add-day-task-btn,
+#modal-day-inspector button[onclick*="openNewTaskForInspectedDay"],
+.inline-input-add-btn,
+.btn-inline-plus {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+}
+
+.universal-add-outline-btn svg,
+#inspector-add-day-task-btn svg,
+#modal-day-inspector button[onclick*="openNewTaskForInspectedDay"] svg,
+.inline-input-add-btn svg,
+.btn-inline-plus svg {
+  margin: auto !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+  transform: none !important;
+}
+
+/* REQ 8: Mission Library Execution Count Button — Inline Centered (Icon + Number), Zero Clipping */
+button.lib-exec-count-btn,
+#lib-missions-grid .mission-lib-card button.lib-exec-count-btn,
+#cfg-library-list-container button.lib-exec-count-btn,
+.card-actions button.lib-exec-count-btn {
+  width: auto !important;
+  min-width: 54px !important;
+  max-width: none !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  max-height: 36px !important;
+  aspect-ratio: auto !important;
+  padding: 0 10px !important;
+  border-radius: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  overflow: visible !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+}
+
+@media (max-width: 768px) {
+  button.lib-exec-count-btn,
+  #lib-missions-grid .mission-lib-card button.lib-exec-count-btn,
+  #cfg-library-list-container button.lib-exec-count-btn,
+  .card-actions button.lib-exec-count-btn {
+    width: auto !important;
+    min-width: 56px !important;
+    max-width: none !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    padding: 0 10px !important;
+    gap: 6px !important;
+    font-size: 13px !important;
+    overflow: visible !important;
+  }
+}
+
+button.lib-exec-count-btn svg,
+.lib-exec-count-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+button.lib-exec-count-btn .lib-mini-count-badge,
+.lib-exec-count-btn .lib-mini-count-badge {
+  position: static !important;
+  top: auto !important;
+  inset-inline-start: auto !important;
+  min-width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: currentColor !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* REQ 9: Fix Double-Rotation Bug on Section Chevrons in Today Board & Dashboard
+   Rotate ONLY the inner SVG (0deg = closed/down, 180deg = open/up), never both container and SVG! */
+.accordion-chevron,
+.accordion-item.is-open .accordion-chevron,
+.accordion-item:not(.is-open) .accordion-chevron,
+.universal-card-toggle-btn,
+#dash-today-collapse-btn {
+  transform: none !important;
+}
+
+.accordion-item:not(.is-open) .accordion-chevron svg,
+.card.is-card-collapsed .universal-card-toggle-btn .chevron-rotatable,
+.card.is-compact-mode .universal-card-toggle-btn .chevron-rotatable,
+#dash-today-section-card.is-card-collapsed #dash-today-collapse-btn svg,
+#dash-today-section-card.is-compact-mode #dash-today-collapse-btn svg,
+.universal-card-toggle-btn.is-collapsed .chevron-rotatable,
+#dash-today-collapse-btn.is-collapsed svg {
+  transform: rotate(0deg) !important;
+  transition: transform 0.2s ease !important;
+}
+
+.accordion-item.is-open .accordion-chevron svg,
+.card:not(.is-card-collapsed):not(.is-compact-mode) .universal-card-toggle-btn .chevron-rotatable,
+#dash-today-section-card:not(.is-card-collapsed):not(.is-compact-mode) #dash-today-collapse-btn svg {
+  transform: rotate(180deg) !important;
+  transition: transform 0.2s ease !important;
+}
+
+/* REQ 10: Unify Task Count Badges in Section Headers (Remove Exceptional Border on .badge-purple) */
+.badge-purple,
+.accordion-header .badge-soft,
+.accordion-header .badge-primary,
+.accordion-header .badge-warning,
+.accordion-header .badge-purple,
+.accordion-header .badge-success,
+.card-header .badge-soft {
+  border: none !important;
+  box-shadow: none !important;
+  cursor: default !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  height: 24px !important;
+  padding: 0 0.65rem !important;
+  border-radius: 9999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+}
+
+/* REQ 11 & REQ 12: Remove Redundant Inner Dropdown Headers & Fix Full-Width Dropdown Option Layout */
+.smart-combo-header {
+  display: none !important;
+}
+
+#tf-smart-chips-toggle-btn,
+#tf-smart-chips-drawer {
+  display: none !important;
+}
+
+.smart-combo-menu,
+#title-combo-menu,
+#cat-combo-menu,
+#subcat-combo-menu,
+#dest-combo-menu,
+#dest2-combo-menu,
+#dest3-combo-menu,
+#fc-cat-combo-menu,
+#fc-dest-combo-menu,
+.fc-breakout-dropdown {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  inset-inline-start: 0 !important;
+  inset-inline-end: 0 !important;
+  box-sizing: border-box !important;
+  max-height: 140px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  z-index: 99999 !important;
+}
+
+.smart-combo-menu.drop-up,
+.fc-breakout-dropdown.drop-up {
+  top: auto !important;
+  bottom: calc(100% + 4px) !important;
+}
+
+.smart-combo-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.5rem !important;
+  width: 100% !important;
+  padding: 0.52rem 0.75rem !important;
+  box-sizing: border-box !important;
+  text-align: right !important;
+}
+
+.smart-combo-item-main {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+  text-align: right !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+  line-height: 1.35 !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+}
+
+.smart-combo-item-main .outline-icon-text-wrap {
+  display: inline !important;
+  white-space: normal !important;
+}
+
+.smart-combo-item-meta {
+  flex: 0 0 auto !important;
+  max-width: 34% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  font-size: 0.72rem !important;
+}
+
+/* REQ 14: Unclip Dropdowns Inside Quick Entry (#modal-fast-capture) */
+#modal-fast-capture,
+#modal-fast-capture > .modal,
+#modal-fast-capture > .modal > .modal-body,
+#modal-fast-capture #fast-capture-form,
+#modal-fast-capture .form-group,
+#modal-fast-capture .smart-combo-wrap {
+  overflow: visible !important;
+}
+
+#modal-fast-capture > .modal {
+  margin-bottom: 140px !important;
+}
+
   </style>
   <!-- Firebase App & Cloud Firestore SDKs (CDN) -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -8887,6 +10038,10 @@ button.btn-danger-outline,
 
         <!-- Left side (in RTL): Backup Reminder Pill + Refresh (Dashboard Only) + Dynamic Help + Outline Sun/Moon Toggle -->
         <div class="header-tools" style="display:flex; align-items:center; gap:0.5rem;">
+          <span id="backup-reminder-pill" class="backup-reminder-pill" onclick="switchView('settings'); switchSettingsTab('backup');" title="تصدير نسخة احتياطية لحفظ التعديلات الأخيرة">
+            <svg class="outline-svg-icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <span id="backup-reminder-text">حفظ نسخة احتياطية</span>
+          </span>
           <button type="button" class="header-icon-btn" id="header-refresh-btn" onclick="renderDashboard(); showToast('تم تحديث بيانات ومؤشرات اللوحة');" title="تحديث مؤشرات وبيانات اللوحة" aria-label="تحديث اللوحة">
             <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
           </button>
@@ -8901,7 +10056,6 @@ button.btn-danger-outline,
 
       <!-- Hidden compatibility tags completely removed from header layout -->
       <div style="display:none !important; width:0; height:0; overflow:hidden;" aria-hidden="true">
-        <span id="backup-reminder-pill"><span id="backup-reminder-text"></span></span>
         <span id="banner-sys-name"></span>
         <span id="banner-user-display"></span>
         <span id="banner-dept-display"></span>
@@ -9052,7 +10206,7 @@ button.btn-danger-outline,
               <span style="font-size:0.92rem; font-weight:800; color:var(--text-main);">آخر النشاطات</span>
             </div>
             <div style="display:inline-flex; align-items:center; gap:6px;">
-              <button type="button" class="btn btn-sm btn-outline chart-settings-trigger-btn" onclick="switchView('tasks')" title="عرض السجل الكامل">
+              <button type="button" class="btn btn-sm btn-outline chart-settings-trigger-btn adaptive-icon-btn" onclick="switchView('tasks')" title="عرض السجل الكامل" aria-label="عرض السجل الكامل">
                 <svg class="outline-svg-icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
                 <span class="btn-text-label" style="font-size:0.74rem;">السجل</span>
               </button>
@@ -9089,7 +10243,7 @@ button.btn-danger-outline,
             </div>
             <div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
               <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTaskModal()" title="إضافة مهمة لليوم" aria-label="إضافة مهمة لليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
-              <button type="button" class="btn btn-sm btn-outline" style="padding:0.22rem 0.6rem; font-size:0.76rem;" onclick="switchView('today')" title="لوحة اليوم"><span class="btn-text-label">لوحة اليوم</span> ☀️</button>
+              <button type="button" class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('today')" title="إدارة اليوم" aria-label="إدارة اليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"></line><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"></line><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"></line></svg><span class="btn-text-label">لوحة اليوم</span></button>
               <button type="button" class="universal-card-toggle-btn" id="dash-today-collapse-btn" onclick="toggleDashTodaySection()" title="طي أو توسيع قسم مهام اليوم"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
             </div>
           </div>
@@ -9103,14 +10257,14 @@ button.btn-danger-outline,
           </div>
         </div>
 
-        <!-- Horizontal Bar 3: المهام المبرمجة مستقبلاً (استشراف المهام القادمة) -->
+        <!-- Horizontal Bar 3: المهام المبرمجة مستقبلاً -->
         <div class="card" style="margin-bottom:1.25rem; border-right:3.5px solid var(--purple);">
           <div class="card-header">
             <div class="card-title">
-              <span style="display:inline-flex;align-items:center;gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> المهام المبرمجة مستقبلاً (استشراف المهام القادمة)</span>
+              <span style="display:inline-flex;align-items:center;gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> المهام المبرمجة مستقبلاً</span>
               <span class="badge-soft badge-purple" id="dash-future-count-badge">0 مهام</span>
             </div>
-            <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button class="btn btn-sm btn-outline" onclick="switchView('backlog')"><span class="btn-text-label">البرمجة</span> 🗓️</button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
+            <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button type="button" class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('backlog')" title="برمجة المهام" aria-label="برمجة المهام"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg><span class="btn-text-label">البرمجة</span></button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
           </div>
           <div id="dash-future-tasks-container" style="display:flex; flex-direction:column; gap:0.6rem;">
             <!-- Populated dynamically: Max 3 items -->
@@ -9127,7 +10281,7 @@ button.btn-danger-outline,
               <span style="display:inline-flex;align-items:center;gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> مهام متأخرة أو تحتاج تسوية واستكمال</span>
               <span class="badge-soft badge-danger" id="dash-pending-count-badge">0 مهام</span>
             </div>
-            <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button class="btn btn-sm btn-outline" onclick="switchView('tasks')"><span class="btn-text-label">السجل</span> 📋</button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
+            <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button type="button" class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('tasks')" title="سجل المهام والعمليات" aria-label="سجل المهام والعمليات"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg><span class="btn-text-label">السجل</span></button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
           </div>
           <div id="dash-pending-tasks-container" style="display:flex; flex-direction:column; gap:0.6rem;">
             <!-- Populated dynamically: Max 3 items -->
@@ -9141,7 +10295,7 @@ button.btn-danger-outline,
         <div class="card" style="margin-bottom:1.25rem;">
           <div class="card-header">
             <div class="card-title"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> تنقلات المدن والإدارات الخارجية</div>
-            <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button class="btn btn-sm btn-outline" onclick="switchView('tasks')"><span class="btn-text-label">السجل</span> ➜</button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
+            <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button type="button" class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('tasks')" title="سجل المهام والعمليات" aria-label="سجل المهام والعمليات"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg><span class="btn-text-label">السجل</span></button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
           </div>
           <div id="dash-external-trips-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0.6rem;"></div>
         </div>
@@ -9150,7 +10304,7 @@ button.btn-danger-outline,
         <div class="card" style="margin-bottom:1.25rem;">
           <div class="card-header">
             <div class="card-title"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M3 21h18"></path><path d="M5 21V7l7-4 7 4v14"></path><path d="M9 9h1m4 0h1m-6 4h1m4 0h1m-5 8v-5h4v5"></path></svg> مهام الدائرة القضائية بسطات (محلي)</div>
-            <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button class="btn btn-sm btn-outline" onclick="switchView('settings'); switchSettingsTab('destinations');"><span class="btn-text-label">الوجهات</span> 📍</button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
+            <div style="display:inline-flex; align-items:center; gap:0.35rem;"><button type="button" class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('settings'); switchSettingsTab('destinations');" title="دليل الوجهات والمحاكم" aria-label="دليل الوجهات والمحاكم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="btn-text-label">الوجهات</span></button><button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
           </div>
           <div id="dash-internal-trips-list" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0.6rem;"></div>
         </div>
@@ -9159,7 +10313,7 @@ button.btn-danger-outline,
         <div class="card" id="dash-profile-library-card" style="margin-bottom:1.25rem; border-inline-start:4px solid var(--primary);">
           <div class="card-header">
             <div class="card-title">
-              <span style="display:inline-flex;align-items:center;gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> مؤشرات مكتبة المهام المهنية وتتبع الإنجازات الفعلية</span>
+              <span style="display:inline-flex;align-items:center;gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> مؤشرات المكتبة والإنجازات</span>
             </div>
             <div style="display:flex; gap:0.45rem; align-items:center; flex-wrap:wrap;">
               <button class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('settings'); switchSettingsTab('identity');" title="البطاقة المهنية"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span class="btn-text-label">البطاقة المهنية</span></button>
@@ -9220,7 +10374,7 @@ button.btn-danger-outline,
             <div class="card-title"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> القوالب السريعة ومهام المكتبة الفورية</div>
             <div style="display:inline-flex; align-items:center; gap:0.35rem;">
               <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
-              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTemplateModal()" title="إضافة قالب سريع" aria-label="إضافة قالب سريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+              <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTemplateModal()" title="إدخال سريع / إضافة قالب سريع" aria-label="إدخال سريع / إضافة قالب سريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></button>
               <button type="button" class="universal-card-toggle-btn" onclick="toggleCardSection(this, event)" title="طي أو توسيع البطاقة" aria-label="طي أو توسيع"><svg class="outline-svg-icon chevron-rotatable" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
             </div>
           </div>
@@ -9233,7 +10387,7 @@ button.btn-danger-outline,
         <!-- Streamlined Mission Library Header (Single Source of Truth for Profile in Settings) -->
         <div class="card" id="library-profile-banner" style="padding:0.85rem 1.15rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
           <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-            <p class="page-concise-subtitle" style="margin:0;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> <span>دليل الاختصاصات المهنية والعمليات الفرعية المعتمدة</span></p>
+            <p class="page-concise-subtitle" style="margin:0;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> <span>الاختصاصات المهنية والعمليات</span></p>
             <span class="badge-soft badge-primary" id="lib-prof-domain-badge" style="font-weight:700; font-size:0.75rem;">التدبير الإداري والتقني واللوجستي</span>
             <span style="display:none;" id="lib-prof-name-role"></span>
             <span style="display:none;" id="lib-prof-org-chip"></span>
@@ -9246,26 +10400,89 @@ button.btn-danger-outline,
           </div>
         </div>
 
-        <!-- Hidden compatibility nodes for core JS zero-regression -->
-        <div style="display:none !important;" aria-hidden="true">
-          <span id="lib-kpi-total"></span>
-          <span id="lib-kpi-types"></span>
-          <span id="lib-kpi-executed"></span>
-          <span id="lib-kpi-total-runs-label"></span>
-          <span id="lib-kpi-never"></span>
+        <!-- 4-Card Mission Library KPIs Bar (Niveau B) -->
+        <div class="grid-4 lib-kpi-summary-grid" id="lib-kpi-summary-grid" style="margin-bottom:1rem;">
+          <div class="card kpi-stat-card kpi-primary" onclick="setLibraryFilter('all')" title="عرض جميع المهام المعرفة في المكتبة">
+            <div class="kpi-card-top">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary);">إجمالي مهام المكتبة المهنية</span>
+              <span class="kpi-icon-box"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></span>
+            </div>
+            <div style="font-size:1.45rem; font-weight:800; color:var(--primary); line-height:1.2;" id="lib-kpi-total">12</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.35rem; margin-top:0.15rem;">
+              <span class="kpi-meta-pill">اختصاصات المنصب</span>
+              <span style="font-size:0.7rem; color:var(--primary); font-weight:700;">الكل ➜</span>
+            </div>
+          </div>
+
+          <div class="card kpi-stat-card kpi-purple" onclick="setLibraryFilter('principale')" title="توزيع المهام الأساسية والاعتيادية">
+            <div class="kpi-card-top">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary);">توزيع الاختصاصات</span>
+              <span class="kpi-icon-box"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span>
+            </div>
+            <div style="font-size:1.1rem; font-weight:800; color:var(--purple); line-height:1.3;" id="lib-kpi-types">7 أساسية / 5 اعتيادية</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.35rem; margin-top:0.15rem;">
+              <span class="kpi-meta-pill">أساسية واعتيادية</span>
+              <span style="font-size:0.7rem; color:var(--purple); font-weight:700;">الأساسية ➜</span>
+            </div>
+          </div>
+
+          <div class="card kpi-stat-card kpi-success" onclick="setLibraryFilter('executed')" title="عرض مهام المكتبة التي لها سجل إنجازات فعلي">
+            <div class="kpi-card-top">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary);">مهام منفذة فعلياً (≥ 1)</span>
+              <span class="kpi-icon-box"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>
+            </div>
+            <div style="font-size:1.45rem; font-weight:800; color:var(--success); line-height:1.2;" id="lib-kpi-executed">10</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.35rem; margin-top:0.15rem;">
+              <span class="kpi-meta-pill" id="lib-kpi-total-runs-label">إجمالي 72 تنفيذ مسجل بالسجل</span>
+              <span style="font-size:0.7rem; color:var(--success); font-weight:700;">المنفذة ➜</span>
+            </div>
+          </div>
+
+          <div class="card kpi-stat-card kpi-warning" onclick="setLibraryFilter('never')" title="عرض مهام المكتبة المعرفة التي لم تُنفذ بعد">
+            <div class="kpi-card-top">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--text-secondary);">لم تُنفذ بعد (0 إنجاز)</span>
+              <span class="kpi-icon-box"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></span>
+            </div>
+            <div style="font-size:1.45rem; font-weight:800; color:var(--warning); line-height:1.2;" id="lib-kpi-never">2</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.35rem; margin-top:0.15rem;">
+              <span class="kpi-meta-pill">معرفة وجاهزة للتنفيذ</span>
+              <span style="font-size:0.7rem; color:var(--warning); font-weight:700;">غير منفذة ➜</span>
+            </div>
+          </div>
         </div>
 
         <!-- Library Filter & Search Bar (With Data-Driven Inline Counts) -->
         <div class="card" style="padding:0.9rem 1rem; margin-bottom:1rem;">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:0.75rem;">
-            <div class="sub-filter-pills" id="lib-filter-pills">
-              <button type="button" class="sub-filter-pill active" data-libf="all" id="lib-pill-all" onclick="setLibraryFilter('all')">الكل (12)</button>
-              <button type="button" class="sub-filter-pill" data-libf="principale" id="lib-pill-principale" onclick="setLibraryFilter('principale')">مهام أساسية (7)</button>
-              <button type="button" class="sub-filter-pill" data-libf="habituelle" id="lib-pill-habituelle" onclick="setLibraryFilter('habituelle')">مهام اعتيادية (5)</button>
-              <button type="button" class="sub-filter-pill" data-libf="personnalisee" id="lib-pill-personnalisee" onclick="setLibraryFilter('personnalisee')">مهام مخصصة (0)</button>
-              <button type="button" class="sub-filter-pill" data-libf="executed" id="lib-pill-executed" onclick="setLibraryFilter('executed')">منفذة سابقاً (10)</button>
-              <button type="button" class="sub-filter-pill" data-libf="never" id="lib-pill-never" onclick="setLibraryFilter('never')">لم تُنفذ بعد (2)</button>
-              <button type="button" class="sub-filter-pill" data-libf="archived" id="lib-pill-archived" onclick="setLibraryFilter('archived')">الأرشيف (0)</button>
+            <div class="sub-filter-pills filters-container" id="lib-filter-pills">
+              <button type="button" class="sub-filter-pill filter-btn active" data-libf="all" id="lib-pill-all" onclick="setLibraryFilter('all')" title="الكل" aria-label="الكل">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                <span class="btn-text-mobile-hide">الكل (12)</span>
+              </button>
+              <button type="button" class="sub-filter-pill filter-btn" data-libf="principale" id="lib-pill-principale" onclick="setLibraryFilter('principale')" title="مهام أساسية" aria-label="مهام أساسية">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <span class="btn-text-mobile-hide">مهام أساسية (7)</span>
+              </button>
+              <button type="button" class="sub-filter-pill filter-btn" data-libf="habituelle" id="lib-pill-habituelle" onclick="setLibraryFilter('habituelle')" title="مهام اعتيادية" aria-label="مهام اعتيادية">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                <span class="btn-text-mobile-hide">مهام اعتيادية (5)</span>
+              </button>
+              <button type="button" class="sub-filter-pill filter-btn" data-libf="personnalisee" id="lib-pill-personnalisee" onclick="setLibraryFilter('personnalisee')" title="مهام مخصصة" aria-label="مهام مخصصة">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                <span class="btn-text-mobile-hide">مهام مخصصة (0)</span>
+              </button>
+              <button type="button" class="sub-filter-pill filter-btn" data-libf="executed" id="lib-pill-executed" onclick="setLibraryFilter('executed')" title="منفذة سابقاً" aria-label="منفذة سابقاً">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span class="btn-text-mobile-hide">منفذة سابقاً (10)</span>
+              </button>
+              <button type="button" class="sub-filter-pill filter-btn" data-libf="never" id="lib-pill-never" onclick="setLibraryFilter('never')" title="لم تُنفذ بعد" aria-label="لم تُنفذ بعد">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span class="btn-text-mobile-hide">لم تُنفذ بعد (2)</span>
+              </button>
+              <button type="button" class="sub-filter-pill filter-btn" data-libf="archived" id="lib-pill-archived" onclick="setLibraryFilter('archived')" title="الأرشيف" aria-label="الأرشيف">
+                <svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>
+                <span class="btn-text-mobile-hide">الأرشيف (0)</span>
+              </button>
             </div>
             <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; flex:1; max-width:460px;">
               <input type="text" id="lib-search-input" class="form-control" style="flex:1; min-width:170px;" placeholder="🔍 ابحث في مكتبة المهام، العمليات الفرعية، الكلمات المفتاحية..." oninput="renderMissionLibraryView()">
@@ -9328,12 +10545,12 @@ button.btn-danger-outline,
           </div>
         </div>
 
-        <!-- Accordion 3: المهام المبرمجة مستقبلاً (استشراف المهام القادمة) -->
+        <!-- Accordion 3: المهام المبرمجة مستقبلاً -->
         <div class="accordion-item" id="acc-today-future">
           <div class="accordion-header" onclick="toggleAccordion('acc-today-future')">
             <div style="display:flex; align-items:center; gap:0.5rem;">
               <span style="font-size:1.15rem;">🗓️</span>
-              <strong style="font-size:0.95rem;">المهام المبرمجة مستقبلاً (استشراف المهام القادمة)</strong>
+              <strong style="font-size:0.95rem;">المهام المبرمجة مستقبلاً</strong>
               <span class="badge-soft badge-purple" id="acc-today-future-badge">0 مهام</span>
             </div>
             <div style="display:inline-flex; align-items:center;">
@@ -9381,10 +10598,19 @@ button.btn-danger-outline,
         </div>
 
         <div class="card" style="padding:0.85rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
-          <div class="sub-filter-pills">
-            <button class="sub-filter-pill active" id="backlog-pill-all" onclick="setBacklogSubFilter('all')">الكل (المستقبلية والمفتوحة)</button>
-            <button class="sub-filter-pill" id="backlog-pill-future" onclick="setBacklogSubFilter('future')">🗓️ مجدولة مستقبلاً</button>
-            <button class="sub-filter-pill" id="backlog-pill-open" onclick="setBacklogSubFilter('open')">📌 مفتوحة بدون تاريخ</button>
+          <div class="sub-filter-pills filters-container">
+            <button type="button" class="sub-filter-pill filter-btn active" id="backlog-pill-all" onclick="setBacklogSubFilter('all')" title="الكل (المستقبلية والمفتوحة)" aria-label="الكل (المستقبلية والمفتوحة)">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+              <span class="btn-text-mobile-hide">الكل (المستقبلية والمفتوحة)</span>
+            </button>
+            <button type="button" class="sub-filter-pill filter-btn" id="backlog-pill-future" onclick="setBacklogSubFilter('future')" title="مجدولة مستقبلاً" aria-label="مجدولة مستقبلاً">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span class="btn-text-mobile-hide">مجدولة مستقبلاً</span>
+            </button>
+            <button type="button" class="sub-filter-pill filter-btn" id="backlog-pill-open" onclick="setBacklogSubFilter('open')" title="مفتوحة بدون تاريخ" aria-label="مفتوحة بدون تاريخ">
+              <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              <span class="btn-text-mobile-hide">مفتوحة بدون تاريخ</span>
+            </button>
           </div>
           <div style="flex:1; max-width:320px; min-width:200px;">
             <input type="text" id="backlog-search-input" class="form-control" placeholder="🔍 بحث في المهام المبرمجة والمفتوحة..." oninput="renderBacklogTable()">
@@ -9439,24 +10665,24 @@ button.btn-danger-outline,
       <section id="view-tasks" class="app-view" style="display:none;">
         <div class="card" style="margin-bottom:1rem; padding:1rem;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
-            <div style="display:flex; align-items:center; gap:0.65rem; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; justify-content:space-between; width:100%; gap:0.65rem; flex-wrap:wrap;">
               <p class="page-concise-subtitle" style="margin:0;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg> <span>البحث والتصفية</span></p>
-              <div class="workflow-subview-bar" role="tablist" aria-label="التبديل بين جدول المهام وسجل العمليات الزمني">
-                <button type="button" class="workflow-subview-btn active" id="tasks-subtab-registry-btn" onclick="switchTasksRegistrySubTab('registry')" title="المهام"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> <span id="tasks-registry-total-badge">75</span></button>
-                <button type="button" class="workflow-subview-btn" id="tasks-subtab-audit-btn" onclick="switchTasksRegistrySubTab('audit')" title="العمليات"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span id="audit-log-total-badge">0</span></button>
+              <div class="tasks-top-actions-row" role="tablist" aria-label="التبديل بين جدول المهام وسجل العمليات الزمني والطباعة" style="display:inline-flex; align-items:center; gap:8px; flex-wrap:nowrap;">
+                <button type="button" class="btn btn-outline workflow-subview-btn active" id="tasks-subtab-registry-btn" onclick="switchTasksRegistrySubTab('registry')" title="سجل المهام"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg> <span id="tasks-registry-total-badge">75</span></button>
+                <button type="button" class="btn btn-outline workflow-subview-btn" id="tasks-subtab-audit-btn" onclick="switchTasksRegistrySubTab('audit')" title="سجل العمليات"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span id="audit-log-total-badge">0</span></button>
+                <button type="button" class="action-icon-btn btn-outline" id="btn-print-tasks-summary" onclick="printFilteredTasksSummaryReport()" title="طباعة الكشف" aria-label="طباعة الكشف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></button>
+                <button type="button" class="action-icon-btn btn-outline" id="btn-clear-task-filters" onclick="resetAllTaskFilters()" title="مسح الفلاتر" aria-label="مسح الفلاتر"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
               </div>
               <button class="btn btn-sm btn-icon btn-outline help-btn" onclick="openContextualHelp('tasks')" title="دليل المساعدة والإرشادات">❓</button>
             </div>
-            <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+            <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap; width:100%;">
               <span style="font-size:0.78rem; color:var(--text-muted);">الترتيب:</span>
-              <select id="tasks-sort-order" class="form-control" style="width:auto; padding:0.25rem 0.6rem; font-size:0.8rem;" onchange="renderTasksTable()">
-                <option value="newest" selected>من الأحدث إلى الأقدم (تنازلي) ⬇️</option>
-                <option value="oldest">من الأقدم إلى الأحدث (تصاعدي) ⬆️</option>
+              <select id="tasks-sort-order" class="form-control" style="flex:1; min-width:180px; padding:0.25rem 0.6rem; font-size:0.8rem;" onchange="renderTasksTable()">
+                <option value="newest" selected>من الأحدث إلى الأقدم (تنازلي)</option>
+                <option value="oldest">من الأقدم إلى الأحدث (تصاعدي)</option>
                 <option value="timeline">الجدول الزمني الميداني (اليوم أولاً، ثم القادم)</option>
                 <option value="priority">حسب الأولوية (العاجلة أولاً)</option>
               </select>
-              <button type="button" class="action-icon-btn btn-outline" id="btn-clear-task-filters" onclick="resetAllTaskFilters()" title="مسح الفلاتر" aria-label="مسح الفلاتر"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
-              <button type="button" class="action-icon-btn btn-primary" id="btn-print-tasks-summary" onclick="printFilteredTasksSummaryReport()" title="طباعة الكشف" aria-label="طباعة الكشف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg></button>
             </div>
           </div>
 
@@ -9712,17 +10938,47 @@ button.btn-danger-outline,
         </div>
 
         <!-- Control Center Tabs (With Dedicated User Settings & Security PIN Protection) -->
-        <div class="settings-nav-bar" role="tablist">
-          <button type="button" class="settings-nav-btn active" id="stab-user-btn" onclick="switchSettingsTab('user')">👤 المستخدم</button>
-          <button type="button" class="settings-nav-btn" id="stab-security-btn" onclick="switchSettingsTab('security')">🔒 PIN</button>
-          <button type="button" class="settings-nav-btn" id="stab-titles-btn" onclick="switchSettingsTab('titles')">📌 التدخلات</button>
-          <button type="button" class="settings-nav-btn" id="stab-destinations-btn" onclick="switchSettingsTab('destinations')">📍 الوجهات</button>
-          <button type="button" class="settings-nav-btn" id="stab-categories-btn" onclick="switchSettingsTab('categories')">🏷️ التصنيفات</button>
-          <button type="button" class="settings-nav-btn" id="stab-identity-btn" onclick="switchSettingsTab('identity')">🎨 المظهر</button>
-          <button type="button" class="settings-nav-btn" id="stab-backup-btn" onclick="switchSettingsTab('backup')">💾 البيانات</button>
-          <button type="button" class="settings-nav-btn" id="stab-library-btn" onclick="switchSettingsTab('library')">📚 المكتبة</button>
-          <button type="button" class="settings-nav-btn" id="stab-templates-btn" onclick="switchSettingsTab('templates')">⚡ القوالب</button>
-          <button type="button" class="settings-nav-btn" id="stab-about-btn" onclick="switchSettingsTab('about')">ℹ️ حول</button>
+        <div class="settings-nav-bar settings-nav" role="tablist">
+          <button type="button" class="settings-nav-btn active" id="stab-user-btn" onclick="switchSettingsTab('user')" title="المستخدم" aria-label="المستخدم">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="btn-text-mobile-hide">المستخدم</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-security-btn" onclick="switchSettingsTab('security')" title="رمز الحماية PIN" aria-label="رمز الحماية PIN">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <span class="btn-text-mobile-hide">PIN</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-titles-btn" onclick="switchSettingsTab('titles')" title="التدخلات" aria-label="التدخلات">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+            <span class="btn-text-mobile-hide">التدخلات</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-destinations-btn" onclick="switchSettingsTab('destinations')" title="الوجهات" aria-label="الوجهات">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span class="btn-text-mobile-hide">الوجهات</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-categories-btn" onclick="switchSettingsTab('categories')" title="التصنيفات" aria-label="التصنيفات">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+            <span class="btn-text-mobile-hide">التصنيفات</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-identity-btn" onclick="switchSettingsTab('identity')" title="المظهر والبطاقة التقنية" aria-label="المظهر والبطاقة التقنية">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span class="btn-text-mobile-hide">المظهر</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-backup-btn" onclick="switchSettingsTab('backup')" title="البيانات والنسخ الاحتياطي" aria-label="البيانات والنسخ الاحتياطي">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            <span class="btn-text-mobile-hide">البيانات</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-library-btn" onclick="switchSettingsTab('library')" title="المكتبة" aria-label="المكتبة">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span class="btn-text-mobile-hide">المكتبة</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-templates-btn" onclick="switchSettingsTab('templates')" title="القوالب السريعة" aria-label="القوالب السريعة">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span class="btn-text-mobile-hide">القوالب</span>
+          </button>
+          <button type="button" class="settings-nav-btn" id="stab-about-btn" onclick="switchSettingsTab('about')" title="حول النظام" aria-label="حول النظام">
+            <svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            <span class="btn-text-mobile-hide">حول</span>
+          </button>
         </div>
 
         <!-- REQUIREMENT 2 & 3: DEDICATED "USER SETTINGS" SECTION (إعدادات المستخدم) — Pure Arabic & Single Source of Truth -->
@@ -9852,12 +11108,14 @@ button.btn-danger-outline,
             <!-- Add New Saved Title Inline Bar -->
             <div style="background:var(--bg-muted); padding:0.85rem 1rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle); margin-bottom:1rem;">
               <label class="form-label" style="margin-bottom:0.4rem;">➕ إضافة عنوان تدخل أو مهمة جديدة إلى العناوين المحفوظة:</label>
-              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <input type="text" id="cfg-new-saved-title-input" class="form-control" style="flex:2; min-width:220px;" placeholder="اكتب عنوان المهمة أو التدخل الجديد (مثال: صيانة الشبكة المعلوماتية وتفقد الموزعات)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSavedTitleFromSettings();}">
-                <select id="cfg-new-saved-title-cat" class="form-control" style="flex:1; min-width:170px;">
-                  <option value="">-- ربط بصنف (اختياري) --</option>
-                </select>
-                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addSavedTitleFromSettings()" title="إضافة وحفظ العنوان" aria-label="إضافة وحفظ العنوان"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+              <div class="v80-vertical-input-stack" style="display:flex; flex-direction:column; gap:0.55rem; align-items:stretch; width:100%;">
+                <input type="text" id="cfg-new-saved-title-input" class="form-control" style="width:100%; min-width:0;" placeholder="اكتب عنوان المهمة أو التدخل الجديد (مثال: صيانة الشبكة المعلوماتية وتفقد الموزعات)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSavedTitleFromSettings();}">
+                <div style="display:flex; gap:0.5rem; align-items:center; width:100%;">
+                  <select id="cfg-new-saved-title-cat" class="form-control" style="flex:1; width:100%; min-width:0;">
+                    <option value="">-- ربط بصنف (اختياري) --</option>
+                  </select>
+                  <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addSavedTitleFromSettings()" title="إضافة وحفظ العنوان" aria-label="إضافة وحفظ العنوان"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                </div>
               </div>
             </div>
 
@@ -9917,10 +11175,12 @@ button.btn-danger-outline,
             <!-- Direct Inline Bar to Add a New Primary Category Immediately -->
             <div style="background:var(--bg-muted); padding:0.85rem 1rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle); margin-bottom:1rem;">
               <label class="form-label" for="cfg-inline-new-cat-name" style="margin-bottom:0.4rem;">➕ إضافة تصنيف رئيسي جديد مباشرة:</label>
-              <div style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center;">
-                <input type="text" id="cfg-inline-new-cat-name" class="form-control" style="flex:2; min-width:200px;" placeholder="اكتب اسم التصنيف الرئيسي الجديد..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addPrimaryCategoryFromSettingsBar();}">
-                <input type="text" id="cfg-inline-new-cat-sub" class="form-control" style="flex:2; min-width:180px;" placeholder="تفريعات أولية مفصولة بفاصلة (اختياري)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addPrimaryCategoryFromSettingsBar();}">
-                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addPrimaryCategoryFromSettingsBar()" title="إضافة وحفظ التصنيف" aria-label="إضافة وحفظ التصنيف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+              <div class="v80-vertical-input-stack" style="display:flex; flex-direction:column; gap:0.55rem; align-items:stretch; width:100%;">
+                <input type="text" id="cfg-inline-new-cat-name" class="form-control" style="width:100%; min-width:0;" placeholder="اكتب اسم التصنيف الرئيسي الجديد..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addPrimaryCategoryFromSettingsBar();}">
+                <div style="display:flex; gap:0.5rem; align-items:center; width:100%;">
+                  <input type="text" id="cfg-inline-new-cat-sub" class="form-control" style="flex:1; width:100%; min-width:0;" placeholder="تفريعات أولية مفصولة بفاصلة (اختياري)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addPrimaryCategoryFromSettingsBar();}">
+                  <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addPrimaryCategoryFromSettingsBar()" title="إضافة وحفظ التصنيف" aria-label="إضافة وحفظ التصنيف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                </div>
               </div>
             </div>
 
@@ -9946,20 +11206,7 @@ button.btn-danger-outline,
               </div>
             </div>
 
-            <!-- Optional Quick Role Adaptation Presets -->
-            <div style="background:var(--bg-muted); padding:0.75rem 1rem; border-radius:var(--radius-sm); margin-bottom:1rem; border:1px dashed var(--border-color);">
-              <div style="font-size:0.78rem; font-weight:700; color:var(--text-secondary); margin-bottom:0.45rem;">
-                ⚙️ ملفات تعريف الواجهة وبيئات العمل المعتمدة (بدون تكرار):
-              </div>
-              <div style="display:flex; flex-wrap:wrap; gap:0.35rem;">
-                <button type="button" class="cat-pill-btn" onclick="applyProfileRolePreset('equip_it')">🖥️ مسؤول العتاد واللوجستيك والمعلوميات</button>
-                <button type="button" class="cat-pill-btn" onclick="applyProfileRolePreset('rh')">👥 مسؤول الموارد البشرية والشؤون الإدارية</button>
-                <button type="button" class="cat-pill-btn" onclick="applyProfileRolePreset('finance')">💰 مسؤول الشؤون المالية والميزانية والصفقات</button>
-                <button type="button" class="cat-pill-btn" onclick="applyProfileRolePreset('it_sys')">🌐 مسؤول الأنظمة المعلوماتية والشبكات</button>
-                <button type="button" class="cat-pill-btn" onclick="applyProfileRolePreset('archives')">🗄️ مسؤول الأرشيف والوثائق والرقمنة</button>
-                <button type="button" class="cat-pill-btn" onclick="applyProfileRolePreset('director')">🏛️ المدير الإقليمي / رئيس مصلحة</button>
-              </div>
-            </div>
+<!-- Job profile presets removed per V61.0: relies strictly on User tab -->
 
             <!-- Hidden compatibility fields automatically synced from إعدادات المستخدم (Single Source of Truth) -->
             <div style="display:none !important;" aria-hidden="true">
@@ -10187,8 +11434,7 @@ button.btn-danger-outline,
                 
               </div>
               <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-                <button class="btn btn-sm btn-outline adaptive-icon-btn" onclick="switchView('library')" title="شاشة المكتبة الكاملة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg><span class="btn-text-label">شاشة المكتبة الكاملة</span></button>
-                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                                <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openMissionLibraryModal()" title="إضافة مهمة للمكتبة" aria-label="إضافة مهمة للمكتبة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
               </div>
             </div>
             <div id="cfg-library-list-container" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
@@ -10206,16 +11452,32 @@ button.btn-danger-outline,
           </div>
         </div>
 
-        <!-- SETTINGS TAB 8: ABOUT APP -->
+        <!-- SETTINGS TAB 8: DYNAMIC ABOUT APP (V61.0) -->
         <div id="settings-tab-about" class="settings-sub-tab" style="display:none;">
-          <div class="card">
-            <p class="page-concise-subtitle" style="margin-bottom:0.5rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <span>معلومات تقنية حول بنية النظام وخصائصه</span></p>
-            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.7;">
-              منظومة رقمية مؤسساتية شاملة تعمل بملف واحد مستقل (تطبيق مستقل يعمل بالكامل دون اتصال بالإنترنت) لتدبير المهام اليومية والتدخلات التقنية واللوجستية وتنقلات أوامر المهمة، وإصدار التقارير الرسمية بصيغة A4.
-            </p>
+          <div class="card" style="border-inline-start: 4px solid var(--primary);">
+            <div class="card-header" style="border-bottom:1px solid var(--border-subtle); padding-bottom:0.75rem; margin-bottom:1rem;">
+              <p class="page-concise-subtitle" style="margin:0;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg> <span>حول البرنامج</span></p>
+              <button type="button" class="action-icon-btn btn-primary" onclick="saveAboutAppSettings()" title="حفظ معلومات حول البرنامج" aria-label="حفظ"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cfg-about-title">عنوان البرنامج (App Title):</label>
+              <input type="text" id="cfg-about-title" class="form-control" placeholder="عنوان البرنامج..." value="نظام تدبير المهام اليومية — المديرية الإقليمية للعدل" oninput="markSettingsDirty()">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label class="form-label" for="cfg-about-desc">التفاصيل والوصف (Details / Description):</label>
+              <textarea id="cfg-about-desc" class="form-control" rows="4" placeholder="اكتب وصف وتفاصيل البرنامج هنا..." oninput="markSettingsDirty()">منظومة رقمية مؤسساتية شاملة لتدبير المهام اليومية والتدخلات التقنية واللوجستية وتنقلات أوامر المهمة، وإصدار التقارير الرسمية بصيغة A4.</textarea>
+            </div>
           </div>
         </div>
       </section>
+
+      <!-- CLICKABLE FOOTER LINK FOR ABOUT MODAL (V64.0 — PINNED BOTTOM-LEFT) -->
+      <footer id="app-footer-about-bar" class="no-print" style="display:flex; justify-content:flex-end; align-items:center; padding:0.85rem 0 0.35rem 0; margin-top:auto; border-top:1px solid var(--border-subtle);">
+        <a href="javascript:void(0)" onclick="openAboutAppModal()" class="footer-about-pill-link" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:12.5px; font-weight:700; color:var(--text-muted); text-decoration:none; padding:0.32rem 0.85rem; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-surface); transition:all 0.2s ease;">
+          <svg class="outline-svg-icon" style="width:15px !important; height:15px !important;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span id="footer-about-link-text">حول البرنامج © 2026</span>
+        </a>
+      </footer>
 
     </main>
     </div><!-- /app-main -->
@@ -10227,14 +11489,13 @@ button.btn-danger-outline,
   <div id="modal-contextual-help" class="modal-backdrop">
     <div class="modal" style="max-width:580px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="help-modal-title">❓ دليل المساعدة والإرشادات</h3>
-        <button class="modal-close" onclick="closeModal('modal-contextual-help')">&times;</button>
+        <h3 class="modal-title" id="help-modal-title">دليل المساعدة والإرشادات</h3>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-contextual-help')" title="إغلاق" aria-label="إغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body" id="help-modal-body" style="font-size:0.88rem; line-height:1.8; color:var(--text-main);">
         <!-- Injected dynamically -->
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary btn-sm" onclick="closeModal('modal-contextual-help')">فهمت ذلك ✓</button>
       </div>
     </div>
   </div>
@@ -10244,10 +11505,13 @@ button.btn-danger-outline,
     <div class="modal" style="max-width:500px;">
       <div class="modal-header">
         <div>
-          <h3 class="modal-title" style="font-size:1.02rem;">⚡ الإدخال السريع للمهام</h3>
+          <h3 class="modal-title" style="font-size:1.02rem; display:inline-flex; align-items:center; gap:0.4rem;"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg><span>الإدخال السريع للمهام</span></h3>
           <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">حقلان اختياريان فقط (الصنف الرئيسي والوجهة) مع إسناد تاريخ اليوم تلقائياً.</div>
         </div>
-        <button type="button" class="modal-close" onclick="closeModal('modal-fast-capture')">&times;</button>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-save-btn" id="fc-save-btn" onclick="executeFastCapture()" title="حفظ سريع" aria-label="حفظ سريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-fast-capture')" title="إلغاء وإغلاق" aria-label="إلغاء وإغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body">
         <form id="fast-capture-form" onsubmit="event.preventDefault(); executeFastCapture();">
@@ -10274,10 +11538,7 @@ button.btn-danger-outline,
           </div>
         </form>
       </div>
-      <div class="modal-footer" style="justify-content:flex-end; gap:0.6rem;">
-        <button type="button" class="btn btn-danger" onclick="closeModal('modal-fast-capture')">إلغاء</button>
-        <button type="button" class="btn btn-primary" id="fc-save-btn" onclick="executeFastCapture()" style="min-width:140px; font-weight:800;">حفظ سريع</button>
-      </div>
+
     </div>
   </div>
 
@@ -10286,7 +11547,10 @@ button.btn-danger-outline,
     <div class="modal" style="max-width:650px;">
       <div class="modal-header">
         <h3 class="modal-title" id="task-modal-title" style="font-size:1.05rem;">تسجيل مهمة أو تدخل جديد</h3>
-        <button type="button" class="modal-close" onclick="closeModal('modal-task-form')">&times;</button>
+        <div class="modal-top-actions">
+          <button type="submit" form="task-main-form" class="action-icon-btn modal-action-save-btn" id="tf-submit-btn" title="حفظ المهمة" aria-label="حفظ المهمة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" id="tf-cancel-btn" onclick="closeModal('modal-task-form')" title="إلغاء وإغلاق" aria-label="إلغاء وإغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body">
         <form id="task-main-form" onsubmit="handleTaskFormSubmit(event)">
@@ -10465,9 +11729,9 @@ button.btn-danger-outline,
                 <span id="tf-status-visual-label" style="font-size:0.76rem; font-weight:800; color:#3b82f6;">قيد الإنجاز (50%)</span>
               </div>
               <div class="status-track three-state-track" id="tf-status-track">
-                <button type="button" class="status-pill-btn" data-st="مبرمجة" onclick="setInteractiveStatus('مبرمجة')">مبرمجة (0%)</button>
-                <button type="button" class="status-pill-btn active-progress" data-st="قيد الإنجاز" onclick="setInteractiveStatus('قيد الإنجاز')">قيد الإنجاز (1%–99%)</button>
-                <button type="button" class="status-pill-btn" data-st="منجزة" onclick="setInteractiveStatus('منجزة')">منجزة (100%)</button>
+                <button type="button" class="status-pill-btn" data-st="مبرمجة" onclick="setInteractiveStatus('مبرمجة')" title="0%" data-tooltip="0%">مبرمجة</button>
+                <button type="button" class="status-pill-btn active-progress" data-st="قيد الإنجاز" onclick="setInteractiveStatus('قيد الإنجاز')" title="1%–99%" data-tooltip="1%–99%">قيد الإنجاز</button>
+                <button type="button" class="status-pill-btn" data-st="منجزة" onclick="setInteractiveStatus('منجزة')" title="100%" data-tooltip="100%">منجزة</button>
               </div>
             </div>
 
@@ -10505,11 +11769,7 @@ button.btn-danger-outline,
           </div>
         </form>
       </div>
-      <!-- REQUIREMENT 8: Fixed Footer Inside Task Modal (Blue Save Button + Red Cancel Button) -->
-      <div class="modal-footer" id="tf-fixed-modal-footer">
-        <button type="button" class="btn btn-danger" id="tf-cancel-btn" onclick="closeModal('modal-task-form')">إلغاء</button>
-        <button type="submit" form="task-main-form" class="btn btn-primary" id="tf-submit-btn" style="min-width:155px; font-weight:800;">حفظ المهمة</button>
-      </div>
+
     </div>
   </div>
 
@@ -10518,14 +11778,16 @@ button.btn-danger-outline,
     <div class="modal" style="max-width:620px;">
       <div class="modal-header">
         <div>
-          <h3 class="modal-title" id="inspector-day-title">📅 مهام اليوم</h3>
+          <h3 class="modal-title" id="inspector-day-title">مهام اليوم</h3>
           <div style="font-size:0.78rem; color:var(--text-muted);" id="inspector-day-count">0 مهام مسجلة</div>
         </div>
-        <button class="modal-close" onclick="closeModal('modal-day-inspector')">&times;</button>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-day-inspector')" title="إغلاق" aria-label="إغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body">
-        <div style="display:flex; justify-content:flex-end; margin-bottom:0.75rem;">
-          <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="openNewTaskForInspectedDay()" title="إضافة مهمة لهذا اليوم" aria-label="إضافة مهمة لهذا اليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:0.75rem;">
+          <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" id="inspector-add-day-task-btn" onclick="openNewTaskForInspectedDay()" title="إضافة مهمة لهذا اليوم" aria-label="إضافة مهمة لهذا اليوم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
         </div>
         <div id="inspector-tasks-container" style="display:flex; flex-direction:column; gap:0.65rem;"></div>
       </div>
@@ -10537,13 +11799,12 @@ button.btn-danger-outline,
     <div class="modal" style="max-width:640px;">
       <div class="modal-header">
         <h3 class="modal-title" id="prev-task-title">معاينة تفاصيل المهمة</h3>
-        <button class="modal-close" onclick="closeModal('modal-task-preview')">&times;</button>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-save-btn" id="prev-edit-btn" title="تعديل المهمة" aria-label="تعديل المهمة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-task-preview')" title="إغلاق" aria-label="إغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body" id="prev-task-body"></div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('modal-task-preview')">إغلاق</button>
-        <button class="btn btn-primary" id="prev-edit-btn">✏️ تعديل المهمة</button>
-      </div>
     </div>
   </div>
 
@@ -10551,8 +11812,11 @@ button.btn-danger-outline,
   <div id="modal-destination-form" class="modal-backdrop">
     <div class="modal" style="max-width:560px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="dest-modal-title">📍 إضافة وجهة جديدة إلى دليل الوجهات</h3>
-        <button class="modal-close" onclick="closeModal('modal-destination-form')">&times;</button>
+        <h3 class="modal-title" id="dest-modal-title">إضافة وجهة جديدة إلى دليل الوجهات</h3>
+        <div class="modal-top-actions">
+          <button type="submit" form="dest-main-form" class="action-icon-btn modal-action-save-btn" title="حفظ الوجهة في الدليل" aria-label="حفظ الوجهة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-destination-form')" title="إلغاء وإغلاق" aria-label="إلغاء وإغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body">
         <form id="dest-main-form" onsubmit="handleDestinationFormSubmit(event)">
@@ -10592,10 +11856,7 @@ button.btn-danger-outline,
             <input type="text" id="df-notes" class="form-control" placeholder="ملاحظات حول المقر أو العنوان...">
           </div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline" onclick="closeModal('modal-destination-form')">إلغاء</button>
-            <button type="submit" class="btn btn-primary">💾 حفظ الوجهة في الدليل</button>
-          </div>
+
         </form>
       </div>
     </div>
@@ -10606,7 +11867,10 @@ button.btn-danger-outline,
     <div class="modal" style="max-width:460px;">
       <div class="modal-header">
         <h3 class="modal-title" id="cdlg-title" style="font-size:1rem;">تأكيد الإجراء</h3>
-        <button class="modal-close" onclick="closeCustomDialog(false)">&times;</button>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-save-btn" id="cdlg-ok-btn" onclick="closeCustomDialog(true)" title="تأكيد وحفظ" aria-label="تأكيد وحفظ"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" id="cdlg-cancel-btn" onclick="closeCustomDialog(false)" title="إلغاء وإغلاق" aria-label="إلغاء وإغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body">
         <p id="cdlg-message" style="font-size:0.88rem; color:var(--text-main); margin:0 0 0.75rem 0; line-height:1.6;"></p>
@@ -10614,10 +11878,7 @@ button.btn-danger-outline,
           <input type="text" id="cdlg-input" class="form-control" placeholder="أدخل النص هنا..." onkeydown="if(event.key==='Enter'){event.preventDefault(); closeCustomDialog(true);}">
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline btn-sm" id="cdlg-cancel-btn" onclick="closeCustomDialog(false)">إلغاء</button>
-        <button type="button" class="btn btn-primary btn-sm" id="cdlg-ok-btn" onclick="closeCustomDialog(true)">تأكيد وحفظ ✓</button>
-      </div>
+
     </div>
   </div>
 
@@ -10625,8 +11886,11 @@ button.btn-danger-outline,
   <div id="modal-category-form" class="modal-backdrop">
     <div class="modal" style="max-width:540px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="cat-modal-title">🏷️ تعديل التصنيف وتفريعاته</h3>
-        <button class="modal-close" onclick="closeModal('modal-category-form')">&times;</button>
+        <h3 class="modal-title" id="cat-modal-title">تعديل التصنيف وتفريعاته</h3>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-save-btn" onclick="saveCategoryModalSubmit()" title="حفظ التغييرات" aria-label="حفظ التغييرات"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-category-form')" title="إلغاء وإغلاق" aria-label="إلغاء وإغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body">
         <input type="hidden" id="cf-id">
@@ -10649,10 +11913,7 @@ button.btn-danger-outline,
           <div id="cf-modal-subs-list" style="display:flex; flex-direction:column; gap:0.35rem; max-height:190px; overflow-y:auto; padding:0.35rem; background:var(--bg-muted); border-radius:var(--radius-sm); border:1px solid var(--border-subtle);"></div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline" onclick="closeModal('modal-category-form')">إلغاء</button>
-        <button type="button" class="btn btn-primary" onclick="saveCategoryModalSubmit()">💾 حفظ التغييرات</button>
-      </div>
+
     </div>
   </div>
 
@@ -10660,8 +11921,11 @@ button.btn-danger-outline,
   <div id="modal-template-form" class="modal-backdrop">
     <div class="modal" style="max-width:550px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="tpl-modal-title">⚡ قالب سريع جديد</h3>
-        <button class="modal-close" onclick="closeModal('modal-template-form')">&times;</button>
+        <h3 class="modal-title" id="tpl-modal-title">قالب سريع جديد</h3>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-save-btn" onclick="saveTemplateModalSubmit()" title="حفظ القالب" aria-label="حفظ القالب"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-template-form')" title="إلغاء وإغلاق" aria-label="إلغاء وإغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body">
         <input type="hidden" id="tf-tpl-id">
@@ -10689,10 +11953,7 @@ button.btn-danger-outline,
           <textarea id="tf-tpl-desc" class="form-control" rows="3" placeholder="التفاصيل التي سيتم ملؤها تلقائياً..."></textarea>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('modal-template-form')">إلغاء</button>
-        <button class="btn btn-primary" onclick="saveTemplateModalSubmit()">💾 حفظ القالب</button>
-      </div>
+
     </div>
   </div>
 
@@ -10700,8 +11961,11 @@ button.btn-danger-outline,
   <div id="modal-mission-library-form" class="modal-backdrop">
     <div class="modal modal-card" style="max-width:660px;">
       <div class="modal-header">
-        <h3 class="modal-title" id="mlf-modal-title">📚 إضافة مهمة مهنية إلى المكتبة</h3>
-        <button class="modal-close" onclick="closeModal('modal-mission-library-form')">&times;</button>
+        <h3 class="modal-title" id="mlf-modal-title">إضافة مهمة مهنية إلى المكتبة</h3>
+        <div class="modal-top-actions">
+          <button type="submit" form="mission-library-form" class="action-icon-btn modal-action-save-btn" title="حفظ المهمة في المكتبة" aria-label="حفظ المهمة"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-mission-library-form')" title="إلغاء وإغلاق" aria-label="إلغاء وإغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body">
         <form id="mission-library-form" onsubmit="saveMissionLibraryFormSubmit(event)">
@@ -10771,10 +12035,7 @@ button.btn-danger-outline,
             </div>
           </div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline" onclick="closeModal('modal-mission-library-form')">إلغاء</button>
-            <button type="submit" class="btn btn-primary">💾 حفظ المهمة في المكتبة</button>
-          </div>
+
         </form>
       </div>
     </div>
@@ -10785,22 +12046,17 @@ button.btn-danger-outline,
     <div class="modal modal-card" style="max-width:740px;">
       <div class="modal-header">
         <div>
-          <h3 class="modal-title" id="mexec-modal-title">📊 سجل التنفيذات الفعلية للمهمة</h3>
+          <h3 class="modal-title" id="mexec-modal-title">سجل التنفيذات الفعلية للمهمة</h3>
           <div style="font-size:0.78rem; color:var(--text-muted);" id="mexec-modal-subtitle"></div>
         </div>
-        <button class="modal-close" onclick="closeModal('modal-mission-executions')">&times;</button>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-save-btn" id="mexec-new-run-btn" title="تسجيل تنفيذ جديد لهذه المهمة" aria-label="تنفيذ جديد"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></button>
+          <button type="button" class="action-icon-btn btn-outline" id="mexec-edit-mission-btn" title="تعديل نموذج المهمة بالمكتبة" aria-label="تعديل"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>
+          <button type="button" class="action-icon-btn btn-outline" id="mexec-filter-registry-btn" title="عرض في السجل العام" aria-label="السجل"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-mission-executions')" title="إغلاق" aria-label="إغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body" id="mexec-modal-body"></div>
-      <div class="modal-footer" style="justify-content:space-between;">
-        <div style="display:flex; gap:0.4rem;">
-          <button type="button" class="btn btn-sm btn-outline" id="mexec-edit-mission-btn">✏️ تعديل نموذج المهمة بالمكتبة</button>
-          <button type="button" class="btn btn-sm btn-outline" id="mexec-filter-registry-btn">📋 عرض في السجل العام</button>
-        </div>
-        <div style="display:flex; gap:0.4rem;">
-          <button type="button" class="btn btn-sm btn-primary" id="mexec-new-run-btn">⚡ تسجيل تنفيذ جديد لهذه المهمة</button>
-          <button type="button" class="btn btn-sm btn-secondary" onclick="closeModal('modal-mission-executions')">إغلاق</button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -10808,8 +12064,12 @@ button.btn-danger-outline,
   <div id="modal-unsaved-guard" class="modal-backdrop">
     <div class="modal modal-card" style="max-width:460px;">
       <div class="modal-header">
-        <h3 class="modal-title" style="font-size:1rem; color:var(--warning);">⚠️ تنبيه: بيانات مدخلة غير محفوظة</h3>
-        <button class="modal-close" onclick="resolveUnsavedGuard('stay')">&times;</button>
+        <h3 class="modal-title" style="font-size:1rem; color:var(--warning);">تنبيه: بيانات مدخلة غير محفوظة</h3>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-save-btn" onclick="resolveUnsavedGuard('stay')" title="البقاء ومواصلة التحرير" aria-label="البقاء"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn btn-outline" id="unsaved-guard-transfer-btn" style="display:none;" onclick="resolveUnsavedGuard('transfer')" title="نقل النص للنافذة المطلوبة" aria-label="نقل النص"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="resolveUnsavedGuard('discard')" title="تجاهل التعديلات وإغلاق" aria-label="تجاهل"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body" style="font-size:0.86rem; line-height:1.7;">
         <p id="unsaved-guard-message" style="margin:0 0 0.5rem 0; font-weight:700; color:var(--text-main);">
@@ -10818,13 +12078,6 @@ button.btn-danger-outline,
         <p style="margin:0; font-size:0.78rem; color:var(--text-muted);">
           يضمن هذا الحارس عدم ضياع أي بيانات قمت بكتابتها عن طريق الخطأ.
         </p>
-      </div>
-      <div class="modal-footer" style="justify-content:space-between; flex-wrap:wrap; gap:0.4rem;">
-        <button type="button" class="btn btn-sm btn-primary" onclick="resolveUnsavedGuard('stay')">↩️ البقاء ومواصلة التحرير</button>
-        <div style="display:flex; gap:0.4rem;">
-          <button type="button" class="btn btn-sm btn-outline" id="unsaved-guard-transfer-btn" style="display:none;" onclick="resolveUnsavedGuard('transfer')">🔄 نقل النص للنافذة المطلوبة</button>
-          <button type="button" class="btn btn-sm btn-danger-outline" onclick="resolveUnsavedGuard('discard')">🗑️ تجاهل التعديلات</button>
-        </div>
       </div>
     </div>
   </div>
@@ -10837,7 +12090,10 @@ button.btn-danger-outline,
           <svg class="outline-svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
           <span>قفل حماية الإعدادات (PIN)</span>
         </h3>
-        <button type="button" class="modal-close" onclick="cancelSettingsPinVerify()">&times;</button>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-save-btn" id="pin-verify-submit-btn" onclick="verifySettingsPinSubmit()" title="فتح الإعدادات" aria-label="فتح الإعدادات"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="cancelSettingsPinVerify()" title="إلغاء وإغلاق" aria-label="إلغاء وإغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
       </div>
       <div class="modal-body" style="padding: 1.25rem !important;">
         <p style="font-size:0.86rem; color:var(--text-secondary); margin:0 0 0.85rem 0; line-height:1.6;">
@@ -10850,9 +12106,25 @@ button.btn-danger-outline,
           الرمز السري غير صحيح، يُرجى المحاولة مرة أخرى.
         </div>
       </div>
-      <div class="modal-footer" style="justify-content:flex-end; gap:0.5rem;">
-        <button type="button" class="btn btn-danger" onclick="cancelSettingsPinVerify()">إلغاء</button>
-        <button type="button" class="btn btn-primary" id="pin-verify-submit-btn" onclick="verifySettingsPinSubmit()">فتح الإعدادات</button>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL: DYNAMIC ABOUT APP (V64.0) -->
+  <div id="modal-about-app" class="modal-backdrop" style="z-index: 3100 !important;">
+    <div class="modal modal-card" style="max-width: 480px !important;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display:inline-flex; align-items:center; gap:0.45rem;">
+          <svg class="outline-svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span id="about-modal-title-display">نظام تدبير المهام اليومية — المديرية الإقليمية للعدل</span>
+        </h3>
+        <div class="modal-top-actions">
+          <button type="button" class="action-icon-btn modal-action-close-btn" onclick="closeModal('modal-about-app')" title="إغلاق" aria-label="إغلاق"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+        </div>
+      </div>
+      <div class="modal-body" style="padding: 1.25rem !important;">
+        <p id="about-modal-desc-display" style="font-size:14px; color:var(--text-secondary); line-height:1.75; margin:0; white-space:pre-wrap;">منظومة رقمية مؤسساتية شاملة لتدبير المهام اليومية والتدخلات التقنية واللوجستية وتنقلات أوامر المهمة، وإصدار التقارير الرسمية بصيغة A4.</p>
       </div>
     </div>
   </div>
@@ -10861,29 +12133,72 @@ button.btn-danger-outline,
   <div id="toast-container"></div>
 
   <script>
-// In-memory runtime session store (replaces all legacy browser storage)
+// Hybrid Persistent Storage Engine (Bridges window.localStorage with in-memory fallback for 100% offline/file:// & cloud reliability)
 const CLOUD_MEMORY_DATA = {};
 const CLOUD_MEMORY_STORE = {
   get length() {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        return window.localStorage.length;
+      }
+    } catch (e) {}
     return Object.keys(CLOUD_MEMORY_DATA).length;
   },
   key(idx) {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        return window.localStorage.key(idx);
+      }
+    } catch (e) {}
     const keys = Object.keys(CLOUD_MEMORY_DATA);
     return keys[idx] !== undefined ? keys[idx] : null;
   },
   getItem(k) {
-    return Object.prototype.hasOwnProperty.call(CLOUD_MEMORY_DATA, k) ? CLOUD_MEMORY_DATA[k] : null;
+    const keyStr = String(k);
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const val = window.localStorage.getItem(keyStr);
+        if (val !== null) {
+          CLOUD_MEMORY_DATA[keyStr] = val;
+          return val;
+        }
+      }
+    } catch (e) {}
+    return Object.prototype.hasOwnProperty.call(CLOUD_MEMORY_DATA, keyStr) ? CLOUD_MEMORY_DATA[keyStr] : null;
   },
   setItem(k, v) {
-    CLOUD_MEMORY_DATA[String(k)] = String(v);
+    const keyStr = String(k);
+    const valStr = String(v);
+    CLOUD_MEMORY_DATA[keyStr] = valStr;
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(keyStr, valStr);
+      }
+    } catch (e) {
+      if (e && (e.name === 'QuotaExceededError' || e.code === 22)) {
+        throw e;
+      }
+    }
   },
   removeItem(k) {
-    delete CLOUD_MEMORY_DATA[String(k)];
+    const keyStr = String(k);
+    delete CLOUD_MEMORY_DATA[keyStr];
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.removeItem(keyStr);
+      }
+    } catch (e) {}
   },
   clear() {
     Object.keys(CLOUD_MEMORY_DATA).forEach(k => delete CLOUD_MEMORY_DATA[k]);
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.clear();
+      }
+    } catch (e) {}
   }
 };
+try { window.CLOUD_MEMORY_STORE = CLOUD_MEMORY_STORE; } catch (e) {}
 
 // ========================================================
 // CORE JAVASCRIPT SYSTEM ENGINE (V4.1 ENTERPRISE / DYNAMIC FORMS)
@@ -12261,7 +13576,7 @@ function renderDashboard() {
     }
   }
 
-  // Horizontal Bar 3: المهام المبرمجة مستقبلاً (استشراف المهام القادمة)
+  // Horizontal Bar 3: المهام المبرمجة مستقبلاً
   const futureContainer = document.getElementById('dash-future-tasks-container');
   const futureMoreLink = document.getElementById('dash-future-more-link');
   if (futureContainer) {
@@ -12761,15 +14076,15 @@ function renderCalendar() {
     cell.className = `calendar-cell ${isWeekend ? 'weekend' : ''} ${dateStr === todayStr ? 'today' : ''} ${borderClass}`;
     cell.onclick = () => openDayInspector(dateStr);
 
-    let badgeHtml = count > 0 ? `<span class="cell-task-badge">${count}</span>` : '';
+    let badgeHtml = count > 0 ? `<span class="cell-task-badge task-badge">${count}</span>` : '';
     let previewDest = count > 0 ? (dayTasks[0].destination ? '📍 ' + dayTasks[0].destination.split(' ')[0] : '') : '';
 
     cell.innerHTML = `
       <div class="cell-top">
-        <span class="cell-num">${day}</span>
+        <span class="cell-num day-number">${day}</span>
         ${badgeHtml}
       </div>
-      <div style="font-size:0.68rem; color:var(--text-muted); margin-top:auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+      <div class="task-details" style="font-size:0.68rem; color:var(--text-muted); margin-top:auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
         ${previewDest}
       </div>
     `;
@@ -13371,10 +14686,20 @@ function printMissionReport() {
           max-height: 75px;
           object-fit: contain;
         }
+        html, body {
+          height: auto !important;
+          min-height: 0 !important;
+          max-height: none !important;
+          overflow: visible !important;
+        }
         .report-print-content {
-          padding: 135px 45px 95px 45px;
+          padding: 130px 40px 90px 40px;
+          margin: 0 auto !important;
+          width: 100% !important;
           box-sizing: border-box;
-          min-height: 100vh;
+          height: auto !important;
+          min-height: auto !important;
+          page-break-after: avoid !important;
         }
       </style>
     </head>
@@ -13982,7 +15307,7 @@ function handleTaskFormSubmit(e) {
 
   const btn = document.getElementById('tf-submit-btn');
   btn.disabled = true;
-  btn.innerText = 'جاري الحفظ... ⏳';
+  btn.innerHTML = '<svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
   isSubmitting = true;
 
   setTimeout(() => {
@@ -14030,7 +15355,7 @@ function handleTaskFormSubmit(e) {
     closeModal('modal-task-form');
     
     btn.disabled = false;
-    btn.innerText = '💾 حفظ المهمة';
+    btn.innerHTML = '<svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
     isSubmitting = false;
 
     populateAllDropdowns();
@@ -15309,7 +16634,7 @@ setTaskSchedulePreset = function(type) {
 
 // Override openNewTaskModal for V18 Calm & Progressive experience
 openNewTaskModal = function() {
-  document.getElementById('task-modal-title').innerText = '➕ تسجيل مهمة أو تدخل جديد';
+  document.getElementById('task-modal-title').innerText = 'تسجيل مهمة أو تدخل جديد';
   document.getElementById('tf-id').value = '';
   document.getElementById('task-main-form').reset();
   closeAllSmartCombos();
@@ -15366,7 +16691,7 @@ openEditTaskModal = function(id) {
   if (!t) return;
   closeAllSmartCombos();
 
-  document.getElementById('task-modal-title').innerText = '✏️ تعديل بيانات المهمة';
+  document.getElementById('task-modal-title').innerText = 'تعديل بيانات المهمة';
   document.getElementById('tf-id').value = t.id;
 
   const chkBacklog = document.getElementById('tf-is-backlog');
@@ -16859,11 +18184,11 @@ function renderMissionLibraryView() {
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.35rem; padding-top:0.65rem; border-top:1px solid var(--border-subtle);">
-            <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
-              <button type="button" class="btn btn-sm btn-primary" style="padding:0.28rem 0.65rem; font-size:0.76rem;" onclick="launchTaskFromLibraryMission('${m.id}')">⚡ تنفيذ الآن</button>
-              <button type="button" class="btn btn-sm btn-outline" style="padding:0.28rem 0.55rem; font-size:0.75rem;" onclick="openMissionExecutionsModal('${m.id}')">📊 التنفيذات (${stats.totalExecutions})</button>
+            <div class="card-actions" style="display:flex; gap:0.35rem; align-items:center;">
+              <button type="button" class="btn btn-sm btn-primary action-icon-btn" onclick="launchTaskFromLibraryMission('${m.id}')" title="تنفيذ الآن" aria-label="تنفيذ الآن"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></button>
+              <button type="button" class="btn btn-sm btn-outline lib-exec-count-btn" onclick="openMissionExecutionsModal('${m.id}')" title="سجل التنفيذات (${stats.totalExecutions})" aria-label="سجل التنفيذات (${stats.totalExecutions})"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg><span class="lib-mini-count-badge">${stats.totalExecutions}</span></button>
             </div>
-            <div style="display:flex; gap:0.25rem; align-items:center;">
+            <div class="card-actions" style="display:flex; gap:0.25rem; align-items:center;">
               <button type="button" class="btn btn-sm btn-outline" style="padding:0.2rem 0.42rem; font-size:0.72rem;" onclick="moveMissionInLibrary('${m.id}', -1)" title="تحريك للأعلى">▲</button>
               <button type="button" class="btn btn-sm btn-outline" style="padding:0.2rem 0.42rem; font-size:0.72rem;" onclick="moveMissionInLibrary('${m.id}', 1)" title="تحريك للأسفل">▼</button>
               <button type="button" class="btn btn-sm btn-outline" style="padding:0.2rem 0.45rem; font-size:0.74rem;" onclick="openMissionLibraryModal('${m.id}')" title="تعديل المهمة والعمليات الفرعية">✏️</button>
@@ -16906,12 +18231,12 @@ function renderSettingsLibraryTab() {
           🏷️ ${escapeHtml(m.category || 'عام')} | ☑️ ${subsCount} عمليات فرعية نموذجية | 📊 ${stats.totalExecutions} تنفيذات مسجلة بالسجل
         </div>
       </div>
-      <div style="display:flex; gap:0.3rem; align-items:center; flex-wrap:wrap;">
-        <button type="button" class="btn btn-sm btn-primary" onclick="launchTaskFromLibraryMission('${m.id}')">⚡ تنفيذ</button>
-        <button type="button" class="btn btn-sm btn-outline" onclick="openMissionExecutionsModal('${m.id}')">📊 السجل (${stats.totalExecutions})</button>
-        <button type="button" class="btn btn-sm btn-outline" onclick="openMissionLibraryModal('${m.id}')">✏️ تعديل</button>
-        <button type="button" class="btn btn-sm btn-outline" onclick="toggleArchiveMissionLibrary('${m.id}')">${isArch ? '♻️ تفعيل' : '📦 أرشفة'}</button>
-        <button type="button" class="btn btn-sm btn-danger-outline" onclick="deleteMissionFromLibrary('${m.id}')">🗑️</button>
+      <div class="card-actions" style="display:flex; gap:0.3rem; align-items:center; flex-wrap:nowrap;">
+        <button type="button" class="btn btn-sm btn-primary action-icon-btn" onclick="launchTaskFromLibraryMission('${m.id}')" title="تنفيذ" aria-label="تنفيذ"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></button>
+        <button type="button" class="btn btn-sm btn-outline lib-exec-count-btn" onclick="openMissionExecutionsModal('${m.id}')" title="السجل (${stats.totalExecutions})" aria-label="السجل (${stats.totalExecutions})"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg><span class="lib-mini-count-badge">${stats.totalExecutions}</span></button>
+        <button type="button" class="btn btn-sm btn-outline action-icon-btn" onclick="openMissionLibraryModal('${m.id}')" title="تعديل" aria-label="تعديل"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>
+        <button type="button" class="btn btn-sm btn-outline action-icon-btn" onclick="toggleArchiveMissionLibrary('${m.id}')" title="${isArch ? 'تفعيل' : 'أرشفة'}" aria-label="${isArch ? 'تفعيل' : 'أرشفة'}">${isArch ? '♻️' : '📦'}</button>
+        <button type="button" class="btn btn-sm btn-danger-outline action-icon-btn" onclick="deleteMissionFromLibrary('${m.id}')" title="حذف" aria-label="حذف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
       </div>
     `;
     container.appendChild(row);
@@ -18028,11 +19353,11 @@ renderCalendar = function() {
     let badgeHtml = '';
     if (dayState.total > 0) {
       if (dayState.isMixed) {
-        badgeHtml = `<span class="cell-task-badge" title="${escapeHtml(dayState.statusSummary)}">${dayState.doneCount}/${dayState.total} ✓</span>`;
+        badgeHtml = `<span class="cell-task-badge task-badge" title="${escapeHtml(dayState.statusSummary)}">${dayState.doneCount}/${dayState.total} ✓</span>`;
       } else if (dayState.openCount === 0) {
-        badgeHtml = `<span class="cell-task-badge" style="background:var(--success);">${dayState.total} ✓</span>`;
+        badgeHtml = `<span class="cell-task-badge task-badge" style="background:var(--success);">${dayState.total} ✓</span>`;
       } else {
-        badgeHtml = `<span class="cell-task-badge">${dayState.total}</span>`;
+        badgeHtml = `<span class="cell-task-badge task-badge">${dayState.total}</span>`;
       }
     }
 
@@ -18042,10 +19367,10 @@ renderCalendar = function() {
 
     cell.innerHTML = `
       <div class="cell-top">
-        <span class="cell-num">${day}</span>
+        <span class="cell-num day-number">${day}</span>
         ${badgeHtml}
       </div>
-      <div style="font-size:0.68rem; color:var(--text-muted); margin-top:auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+      <div class="task-details" style="font-size:0.68rem; color:var(--text-muted); margin-top:auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
         ${previewDest}
       </div>
     `;
@@ -18840,7 +20165,7 @@ updateReportPreview = function() {
 
     ${subtasksReportHtml}
 
-    <div style="display:flex; justify-content:space-between; margin-top:3rem; padding:0 2rem; font-size:10pt; color:#0f172a;">
+    <div class="report-signatures-block" style="display:flex; justify-content:space-between; margin-top:2.2rem; padding:0 2rem; font-size:10pt; color:#0f172a; page-break-inside:avoid !important; break-inside:avoid !important;">
       <div style="text-align:center;">
         <strong>توقيع الشخص القائم بالمهمة :</strong><br><br><br>
         <u>${escapeHtml(p.fullName || s.userName || 'محمد ايت حمادي')}</u>
@@ -18913,8 +20238,11 @@ printMissionReport = function() {
           text-align: center; background: #ffffff; z-index: 1000;
         }
         .report-print-footer img { width: 100%; max-height: 75px; object-fit: contain; }
+        html, body {
+          height: auto !important; min-height: 0 !important; max-height: none !important; overflow: visible !important;
+        }
         .report-print-content {
-          padding: 135px 45px 95px 45px; box-sizing: border-box; min-height: 100vh;
+          padding: 130px 40px 90px 40px; margin: 0 auto !important; width: 100% !important; box-sizing: border-box; height: auto !important; min-height: auto !important; page-break-after: avoid !important;
         }
       </style>
     </head>
@@ -18949,7 +20277,7 @@ printMissionReport = function() {
           <div style="min-height:120px; padding:0.4rem 0; line-height:2.1; white-space:pre-wrap; margin-top:0.2rem;">${escapeHtml(notes)}</div>
         </div>
         ${subtasksPrintHtml}
-        <div style="display:flex; justify-content:space-between; margin-top:3rem; padding:0 3rem; font-size:10pt;">
+        <div class="report-signatures-block" style="display:flex; justify-content:space-between; margin-top:2.2rem; padding:0 3rem; font-size:10pt; page-break-inside:avoid !important; break-inside:avoid !important;">
           <div style="text-align:center;">
             <strong>توقيع الشخص القائم بالمهمة :</strong><br><br><br>
             <u>${escapeHtml(p.fullName || s.userName || 'محمد ايت حمادي')}</u>
@@ -21212,7 +22540,7 @@ updateReportPreview = function() {
 
     ${subtasksReportHtml}
 
-    <div style="display:flex; justify-content:space-between; margin-top:3rem; padding:0 2rem; font-size:10pt; color:#0f172a;">
+    <div class="report-signatures-block" style="display:flex; justify-content:space-between; margin-top:2.2rem; padding:0 2rem; font-size:10pt; color:#0f172a; page-break-inside:avoid !important; break-inside:avoid !important;">
       <div style="text-align:center;">
         <strong>توقيع الشخص القائم بالمهمة :</strong><br><br><br>
         <u>${escapeHtml(empDisplay)}</u>
@@ -21287,8 +22615,11 @@ printMissionReport = function() {
           text-align: center; background: #ffffff; z-index: 1000;
         }
         .report-print-footer img { width: 100%; max-height: 75px; object-fit: contain; }
+        html, body {
+          height: auto !important; min-height: 0 !important; max-height: none !important; overflow: visible !important;
+        }
         .report-print-content {
-          padding: 135px 45px 95px 45px; box-sizing: border-box; min-height: 100vh;
+          padding: 130px 40px 90px 40px; margin: 0 auto !important; width: 100% !important; box-sizing: border-box; height: auto !important; min-height: auto !important; page-break-after: avoid !important;
         }
       </style>
     </head>
@@ -21321,7 +22652,7 @@ printMissionReport = function() {
           <div style="min-height:120px; padding:0.4rem 0; line-height:2.1; white-space:pre-wrap; margin-top:0.2rem;">${escapeHtml(notes)}</div>
         </div>
         ${subtasksPrintHtml}
-        <div style="display:flex; justify-content:space-between; margin-top:3rem; padding:0 3rem; font-size:10pt;">
+        <div class="report-signatures-block" style="display:flex; justify-content:space-between; margin-top:2.2rem; padding:0 3rem; font-size:10pt; page-break-inside:avoid !important; break-inside:avoid !important;">
           <div style="text-align:center;">
             <strong>توقيع الشخص القائم بالمهمة :</strong><br><br><br>
             <u>${escapeHtml(p.fullName || s.userName || 'محمد ايت حمادي')}</u>
@@ -22140,16 +23471,9 @@ window.addEventListener('DOMContentLoaded', () => {
 function applyDynamicViewportRestraintToDropdown(menuEl) {
   if (!menuEl) return;
   try {
-    const wrap = menuEl.closest('.smart-combo-wrap') || menuEl.parentElement;
-    if (!wrap) return;
-    const rect = wrap.getBoundingClientRect();
-    const viewportH = window.innerHeight || document.documentElement.clientHeight || 800;
-    const safeBottomMargin = 5; // 5px safe margin from bottom of browser window
-    const availableBelow = Math.floor(viewportH - rect.bottom - safeBottomMargin - 6);
-    const constrainedMaxH = Math.max(80, Math.min(280, availableBelow));
-    menuEl.style.setProperty('max-height', `min(calc(100vh - ${Math.ceil(rect.bottom + safeBottomMargin)}px), ${constrainedMaxH}px)`, 'important');
+    menuEl.style.setProperty('max-height', '150px', 'important');
     menuEl.style.setProperty('overflow-y', 'auto', 'important');
-    menuEl.style.setProperty('z-index', '3500', 'important');
+    menuEl.style.setProperty('z-index', '99999', 'important');
   } catch (e) {}
 }
 
@@ -23553,7 +24877,7 @@ handleTaskFormSubmit = function(e) {
     const btn = document.getElementById('tf-submit-btn');
     if (btn) {
       btn.disabled = false;
-      btn.innerText = 'حفظ المهمة';
+      btn.innerHTML = '<svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
     }
     isSubmitting = false;
   }
@@ -23846,12 +25170,12 @@ renderSettingsCategories = function() {
           </div>
           <div id="sub-edit-box-${idx}-${sIdx}" style="display:none; align-items:center; gap:0.35rem; flex:1;">
             <input type="text" id="sub-edit-input-${idx}-${sIdx}" class="form-control" style="height:32px !important; min-height:32px !important; padding:0.2rem 0.5rem !important; font-size:0.82rem !important;" value="${escapeHtml(subName)}" onkeydown="if(event.key==='Enter'){event.preventDefault(); saveInlineSubcategoryEdit(${idx}, ${sIdx});}">
-            <button type="button" class="btn btn-sm btn-primary" style="padding:0.18rem 0.55rem; font-size:0.74rem;" onclick="saveInlineSubcategoryEdit(${idx}, ${sIdx})">حفظ</button>
-            <button type="button" class="btn btn-sm btn-outline" style="padding:0.18rem 0.45rem; font-size:0.74rem;" onclick="cancelInlineSubcategoryEdit(${idx}, ${sIdx})">إلغاء</button>
+            <button type="button" class="action-icon-btn btn-primary" onclick="saveInlineSubcategoryEdit(${idx}, ${sIdx})" title="حفظ" aria-label="حفظ"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+            <button type="button" class="action-icon-btn btn-danger-outline" onclick="cancelInlineSubcategoryEdit(${idx}, ${sIdx})" title="إلغاء" aria-label="إلغاء"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg></button>
           </div>
           <div id="sub-actions-${idx}-${sIdx}" style="display:flex; gap:0.3rem; flex-shrink:0;">
-            <button type="button" class="btn btn-sm btn-outline" style="padding:0.18rem 0.5rem; font-size:0.74rem;" onclick="editSubcategoryInCategory(${idx}, ${sIdx})" title="تعديل هذا التفريع">تعديل</button>
-            <button type="button" class="btn btn-sm btn-danger-outline" style="padding:0.18rem 0.5rem; font-size:0.74rem;" onclick="removeSubcategoryFromCategory(${idx}, ${sIdx})" title="حذف هذا التفريع">حذف</button>
+            <button type="button" class="action-icon-btn btn-outline" onclick="editSubcategoryInCategory(${idx}, ${sIdx})" title="تعديل هذا التفريع" aria-label="تعديل"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>
+            <button type="button" class="action-icon-btn btn-danger-outline" onclick="removeSubcategoryFromCategory(${idx}, ${sIdx})" title="حذف هذا التفريع" aria-label="حذف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
           </div>
         </div>
       `;
@@ -23860,30 +25184,30 @@ renderSettingsCategories = function() {
     card.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
         <div id="cat-header-display-${idx}" style="display:flex; align-items:center; gap:0.65rem; cursor:pointer; flex:1; min-width:180px;" onclick="toggleCategorySubs('cat-subs-${idx}')" title="اضغط لفتح أو طي التفريعات والعمليات الفرعية الخاصة بهذا الصنف">
-          <span style="font-size:1.25rem;">${cat.icon || '🏷️'}</span>
+          <span style="font-size:1.15rem;">${cat.icon || '🏷️'}</span>
           <div>
-            <strong style="font-size:0.96rem; color:var(--text-main);">${escapeHtml(cat.name)}</strong>
+            <strong style="font-size:0.95rem; color:var(--text-main);">${escapeHtml(cat.name)}</strong>
             <span class="badge-soft badge-primary" style="margin-inline-start:8px; font-weight:700;">${subs.length} تفريعات ▾</span>
           </div>
         </div>
         <div id="cat-header-edit-${idx}" style="display:none; align-items:center; gap:0.4rem; flex:1; min-width:220px;">
           <input type="text" id="cat-inline-name-input-${idx}" class="form-control" style="flex:1; height:36px !important; min-height:36px !important;" value="${escapeHtml(cat.name)}" onkeydown="if(event.key==='Enter'){event.preventDefault(); saveInlineCategoryName(${idx});}">
-          <button type="button" class="btn btn-sm btn-primary" onclick="saveInlineCategoryName(${idx})">حفظ الاسم</button>
-          <button type="button" class="btn btn-sm btn-outline" onclick="cancelInlineCategoryName(${idx})">إلغاء</button>
+          <button type="button" class="action-icon-btn btn-primary" onclick="saveInlineCategoryName(${idx})" title="حفظ الاسم" aria-label="حفظ الاسم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button type="button" class="action-icon-btn btn-danger-outline" onclick="cancelInlineCategoryName(${idx})" title="إلغاء" aria-label="إلغاء"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg></button>
         </div>
-        <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
-          <button type="button" class="btn btn-sm btn-outline" onclick="startInlineCategoryNameEdit(${idx})" title="تعديل اسم التصنيف مباشرة">تعديل الاسم</button>
-          <button type="button" class="btn btn-sm btn-outline" onclick="openCategoryModal(${idx})" title="تعديل التصنيف وتفريعاته في نافذة">نافذة التعديل</button>
-          <button type="button" class="btn btn-sm btn-danger-outline" onclick="deleteCategory(${idx})" title="حذف التصنيف">حذف</button>
+        <div style="display:flex; gap:0.35rem; flex-wrap:nowrap;">
+          <button type="button" class="action-icon-btn btn-outline" onclick="startInlineCategoryNameEdit(${idx})" title="تعديل اسم التصنيف مباشرة" aria-label="تعديل الاسم"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>
+          <button type="button" class="action-icon-btn btn-outline" onclick="openCategoryModal(${idx})" title="تعديل التصنيف وتفريعاته في نافذة" aria-label="نافذة التعديل"><svg class="outline-svg-icon" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></button>
+          <button type="button" class="action-icon-btn btn-danger-outline" onclick="deleteCategory(${idx})" title="حذف التصنيف" aria-label="حذف التصنيف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
         </div>
       </div>
 
       <!-- Interactive Sub-branches Panel for this Category -->
       <div id="cat-subs-${idx}" style="display:block; margin-top:0.85rem; background:var(--bg-muted); padding:0.85rem; border-radius:var(--radius-md); border-top:1px solid var(--border-subtle);">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.65rem;">
+        <div style="display:flex; flex-direction:column; align-items:stretch; gap:0.5rem; margin-bottom:0.65rem; width:100%;">
           <span style="font-weight:800; font-size:0.8rem; color:var(--primary);">التفريعات والعمليات الفرعية المرتبطة بصنف «${escapeHtml(cat.name)}»:</span>
-          <div style="display:flex; gap:0.4rem; flex:1; max-width:440px;">
-            <input type="text" id="new-sub-inline-input-${idx}" class="form-control" style="padding:0.28rem 0.6rem; font-size:0.82rem;" placeholder="اكتب تفريعاً أو عملية فرعية جديدة لهذا الصنف..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubcategoryInline(${idx});}">
+          <div style="display:flex; gap:0.45rem; align-items:center; width:100%; max-width:100%;">
+            <input type="text" id="new-sub-inline-input-${idx}" class="form-control" style="flex:1; width:100%; min-width:0; padding:0.28rem 0.6rem; font-size:0.82rem;" placeholder="اكتب تفريعاً أو عملية فرعية جديدة لهذا الصنف..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addSubcategoryInline(${idx});}">
             <button type="button" class="action-icon-btn btn-primary universal-add-outline-btn" onclick="addSubcategoryInline(${idx})" title="إضافة تفريع" aria-label="إضافة تفريع"><svg class="outline-svg-icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
           </div>
         </div>
@@ -24098,7 +25422,7 @@ function renderCategoryModalSubsList() {
     row.innerHTML = `
       <span style="color:var(--primary); font-weight:800; font-size:0.75rem;">${i + 1}.</span>
       <input type="text" class="form-control" style="flex:1; height:30px !important; min-height:30px !important; padding:0.15rem 0.45rem !important; font-size:0.8rem !important;" value="${escapeHtml(s)}" oninput="categoryModalTempSubs[${i}] = this.value">
-      <button type="button" class="btn btn-sm btn-danger-outline" style="padding:0.12rem 0.4rem; font-size:0.72rem;" onclick="categoryModalTempSubs.splice(${i}, 1); renderCategoryModalSubsList();">حذف</button>
+      <button type="button" class="action-icon-btn btn-danger-outline" onclick="categoryModalTempSubs.splice(${i}, 1); renderCategoryModalSubsList();" title="حذف" aria-label="حذف"><svg class="outline-svg-icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
     `;
     listEl.appendChild(row);
   });
@@ -24651,13 +25975,9 @@ importBackupDataObject = function(rawInput, skipConfirm) {
 const _origApplyDynamicViewportRestraintV13 = applyDynamicViewportRestraintToDropdown;
 applyDynamicViewportRestraintToDropdown = function(menuEl) {
   if (!menuEl) return;
-  if (window.innerWidth <= 768) {
-    menuEl.style.setProperty('max-height', '190px', 'important');
-    menuEl.style.setProperty('overflow-y', 'auto', 'important');
-    menuEl.style.setProperty('z-index', '9999', 'important');
-    return;
-  }
-  _origApplyDynamicViewportRestraintV13(menuEl);
+  menuEl.style.setProperty('max-height', '150px', 'important');
+  menuEl.style.setProperty('overflow-y', 'auto', 'important');
+  menuEl.style.setProperty('z-index', '99999', 'important');
 };
 
 // Boot Hook for Directive v13.0
@@ -25300,7 +26620,7 @@ function enforceUniformSquareOutlineActionButtons() {
     if (oc.includes('openTaskPreview')) {
       btn.innerHTML = ICONS_V20_OUTLINE.eye;
       if (!btn.title) btn.title = 'معاينة';
-    } else if (oc.includes('openEditTaskModal') || oc.includes('openDestinationModal') || oc.includes('openNewTemplateModal') || oc.includes('editSavedTitleInSettings') || oc.includes('editBasicUserTaskInline') || oc.includes('openMissionLibraryModal')) {
+    } else if (oc.includes('openEditTaskModal') || oc.includes('openDestinationModal') || (oc.includes('openNewTemplateModal(') && !oc.includes('openNewTemplateModal()')) || oc.includes('editSavedTitleInSettings') || oc.includes('editBasicUserTaskInline') || (oc.includes('openMissionLibraryModal(') && !oc.includes('openMissionLibraryModal()'))) {
       btn.innerHTML = ICONS_V20_OUTLINE.edit;
       if (!btn.title) btn.title = 'تعديل';
     } else if (oc.includes('softDeleteTask') || oc.includes('permanentDeleteTask') || oc.includes('deleteDestination') || oc.includes('deleteTemplate') || oc.includes('deleteSavedTitleInSettings') || oc.includes('removeBasicUserTask') || oc.includes('deleteMissionFromLibrary')) {
@@ -25828,7 +27148,15 @@ function applyCondensedLibraryAndTaskBadges() {
     };
     Object.keys(pillMap).forEach(key => {
       const btn = document.querySelector(`#lib-filter-pills [data-libf="${key}"]`);
-      if (btn) btn.textContent = pillMap[key];
+      if (btn) {
+        const txtSpan = btn.querySelector('.btn-text-mobile-hide');
+        if (txtSpan) {
+          txtSpan.textContent = pillMap[key];
+        } else {
+          btn.textContent = pillMap[key];
+        }
+        btn.setAttribute('title', pillMap[key]);
+      }
     });
   }
   if (typeof APP !== 'undefined' && APP && Array.isArray(APP.tasks)) {
@@ -25896,7 +27224,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // CLOUD FIRESTORE REAL-TIME ENGINE (COLLECTION: 'tasks')
 // ========================================================
 
-const FIRESTORE_META_DOC_ID = '__app_metadata__';
+const FIRESTORE_META_DOC_ID = 'app_metadata_config';
 let isApplyingRemoteSnapshot = false;
 let metadataSyncTimer = null;
 let hasReceivedInitialFirestoreSnapshot = false;
@@ -25924,7 +27252,7 @@ function ensureTasksCollectionRef() {
 }
 
 // Save non-task app metadata (categories, courts, savedTitles, profile, settings, templates, missionLibrary)
-// inside collection('tasks').doc('__app_metadata__') so 100% of user customizations & JSON imports persist across refreshes!
+// inside collection('tasks').doc('app_metadata_config') so 100% of user customizations & JSON imports persist across refreshes!
 function syncAppMetadataToFirestoreImmediate() {
   if (!APP || isApplyingRemoteSnapshot) return Promise.resolve();
   const col = ensureTasksCollectionRef();
@@ -26137,7 +27465,7 @@ function initFirestoreRealtimeListener() {
         }
       });
 
-      // Restore categories, courts, savedTitles, profile, settings, templates, missionLibrary from __app_metadata__
+      // Restore categories, courts, savedTitles, profile, settings, templates, missionLibrary from app_metadata_config
       if (metaDocData) {
         if (Array.isArray(metaDocData.categories) && metaDocData.categories.length > 0) {
           APP.categories = metaDocData.categories;
@@ -26477,6 +27805,272 @@ window.addEventListener('DOMContentLoaded', () => {
     APP.settings.v13Initialized = true;
   }
   initFirestoreRealtimeListener();
+});
+
+
+// ========================================================
+// MASTER ENGINEERING DIRECTIVE V61.0 — DYNAMIC "ABOUT" SECTION CONTROLLER
+// ========================================================
+const V61_ABOUT_TITLE_KEY = 'ops_v61_about_title';
+const V61_ABOUT_DESC_KEY = 'ops_v61_about_desc';
+
+function loadAboutAppSettings() {
+  const defaultTitle = 'نظام تدبير المهام اليومية — المديرية الإقليمية للعدل';
+  const defaultDesc = 'منظومة رقمية مؤسساتية شاملة لتدبير المهام اليومية والتدخلات التقنية واللوجستية وتنقلات أوامر المهمة، وإصدار التقارير الرسمية بصيغة A4.';
+  let savedTitle = '';
+  let savedDesc = '';
+  try {
+    savedTitle = CLOUD_MEMORY_STORE.getItem(V61_ABOUT_TITLE_KEY) || '';
+    savedDesc = CLOUD_MEMORY_STORE.getItem(V61_ABOUT_DESC_KEY) || '';
+  } catch (e) {}
+
+  if (!savedTitle && typeof APP !== 'undefined' && APP && APP.settings && APP.settings.aboutTitle) {
+    savedTitle = APP.settings.aboutTitle;
+  }
+  if (!savedDesc && typeof APP !== 'undefined' && APP && APP.settings && APP.settings.aboutDesc) {
+    savedDesc = APP.settings.aboutDesc;
+  }
+
+  const finalTitle = savedTitle || defaultTitle;
+  const finalDesc = savedDesc || defaultDesc;
+
+  const titleInp = document.getElementById('cfg-about-title');
+  const descInp = document.getElementById('cfg-about-desc');
+  if (titleInp) titleInp.value = finalTitle;
+  if (descInp) descInp.value = finalDesc;
+
+  const modalTitleEl = document.getElementById('about-modal-title-display');
+  const modalDescEl = document.getElementById('about-modal-desc-display');
+  if (modalTitleEl) modalTitleEl.innerText = finalTitle;
+  if (modalDescEl) modalDescEl.innerText = finalDesc;
+
+  return { title: finalTitle, desc: finalDesc };
+}
+
+function saveAboutAppSettings(silent = false) {
+  const titleInp = document.getElementById('cfg-about-title');
+  const descInp = document.getElementById('cfg-about-desc');
+  const titleVal = (titleInp ? titleInp.value : '').trim() || 'نظام تدبير المهام اليومية — المديرية الإقليمية للعدل';
+  const descVal = (descInp ? descInp.value : '').trim() || 'منظومة رقمية مؤسساتية شاملة لتدبير المهام اليومية والتدخلات التقنية واللوجستية وتنقلات أوامر المهمة، وإصدار التقارير الرسمية بصيغة A4.';
+
+  try {
+    CLOUD_MEMORY_STORE.setItem(V61_ABOUT_TITLE_KEY, titleVal);
+    CLOUD_MEMORY_STORE.setItem(V61_ABOUT_DESC_KEY, descVal);
+  } catch (e) {}
+
+  if (typeof APP !== 'undefined' && APP) {
+    if (!APP.settings) APP.settings = {};
+    APP.settings.aboutTitle = titleVal;
+    APP.settings.aboutDesc = descVal;
+    saveData();
+  }
+
+  const modalTitleEl = document.getElementById('about-modal-title-display');
+  const modalDescEl = document.getElementById('about-modal-desc-display');
+  if (modalTitleEl) modalTitleEl.innerText = titleVal;
+  if (modalDescEl) modalDescEl.innerText = descVal;
+
+  if (!silent) {
+    clearSettingsDirty();
+    showToast('تم حفظ بيانات «حول البرنامج» بنجاح');
+  }
+}
+
+function openAboutAppModal() {
+  loadAboutAppSettings();
+  openModal('modal-about-app');
+}
+
+const _origSaveAllSettingsUnifiedV61 = saveAllSettingsUnified;
+saveAllSettingsUnified = function() {
+  saveAboutAppSettings(true);
+  return _origSaveAllSettingsUnifiedV61();
+};
+
+const _origSwitchSettingsTabV61 = switchSettingsTab;
+switchSettingsTab = function(tabKey) {
+  _origSwitchSettingsTabV61(tabKey);
+  if (tabKey === 'about') {
+    loadAboutAppSettings();
+  }
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    loadAboutAppSettings();
+  }, 200);
+});
+
+
+// ========================================================
+// MASTER ENGINEERING DIRECTIVE V80.0 & V90.0 — CONTROLLERS
+// (Req 7: Modal Backdrop Click + stopPropagation + Unsaved Guard,
+//  Req 8: Preserve .lib-exec-count-btn,
+//  Req 9: Deterministic Accordion Chevron Sync,
+//  Req 12: Strip .smart-combo-header in Dropdowns,
+//  Req 13: Short Status Button Labels + Hover Tooltips,
+//  Req 14: Quick Capture Dropdown Positioning & Scroll Restraint)
+// ========================================================
+
+// 1. Req 9: Deterministic Accordion State & Chevron Synchronizer
+function syncAllAccordionStatesAndChevrons() {
+  document.querySelectorAll('.accordion-item').forEach(item => {
+    const isOpen = item.classList.contains('is-open');
+    const header = item.querySelector('.accordion-header');
+    if (header) {
+      header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+    const chevronSvg = item.querySelector('.accordion-chevron svg');
+    if (chevronSvg) {
+      chevronSvg.style.setProperty('transform', isOpen ? 'rotate(180deg)' : 'rotate(0deg)', 'important');
+    }
+  });
+}
+
+toggleAccordion = function(accId) {
+  const el = document.getElementById(accId);
+  if (!el) return;
+  el.classList.toggle('is-open');
+  syncAllAccordionStatesAndChevrons();
+};
+
+const _origRenderTodayBoardV80 = renderTodayBoard;
+renderTodayBoard = function() {
+  const res = _origRenderTodayBoardV80.apply(this, arguments);
+  syncAllAccordionStatesAndChevrons();
+  return res;
+};
+
+// 2. Req 12 & Req 14: Strip any redundant .smart-combo-header and apply smart 3-row scroll + upward/downward positioning
+const _origRenderSmartComboMenuV80 = renderSmartComboMenu;
+renderSmartComboMenu = function(type, showAll = false) {
+  const res = _origRenderSmartComboMenuV80.apply(this, arguments);
+  document.querySelectorAll('.smart-combo-menu .smart-combo-header').forEach(hdr => hdr.remove());
+  return res;
+};
+
+const _origRenderSubtaskRowComboMenuV80 = renderSubtaskRowComboMenu;
+renderSubtaskRowComboMenu = function(targetKey, showAll = true) {
+  const res = _origRenderSubtaskRowComboMenuV80.apply(this, arguments);
+  document.querySelectorAll('.smart-combo-menu .smart-combo-header').forEach(hdr => hdr.remove());
+  return res;
+};
+
+applyDynamicViewportRestraintToDropdown = function(menuEl) {
+  if (!menuEl) return;
+  // Remove any inner headers immediately
+  menuEl.querySelectorAll('.smart-combo-header').forEach(hdr => hdr.remove());
+  // Enforce ~3 visible items height (136px) with smooth vertical scrolling
+  menuEl.style.setProperty('max-height', '136px', 'important');
+  menuEl.style.setProperty('overflow-y', 'auto', 'important');
+  menuEl.style.setProperty('overflow-x', 'hidden', 'important');
+  menuEl.style.setProperty('z-index', '99999', 'important');
+
+  // Check available viewport space below vs above the input field
+  const wrap = menuEl.closest('.smart-combo-wrap');
+  if (wrap) {
+    const rect = wrap.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    // Flip upward only if space below is very tight (< 150px) and there is more room above (and not inside #modal-fast-capture where header is directly above)
+    const inFastCapture = !!menuEl.closest('#modal-fast-capture');
+    if (!inFastCapture && spaceBelow < 150 && spaceAbove > 170) {
+      menuEl.classList.add('drop-up');
+    } else {
+      menuEl.classList.remove('drop-up');
+    }
+  }
+};
+
+// 3. Req 13: Guarantee Status Pill Buttons Always Keep Short Names + Percentage Tooltips
+function enforceShortStatusButtonsWithTooltips() {
+  const tooltipMap = {
+    'مبرمجة': '0%',
+    'قيد الإنجاز': '1%–99%',
+    'منجزة': '100%'
+  };
+  document.querySelectorAll('#tf-status-track .status-pill-btn').forEach(btn => {
+    const st = btn.getAttribute('data-st');
+    if (st && tooltipMap[st]) {
+      if (btn.textContent.trim() !== st) {
+        btn.textContent = st;
+      }
+      btn.setAttribute('title', tooltipMap[st]);
+      btn.setAttribute('data-tooltip', tooltipMap[st]);
+    }
+  });
+}
+
+const _origUpdateStatusVisualTrackV80 = updateStatusVisualTrack;
+updateStatusVisualTrack = function(st, pct) {
+  const res = _origUpdateStatusVisualTrackV80.apply(this, arguments);
+  enforceShortStatusButtonsWithTooltips();
+  return res;
+};
+
+// 4. Req 8: Protect .lib-exec-count-btn from being turned into a 34x34 icon-only button
+const _origEnforceUniformV80 = enforceUniformSquareOutlineActionButtons;
+enforceUniformSquareOutlineActionButtons = function() {
+  const res = _origEnforceUniformV80.apply(this, arguments);
+  document.querySelectorAll('button[onclick*="openMissionExecutionsModal"]').forEach(btn => {
+    btn.classList.remove('action-icon-btn');
+    btn.classList.add('lib-exec-count-btn');
+  });
+  return res;
+};
+
+// 5. Req 7: Close Modals When Clicking Outside on .modal-backdrop (with stopPropagation inside .modal and Unsaved Form Data Guard)
+function initBackdropClickToCloseModalsV80() {
+  document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+    if (backdrop.dataset.v80BackdropBound === 'true') return;
+    backdrop.dataset.v80BackdropBound = 'true';
+
+    const innerModal = backdrop.querySelector('.modal, .modal-card');
+    if (innerModal) {
+      innerModal.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+      });
+      innerModal.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
+
+    backdrop.addEventListener('click', (e) => {
+      // Only trigger if the user clicked directly on the backdrop itself (outside .modal)
+      if (e.target !== backdrop) return;
+      const modalId = backdrop.id;
+      if (!modalId) return;
+
+      // Close any open smart-combo dropdowns first
+      if (typeof closeAllSmartCombos === 'function') {
+        closeAllSmartCombos();
+      }
+
+      if (modalId === 'modal-settings-pin-verify') {
+        if (typeof cancelSettingsPinVerify === 'function') cancelSettingsPinVerify();
+        else closeModal(modalId);
+      } else if (modalId === 'modal-custom-dialog') {
+        if (typeof closeCustomDialog === 'function') closeCustomDialog(false);
+        else closeModal(modalId);
+      } else if (modalId === 'modal-unsaved-guard') {
+        if (typeof resolveUnsavedGuard === 'function') resolveUnsavedGuard('stay');
+      } else {
+        // Calls closeModal(modalId), which automatically invokes the Unsaved Data Protection Guard for #modal-task-form!
+        closeModal(modalId);
+      }
+    });
+  });
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initBackdropClickToCloseModalsV80();
+  syncAllAccordionStatesAndChevrons();
+  enforceShortStatusButtonsWithTooltips();
+  setTimeout(() => {
+    initBackdropClickToCloseModalsV80();
+    syncAllAccordionStatesAndChevrons();
+    enforceShortStatusButtonsWithTooltips();
+  }, 500);
 });
 
   </script>

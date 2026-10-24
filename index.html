@@ -15199,8 +15199,9 @@ function resetCalToToday() {
 }
 
 function openDayInspector(dateStr) {
-  currentInspectedDay = dateStr;
-  const tasks = APP.tasks.filter(t => t.taskDate === dateStr);
+  const normDate = (typeof getTaskActualExecutionDateISO === 'function' ? getTaskActualExecutionDateISO({ taskDate: dateStr }) : dateStr) || dateStr;
+  currentInspectedDay = normDate;
+  const tasks = (APP.tasks || []).filter(t => t && !t.isDeleted && ((typeof getTaskActualExecutionDateISO === 'function' ? getTaskActualExecutionDateISO(t) : t.taskDate) === normDate || t.taskDate === normDate));
   
   const titleEl = document.getElementById('inspector-day-title');
   if (titleEl) titleEl.innerText = `📅 جدول مهام وتدخلات: ${dateStr}`;
@@ -25744,16 +25745,19 @@ function syncAllViewsRealTime() {
 
 // 6. Fix Day Inspector "Add Task for This Day" so later openNewTaskModal overrides never wipe currentInspectedDay
 openNewTaskForInspectedDay = function() {
-  const chosenDay = currentInspectedDay || getTodayISO();
+  const rawChosenDay = currentInspectedDay || getTodayISO();
+  const chosenDay = (typeof getTaskActualExecutionDateISO === 'function' ? getTaskActualExecutionDateISO({ taskDate: rawChosenDay }) : rawChosenDay) || getTodayISO();
+  currentInspectedDay = chosenDay;
+  window.__addingTaskForCalendarDay = chosenDay;
   closeModal('modal-day-inspector');
   openNewTaskModal();
-  const dateInput = document.getElementById('tf-date');
-  if (dateInput) dateInput.value = chosenDay;
   const chkBacklog = document.getElementById('tf-is-backlog');
   if (chkBacklog) {
     chkBacklog.checked = false;
     toggleTaskBacklogMode(false);
   }
+  const dateInput = document.getElementById('tf-date');
+  if (dateInput) dateInput.value = chosenDay;
   document.querySelectorAll('#tf-presets-box .cat-pill-btn').forEach(b => b.classList.remove('active'));
   const todayStr = getTodayISO();
   if (chosenDay === todayStr) {
@@ -25778,7 +25782,8 @@ handleTaskFormSubmit = function(e) {
 
   const id = (document.getElementById('tf-id')?.value || '').trim();
   const isBacklog = document.getElementById('tf-is-backlog')?.checked || false;
-  const dateVal = (document.getElementById('tf-date')?.value || '').trim();
+  const rawDateVal = (document.getElementById('tf-date')?.value || '').trim() || (!isBacklog && window.__addingTaskForCalendarDay ? window.__addingTaskForCalendarDay : '');
+  const dateVal = (typeof getTaskActualExecutionDateISO === 'function' ? getTaskActualExecutionDateISO({ taskDate: rawDateVal }) : rawDateVal) || rawDateVal;
   const date = isBacklog ? (dateVal || '') : (dateVal || getTodayISO());
 
   // Category & Subcategory: honor #tf-category typed/selected value first!
@@ -25904,6 +25909,7 @@ handleTaskFormSubmit = function(e) {
   taskFormCleanSnapshot = null;
 
   try {
+    let mutatedTaskRef = null;
     if (id) {
       const t = APP.tasks.find(x => x.id === id);
       if (t) {
@@ -25925,8 +25931,10 @@ handleTaskFormSubmit = function(e) {
         t.subtasks = cleanSubtasks;
         if (currentMissionId) t.missionId = currentMissionId;
         if (preservedContext) t.recordedContext = preservedContext;
+        t.isDeleted = false;
         t.updatedAt = nowIso;
         t.lastActivityTs = nowTs;
+        mutatedTaskRef = t;
       }
     } else {
       const p = APP.profile || {};
@@ -25958,11 +25966,26 @@ handleTaskFormSubmit = function(e) {
         },
         person: p.fullName || APP.settings?.userName || 'محمد ايت حمادي',
         responsible: p.jobTitle || APP.settings?.userRole || 'إطار إداري وتقني',
+        isUserCreated: true,
+        isDeleted: false,
         createdAt: nowIso,
         updatedAt: nowIso,
         lastActivityTs: nowTs
       };
       APP.tasks.unshift(newTask);
+      mutatedTaskRef = newTask;
+    }
+
+    window.__lastSavedTaskObj = mutatedTaskRef;
+    window.__lastSavedTaskId = mutatedTaskRef ? String(mutatedTaskRef.id) : '';
+    window.__addingTaskForCalendarDay = null;
+    if (mutatedTaskRef && mutatedTaskRef.id) {
+      if (typeof unrecordDeletedEntity === 'function') {
+        unrecordDeletedEntity('tasks', mutatedTaskRef.id);
+      }
+      if (typeof pendingTaskWrites !== 'undefined' && pendingTaskWrites && typeof pendingTaskWrites.set === 'function') {
+        pendingTaskWrites.set(String(mutatedTaskRef.id), nowTs);
+      }
     }
 
     _origCloseModalV19('modal-task-form');
@@ -25972,7 +25995,7 @@ handleTaskFormSubmit = function(e) {
       id ? 'تعديل بيانات مهمة' : 'إضافة مهمة جديدة',
       title,
       `الوجهة: ${destination || '-'} | الحالة: ${status} (${progress}%)`,
-      id || (APP.tasks[0] && APP.tasks[0].id) || ''
+      id || (mutatedTaskRef && mutatedTaskRef.id) || ''
     );
     recordUserModification();
     showToast(id ? 'تم تحديث بيانات المهمة بنجاح' : 'تم إنشاء المهمة وتحديث لوحة القيادة فوراً');
@@ -28649,14 +28672,20 @@ const _preFirestoreHandleTaskFormSubmit = handleTaskFormSubmit;
 handleTaskFormSubmit = function(e) {
   if (e && e.preventDefault) e.preventDefault();
   const editingId = (document.getElementById('tf-id')?.value || '').trim();
+  window.__lastSavedTaskObj = null;
+  window.__lastSavedTaskId = '';
   _preFirestoreHandleTaskFormSubmit(e);
 
-  const savedTask = editingId
-    ? (APP.tasks || []).find(x => x.id === editingId)
-    : (APP.tasks && APP.tasks[0]);
+  const targetId = editingId || window.__lastSavedTaskId;
+  const savedTask = window.__lastSavedTaskObj ||
+    (targetId ? (APP.tasks || []).find(x => x && String(x.id) === String(targetId)) : null);
 
   if (savedTask) {
     savedTask.isDeleted = false;
+    if (!editingId) savedTask.isUserCreated = true;
+    if (typeof syncV13MirrorsToCloudFirestore === 'function') {
+      syncV13MirrorsToCloudFirestore();
+    }
     syncTaskToFirestore(savedTask);
     scheduleMetadataSyncToFirestore();
   }
@@ -28668,6 +28697,10 @@ executeFastCapture = function() {
   const res = _preFirestoreExecuteFastCapture();
   if (res && res.saved && res.task) {
     res.task.isDeleted = false;
+    res.task.isUserCreated = true;
+    if (typeof syncV13MirrorsToCloudFirestore === 'function') {
+      syncV13MirrorsToCloudFirestore();
+    }
     syncTaskToFirestore(res.task);
     scheduleMetadataSyncToFirestore();
   }
@@ -28677,11 +28710,19 @@ executeFastCapture = function() {
 // 3. Quick Create Task From Text -> Direct Firestore 'tasks' Collection Write
 const _preFirestoreQuickCreateTaskFromText = quickCreateTaskFromText;
 quickCreateTaskFromText = function(text, forceDest = null, forceCat = null) {
+  const beforeIds = new Set(((APP && APP.tasks) || []).map(t => String(t?.id || '')));
   _preFirestoreQuickCreateTaskFromText(text, forceDest, forceCat);
-  if (APP && Array.isArray(APP.tasks) && APP.tasks[0]) {
-    APP.tasks[0].isDeleted = false;
-    syncTaskToFirestore(APP.tasks[0]);
-    scheduleMetadataSyncToFirestore();
+  if (APP && Array.isArray(APP.tasks) && APP.tasks.length > 0) {
+    const addedTask = APP.tasks.find(t => t && !beforeIds.has(String(t.id))) || APP.tasks[0];
+    if (addedTask) {
+      addedTask.isDeleted = false;
+      addedTask.isUserCreated = true;
+      if (typeof syncV13MirrorsToCloudFirestore === 'function') {
+        syncV13MirrorsToCloudFirestore();
+      }
+      syncTaskToFirestore(addedTask);
+      scheduleMetadataSyncToFirestore();
+    }
   }
 };
 
@@ -33185,7 +33226,8 @@ function applyV82OwnerDataMigration(forceSyncToCloud = false) {
     if (isEntityDeleted("tasks", tId)) return;
     const tDate = String(t.taskDate || t.dueDate || t.original_date || "").trim();
     const isJanToSep2026 = (tDate >= "2026-01-01" && tDate <= "2026-09-30");
-    if (isJanToSep2026 && !v82Ids.has(tId) && !t.isV82MigratedTask) {
+    const isUserCreatedTask = Boolean(t.isUserCreated || /^task-\d{10,}/.test(tId));
+    if (isJanToSep2026 && !v82Ids.has(tId) && !t.isV82MigratedTask && !isUserCreatedTask) {
       removedOldJanSepIds.push(tId);
       return;
     }
@@ -34038,14 +34080,21 @@ initFirestoreRealtimeListener = function() {
         }
       });
 
-      // Also preserve local task versions if their updatedAt is strictly newer than the remote doc
+      // Also preserve local task versions if their updatedAt is strictly newer than the remote doc,
+      // and never wipe user-created local tasks that have not yet appeared in the remote snapshot
       localActiveById.forEach((localTask, taskId) => {
+        if (!localTask || isEntityDeleted("tasks", taskId) || remoteTrashMap.has(taskId)) return;
         const remoteTask = remoteActiveMap.get(taskId);
         if (remoteTask) {
-          const lTs = Date.parse(localTask.updatedAt || "") || 0;
-          const rTs = Date.parse(remoteTask.updatedAt || "") || 0;
+          const lTs = Date.parse(localTask.updatedAt || "") || Number(localTask.lastActivityTs || 0);
+          const rTs = Date.parse(remoteTask.updatedAt || "") || Number(remoteTask.lastActivityTs || 0);
           if (lTs > rTs) {
             remoteActiveMap.set(taskId, localTask);
+          }
+        } else if (localTask.isUserCreated || /^task-\d{10,}/.test(taskId)) {
+          remoteActiveMap.set(taskId, localTask);
+          if (!pendingTaskWrites.has(taskId) && typeof syncTaskToFirestore === "function") {
+            setTimeout(() => { syncTaskToFirestore(localTask); }, 50);
           }
         }
       });

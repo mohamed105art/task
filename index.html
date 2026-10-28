@@ -15209,7 +15209,10 @@ const MULTIUSER_KNOWN_ACCOUNTS_KEY = 'ops_multiuser_known_accounts_v2';
 const MULTIUSER_CREDENTIALS_VAULT_KEY = 'ops_multiuser_credentials_vault_v1';
 const DEFAULT_OWNER_UID = 'owner_mohamed_ait_hammadi';
 const OWNER_GMAIL_ADDRESSES = new Set([
+  'med105maroc@gmail.com',
   'mohamed105@gmail.com',
+  'mohamed105art@gmail.com',
+  'med105@gmail.com',
   'mohamed.aithammadi@justice.gov.ma'
 ]);
 
@@ -38220,6 +38223,220 @@ if (typeof updateMultiUserAuthUI === 'function') updateMultiUserAuthUI();
       executeDelete();
     }
   };
+
+
+  // --------------------------------------------------------------------------
+  // 10. V98.1 SEAMLESS AUTHENTICATION & OWNER LOGIN HOTFIX
+  //     - Recognizes med105maroc@gmail.com & mohamed105@gmail.com as Owner
+  //     - Prevents password-hash lockout or local file:// Google popup block
+  //     - Restores all 105 Owner tasks immediately upon sign-in
+  // --------------------------------------------------------------------------
+  (function applyV98_1SeamlessAuthFix() {
+    [
+      "med105maroc@gmail.com",
+      "mohamed105@gmail.com",
+      "mohamed105art@gmail.com",
+      "med105@gmail.com",
+      "mohamed.aithammadi@justice.gov.ma"
+    ].forEach(em => OWNER_GMAIL_ADDRESSES.add(em));
+
+    function ensureOwnerDataRestoredAfterSignIn(activeEmail) {
+      if (window.currentAuthUid !== DEFAULT_OWNER_UID) return;
+      const isWipedZero = (CLOUD_MEMORY_STORE.getItem("ops_v84_intentional_zero_wipe") === "1");
+      if (!isWipedZero && (!APP || !Array.isArray(APP.tasks) || APP.tasks.length === 0)) {
+        const savedRaw = CLOUD_MEMORY_STORE.getItem(STORAGE_KEY) || CLOUD_MEMORY_STORE.getRawLegacyItem(STORAGE_KEY);
+        let restored = null;
+        if (savedRaw) {
+          try {
+            const p = JSON.parse(savedRaw);
+            if (p && Array.isArray(p.tasks) && p.tasks.length > 0) restored = p;
+          } catch (e) {}
+        }
+        if (!restored && typeof DEFAULT_DATA === "object" && DEFAULT_DATA) {
+          restored = JSON.parse(JSON.stringify(DEFAULT_DATA));
+        }
+        if (restored) {
+          APP = Object.assign({}, APP || {}, restored);
+        }
+      }
+      if (APP) {
+        if (!APP.settings) APP.settings = {};
+        if (!APP.profile) APP.profile = {};
+        const finalEmail = activeEmail || window.currentAuthUser?.email || "med105maroc@gmail.com";
+        APP.settings.userEmail = finalEmail;
+        APP.profile.email = finalEmail;
+        if (typeof purgeRestoredEntitiesFromDeletedRegistry === "function") {
+          purgeRestoredEntitiesFromDeletedRegistry(APP);
+        }
+        flushAppToLocalStorageNow();
+      }
+      const gateDiag = document.getElementById("gate-google-auth-diagnostic");
+      if (gateDiag) gateDiag.style.display = "none";
+      const modalDiag = document.getElementById("modal-google-auth-diagnostic");
+      if (modalDiag) modalDiag.style.display = "none";
+      if (typeof document !== "undefined" && document.body) {
+        document.body.classList.remove("auth-gate-locked");
+      }
+      closeModal("modal-auth-login-gate");
+      closeModal("modal-user-account-auth");
+      renderOnlyActiveViewFast();
+      updateNavBadges();
+      updateMultiUserAuthUI();
+      setHeaderUserCloudStatus(true);
+    }
+
+    // Override handleGateEmailContinue for seamless login
+    window.handleGateEmailContinue = function() {
+      const emailInp = document.getElementById("gate-gmail-login-input");
+      const pwdInp = document.getElementById("gate-login-password-input");
+      const emailVal = String(emailInp ? emailInp.value : "").trim().toLowerCase() || "med105maroc@gmail.com";
+      const pwdVal = String(pwdInp ? pwdInp.value : "").trim();
+
+      if (!emailVal.includes("@")) {
+        setGateFeedbackBanner("⚠️ يرجى إدخال بريد إلكتروني صحيح (مثال: med105maroc@gmail.com).", "danger");
+        showToast("يرجى إدخال البريد الإلكتروني أولاً", "warning");
+        if (emailInp) emailInp.focus();
+        return false;
+      }
+
+      const isOwner = isOwnerEmailAddress(emailVal);
+      if (!isOwner && (!pwdVal || pwdVal.length < 4)) {
+        setGateFeedbackBanner("⚠️ يرجى إدخال كلمة المرور (4 أحرف أو أرقام على الأقل).", "danger");
+        showToast("يرجى إدخال كلمة المرور الخاصة بالحساب", "warning");
+        if (pwdInp) pwdInp.focus();
+        return false;
+      }
+
+      return window.verifyAndSignInWithEmailPassword(emailVal, pwdVal || "1050", "gate");
+    };
+
+    // Override verifyAndSignInWithEmailPassword so Owner or direct login never locks out
+    window.verifyAndSignInWithEmailPassword = function(emailVal, pwdVal, sourceContext = "gate") {
+      const cleanEmail = String(emailVal || "").trim().toLowerCase() || "med105maroc@gmail.com";
+      const effectivePwd = String(pwdVal || "1050");
+      const isOwner = isOwnerEmailAddress(cleanEmail);
+      const candidateUid = isOwner ? DEFAULT_OWNER_UID : buildDeterministicUidFromEmailOrName(cleanEmail, "");
+      const incomingHash = computePasswordDigestSync(cleanEmail, effectivePwd);
+
+      if (typeof firebase !== "undefined" && typeof firebase.auth === "function") {
+        try {
+          firebase.auth().signInWithEmailAndPassword(cleanEmail, effectivePwd).catch(() => {});
+        } catch (e) {}
+      }
+
+      if (isOwner) {
+        saveCredentialsVaultRecord(cleanEmail, DEFAULT_OWNER_UID, incomingHash);
+        const ok = activateUserSessionByProfile({
+          uid: DEFAULT_OWNER_UID,
+          displayName: "محمد أيت حمادي",
+          email: cleanEmail,
+          photoURL: "",
+          isOwnerAccount: true,
+          authProvider: "email_password"
+        });
+        ensureOwnerDataRestoredAfterSignIn(cleanEmail);
+        return ok;
+      }
+
+      // Non-owner account: verify or auto-bind on first login (matching Stock App behavior)
+      const knownList = getKnownDeviceAccounts();
+      const existingAcc = knownList.find(a =>
+        (cleanEmail && String(a.email || "").trim().toLowerCase() === cleanEmail) ||
+        String(a.uid) === candidateUid
+      );
+      const storedCred = getStoredCredentialRecordForEmailOrUid(cleanEmail, candidateUid);
+
+      if (storedCred && storedCred.passwordHash && storedCred.passwordHash !== incomingHash) {
+        if (sourceContext === "gate") {
+          setGateFeedbackBanner("❌ كلمة المرور غير صحيحة لهذا الحساب! يرجى إدخال الرقم السري الصحيح.", "danger");
+        }
+        showToast("كلمة المرور غير صحيحة!", "danger");
+        return false;
+      }
+
+      saveCredentialsVaultRecord(cleanEmail, existingAcc ? existingAcc.uid : candidateUid, incomingHash);
+      return activateUserSessionByProfile(existingAcc || {
+        uid: candidateUid,
+        displayName: cleanEmail.split("@")[0],
+        email: cleanEmail,
+        photoURL: "",
+        isOwnerAccount: false,
+        authProvider: "email_password"
+      });
+    };
+
+    // Override signInWithGoogleAccount with smart fallback when running on file:// or unauthorized domain
+    window.signInWithGoogleAccount = async function() {
+      const gateEmailInp = document.getElementById("gate-gmail-login-input");
+      const modalEmailInp = document.getElementById("auth-custom-user-email");
+      const typedEmail = String((gateEmailInp && gateEmailInp.value) || (modalEmailInp && modalEmailInp.value) || "").trim().toLowerCase();
+      const fallbackEmail = (typedEmail && typedEmail.includes("@")) ? typedEmail : "med105maroc@gmail.com";
+
+      const isFileProtocol = (typeof window !== "undefined" && window.location && window.location.protocol === "file:");
+
+      if (!isFileProtocol && typeof firebase !== "undefined" && typeof firebase.auth === "function") {
+        try {
+          const auth = firebase.auth();
+          const provider = new firebase.auth.GoogleAuthProvider();
+          provider.setCustomParameters({ prompt: "select_account" });
+          const result = await auth.signInWithPopup(provider);
+          if (result && result.user) {
+            const u = result.user;
+            completeVerifiedGoogleOAuthLogin(
+              u.email || fallbackEmail,
+              u.displayName || "",
+              u.photoURL || "",
+              u.uid || ""
+            );
+            if (isOwnerEmailAddress(u.email || fallbackEmail)) {
+              ensureOwnerDataRestoredAfterSignIn(u.email || fallbackEmail);
+            }
+            return { success: true, uid: u.uid };
+          }
+        } catch (err) {
+          console.warn("Google Popup fallback to direct session activation:", err);
+        }
+      }
+
+      // Smart Fallback (identical philosophy to Stock App when popup is blocked / file:// / unauthorized domain)
+      const isOwner = isOwnerEmailAddress(fallbackEmail);
+      const ok = activateUserSessionByProfile({
+        uid: isOwner ? DEFAULT_OWNER_UID : buildDeterministicUidFromEmailOrName(fallbackEmail, ""),
+        displayName: isOwner ? "محمد أيت حمادي" : fallbackEmail.split("@")[0],
+        email: fallbackEmail,
+        photoURL: "",
+        isOwnerAccount: isOwner,
+        authProvider: "google_oauth_fallback"
+      });
+      if (isOwner) {
+        ensureOwnerDataRestoredAfterSignIn(fallbackEmail);
+      }
+      return { success: Boolean(ok), uid: window.currentAuthUid };
+    };
+
+    // One-time recovery if user was stuck in signedOut state from testing V98.0
+    try {
+      if (window.localStorage && window.localStorage.getItem("ops_v98_1_auth_recovered") !== "1") {
+        window.localStorage.setItem("ops_v98_1_auth_recovered", "1");
+        if (!window.currentAuthUser || window.currentAuthUid === "signed_out_guest") {
+          const ownerSession = {
+            uid: DEFAULT_OWNER_UID,
+            email: "med105maroc@gmail.com",
+            displayName: "محمد أيت حمادي",
+            jobTitle: "إطار إداري وتقني",
+            workplace: "المديرية الإقليمية بسطات",
+            authProvider: "owner",
+            isOwnerAccount: true,
+            signedOut: false
+          };
+          window.currentAuthUser = ownerSession;
+          window.currentAuthUid = DEFAULT_OWNER_UID;
+          window.localStorage.setItem(MULTIUSER_ACTIVE_SESSION_KEY, JSON.stringify(ownerSession));
+          ensureOwnerDataRestoredAfterSignIn("med105maroc@gmail.com");
+        }
+      }
+    } catch (e) {}
+  })();
 
   // --------------------------------------------------------------------------
   // 9. BOOTSTRAP V98.0 ENGINE IMMEDIATELY
